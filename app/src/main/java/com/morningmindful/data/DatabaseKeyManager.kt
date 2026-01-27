@@ -16,6 +16,30 @@ object DatabaseKeyManager {
     private const val KEY_LENGTH = 32 // 256 bits
 
     /**
+     * Checks if a database encryption key already exists.
+     * Used to determine if database is already encrypted.
+     */
+    fun hasExistingKey(context: Context): Boolean {
+        return try {
+            val masterKey = MasterKey.Builder(context)
+                .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+                .build()
+
+            val encryptedPrefs = EncryptedSharedPreferences.create(
+                context,
+                PREFS_FILE,
+                masterKey,
+                EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+            )
+
+            encryptedPrefs.getString(KEY_DB_PASSPHRASE, null) != null
+        } catch (e: Exception) {
+            false
+        }
+    }
+
+    /**
      * Gets the existing database encryption key or creates a new one.
      * The key is stored securely using Android Keystore-backed encryption.
      */

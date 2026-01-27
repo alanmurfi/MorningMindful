@@ -7,6 +7,8 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import androidx.room.migration.Migration
+import androidx.security.crypto.EncryptedSharedPreferences
+import androidx.security.crypto.MasterKey
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.morningmindful.data.dao.JournalEntryDao
 import com.morningmindful.data.entity.JournalEntry
@@ -67,24 +69,38 @@ abstract class AppDatabase : RoomDatabase() {
          * For production: would need proper data migration.
          */
         private fun handleLegacyDatabase(context: Context) {
-            val prefs = context.getSharedPreferences("db_migration", Context.MODE_PRIVATE)
-            val isEncrypted = prefs.getBoolean("is_encrypted", false)
+            val masterKey = MasterKey.Builder(context)
+                .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+                .build()
+
+            val encryptedPrefs = EncryptedSharedPreferences.create(
+                context,
+                "db_migration_secure",
+                masterKey,
+                EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+            )
+
+            val isEncrypted = encryptedPrefs.getBoolean("is_encrypted", false)
 
             if (!isEncrypted) {
-                // Delete old unencrypted database files
                 val dbFile = context.getDatabasePath(DATABASE_NAME)
-                val dbShm = File(dbFile.path + "-shm")
-                val dbWal = File(dbFile.path + "-wal")
+                val keyExists = DatabaseKeyManager.hasExistingKey(context)
 
-                if (dbFile.exists()) {
+                // Only delete database if it exists AND no encryption key exists
+                // This means it's truly an old unencrypted database, not an encrypted
+                // one where just the migration flag was tampered with
+                if (dbFile.exists() && !keyExists) {
                     Log.d(TAG, "Migrating to encrypted database - removing old unencrypted database")
+                    val dbShm = File(dbFile.path + "-shm")
+                    val dbWal = File(dbFile.path + "-wal")
                     dbFile.delete()
                     dbShm.delete()
                     dbWal.delete()
                 }
 
                 // Mark that we've migrated to encrypted
-                prefs.edit().putBoolean("is_encrypted", true).apply()
+                encryptedPrefs.edit().putBoolean("is_encrypted", true).apply()
             }
         }
     }
