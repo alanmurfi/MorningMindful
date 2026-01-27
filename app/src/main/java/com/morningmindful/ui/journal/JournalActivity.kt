@@ -160,23 +160,22 @@ class JournalActivity : AppCompatActivity() {
                     }
                 }
 
-                // Timer - only show when blocking is active
+                // Timer - show when there's remaining blocking time
                 launch {
                     viewModel.remainingTimeFormatted.collectLatest { time ->
-                        val isBlockingActive = BlockingState.shouldBlock()
                         val remainingSeconds = BlockingState.getRemainingSeconds()
 
-                        if (isBlockingActive && remainingSeconds > 0) {
-                            // Blocking active with time remaining - show timer
+                        if (remainingSeconds > 0) {
+                            // Time remaining - show timer
                             binding.timerText.visibility = View.VISIBLE
                             binding.timerText.text = time
                             binding.skipButton.visibility = View.GONE
-                        } else if (isBlockingActive && remainingSeconds <= 0) {
-                            // Blocking period expired - hide timer, show skip
+                        } else if (BlockingState.shouldBlock()) {
+                            // Blocking period expired but still blocking - show skip
                             binding.timerText.visibility = View.GONE
                             binding.skipButton.visibility = View.VISIBLE
                         } else {
-                            // Not blocking (voluntary journal) - hide both timer and skip
+                            // Not blocking - hide both
                             binding.timerText.visibility = View.GONE
                             binding.skipButton.visibility = View.GONE
                         }

@@ -59,6 +59,22 @@ class JournalViewModel(
     init {
         startTimer()
         loadExistingEntry()
+        ensureBlockingStarted()
+    }
+
+    /**
+     * Ensure blocking period is started if we're in the morning window.
+     * This is a fallback in case the screen unlock receiver didn't fire.
+     */
+    private fun ensureBlockingStarted() {
+        viewModelScope.launch {
+            // If blocking hasn't started yet and we're opening the journal,
+            // start the blocking period with the configured duration
+            if (BlockingState.getRemainingSeconds() <= 0 && !BlockingState.journalCompletedToday.value) {
+                val duration = settingsRepository.blockingDurationMinutes.first()
+                BlockingState.onFirstUnlock(duration)
+            }
+        }
     }
 
     fun updateJournalText(text: String) {
@@ -194,6 +210,7 @@ class JournalViewModel(
         object Idle : SaveState()
         object Saving : SaveState()
         object Success : SaveState()
+        object DraftSaved : SaveState()
         data class Error(val message: String) : SaveState()
     }
 
