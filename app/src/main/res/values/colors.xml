@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Primary colors -->
+    <color name="primary">#6B5CE7</color>
+    <color name="primary_dark">#5648C7</color>
+    <color name="primary_light">#8B7EED</color>
+
+    <!-- Background colors -->
+    <color name="background">#FAFBFC</color>
+    <color name="surface">#FFFFFF</color>
+
+    <!-- Text colors -->
+    <color name="text_primary">#1A1D21</color>
+    <color name="text_secondary">#4A5568</color>
+    <color name="text_tertiary">#A0AEC0</color>
+
+    <!-- Semantic colors -->
+    <color name="success">#48BB78</color>
+    <color name="warning_background">#FFF5F5</color>
+    <color name="warning_text">#C53030</color>
+    <color name="divider">#E2E8F0</color>
+
+    <!-- Progress bar colors -->
+    <color name="progress_start">#6B5CE7</color>
+    <color name="progress_end">#48BB78</color>
+    <color name="progress_background">#E2E8F0</color>
+</resources>

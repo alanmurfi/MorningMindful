@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Morning Mindful</string>
+
+    <!-- Journal Activity -->
+    <string name="good_morning">Good Morning</string>
+    <string name="journal_hint">Start writing your thoughts…</string>
+    <string name="save_entry">Save &amp; Unlock Apps</string>
+    <string name="skip_today">Skip Today</string>
+    <string name="journal_saved">Journal Saved!</string>
+    <string name="have_a_mindful_day">Have a mindful day.</string>
+
+    <!-- Accessibility Service -->
+    <string name="accessibility_service_description">Morning Mindful uses accessibility to detect when you open blocked apps during your morning mindfulness period. This allows the app to redirect you to your journal instead. No personal data is collected or shared.</string>
+
+    <!-- Notifications -->
+    <string name="notification_title">Morning Mindful Active</string>
+    <string name="notification_text">Complete your journal to unlock apps</string>
+</resources>
