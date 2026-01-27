@@ -46,7 +46,8 @@ class SettingsRepository(private val context: Context) {
 
     suspend fun setBlockingDurationMinutes(minutes: Int) {
         context.dataStore.edit { preferences ->
-            preferences[BLOCKING_DURATION_MINUTES] = minutes
+            // Security: Enforce bounds (1-120 minutes)
+            preferences[BLOCKING_DURATION_MINUTES] = minutes.coerceIn(1, 120)
         }
     }
 
@@ -58,7 +59,8 @@ class SettingsRepository(private val context: Context) {
 
     suspend fun setRequiredWordCount(count: Int) {
         context.dataStore.edit { preferences ->
-            preferences[REQUIRED_WORD_COUNT] = count
+            // Security: Enforce bounds (1-10000 words)
+            preferences[REQUIRED_WORD_COUNT] = count.coerceIn(1, 10000)
         }
     }
 
@@ -75,10 +77,24 @@ class SettingsRepository(private val context: Context) {
     }
 
     suspend fun addBlockedApp(packageName: String) {
+        // Security: Validate package name format and length
+        if (!isValidPackageName(packageName)) return
+
         context.dataStore.edit { preferences ->
             val current = preferences[BLOCKED_APPS] ?: BlockedApps.DEFAULT_BLOCKED_PACKAGES
             preferences[BLOCKED_APPS] = current + packageName
         }
+    }
+
+    /**
+     * Security: Validate Android package name format.
+     * Must be: lowercase letters, digits, underscores, dots. Max 255 chars.
+     */
+    private fun isValidPackageName(packageName: String): Boolean {
+        if (packageName.isBlank() || packageName.length > 255) return false
+        // Android package name pattern: segments separated by dots
+        val pattern = Regex("^[a-zA-Z][a-zA-Z0-9_]*(\\.[a-zA-Z][a-zA-Z0-9_]*)+$")
+        return pattern.matches(packageName)
     }
 
     suspend fun removeBlockedApp(packageName: String) {
