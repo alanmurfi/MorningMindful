@@ -136,7 +136,8 @@ class SettingsRepository(private val context: Context) {
 
     suspend fun setMorningEndHour(hour: Int) {
         context.dataStore.edit { preferences ->
-            preferences[MORNING_END_HOUR] = hour.coerceIn(0, 23)
+            // Allow 1-24 for end hour (24 = midnight/end of day)
+            preferences[MORNING_END_HOUR] = hour.coerceIn(1, 24)
         }
     }
 

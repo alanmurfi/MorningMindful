@@ -70,6 +70,9 @@ class JournalViewModel(
         _selectedMood.value = mood
     }
 
+    /**
+     * Save journal and unlock blocking (requires minimum word count)
+     */
     fun saveJournalEntry() {
         val text = _journalText.value
         val words = _wordCount.value
@@ -84,24 +87,9 @@ class JournalViewModel(
             _saveState.value = SaveState.Saving
 
             try {
-                val existingId = existingEntry.value?.id
-                val entry = JournalEntry(
-                    id = existingId ?: 0,
-                    date = LocalDate.now(),
-                    content = text,
-                    wordCount = words,
-                    mood = _selectedMood.value,
-                    createdAt = existingEntry.value?.createdAt ?: System.currentTimeMillis(),
-                    updatedAt = System.currentTimeMillis()
-                )
+                saveEntry(text, words)
 
-                if (existingId != null) {
-                    journalRepository.update(entry)
-                } else {
-                    journalRepository.insert(entry)
-                }
-
-                // Mark journal as completed
+                // Mark journal as completed - this unlocks blocking
                 BlockingState.onJournalCompleted()
 
                 _saveState.value = SaveState.Success
@@ -109,6 +97,50 @@ class JournalViewModel(
             } catch (e: Exception) {
                 _saveState.value = SaveState.Error("Failed to save: ${e.message}")
             }
+        }
+    }
+
+    /**
+     * Save progress without unlocking (no minimum word count required)
+     */
+    fun saveDraft() {
+        val text = _journalText.value
+        val words = _wordCount.value
+
+        if (text.isBlank()) {
+            _saveState.value = SaveState.Error("Nothing to save")
+            return
+        }
+
+        viewModelScope.launch {
+            _saveState.value = SaveState.Saving
+
+            try {
+                saveEntry(text, words)
+                _saveState.value = SaveState.DraftSaved
+
+            } catch (e: Exception) {
+                _saveState.value = SaveState.Error("Failed to save: ${e.message}")
+            }
+        }
+    }
+
+    private suspend fun saveEntry(text: String, words: Int) {
+        val existingId = existingEntry.value?.id
+        val entry = JournalEntry(
+            id = existingId ?: 0,
+            date = LocalDate.now(),
+            content = text,
+            wordCount = words,
+            mood = _selectedMood.value,
+            createdAt = existingEntry.value?.createdAt ?: System.currentTimeMillis(),
+            updatedAt = System.currentTimeMillis()
+        )
+
+        if (existingId != null) {
+            journalRepository.update(entry)
+        } else {
+            journalRepository.insert(entry)
         }
     }
 

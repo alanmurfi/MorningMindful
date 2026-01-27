@@ -60,9 +60,14 @@ class JournalActivity : AppCompatActivity() {
             }
         })
 
-        // Save button
+        // Save & Unlock button (requires minimum word count)
         binding.saveButton.setOnClickListener {
             viewModel.saveJournalEntry()
+        }
+
+        // Save Draft button (saves without unlocking)
+        binding.saveDraftButton.setOnClickListener {
+            viewModel.saveDraft()
         }
 
         // Skip button (only visible after timer expires)
@@ -184,18 +189,26 @@ class JournalActivity : AppCompatActivity() {
                         when (state) {
                             is JournalViewModel.SaveState.Saving -> {
                                 binding.saveButton.isEnabled = false
+                                binding.saveDraftButton.isEnabled = false
                                 binding.saveButton.text = "Saving..."
                             }
                             is JournalViewModel.SaveState.Success -> {
                                 showSuccessAndClose()
                             }
+                            is JournalViewModel.SaveState.DraftSaved -> {
+                                showDraftSavedMessage()
+                                binding.saveDraftButton.isEnabled = true
+                                binding.saveButton.text = getString(R.string.save_entry)
+                            }
                             is JournalViewModel.SaveState.Error -> {
                                 binding.saveButton.isEnabled = true
+                                binding.saveDraftButton.isEnabled = true
                                 binding.saveButton.text = getString(R.string.save_entry)
                                 showError(state.message)
                             }
                             else -> {
                                 binding.saveButton.text = getString(R.string.save_entry)
+                                binding.saveDraftButton.isEnabled = true
                             }
                         }
                     }
@@ -290,5 +303,13 @@ class JournalActivity : AppCompatActivity() {
             .setMessage(message)
             .setPositiveButton("OK", null)
             .show()
+    }
+
+    private fun showDraftSavedMessage() {
+        com.google.android.material.snackbar.Snackbar.make(
+            binding.root,
+            getString(R.string.draft_saved),
+            com.google.android.material.snackbar.Snackbar.LENGTH_SHORT
+        ).show()
     }
 }
