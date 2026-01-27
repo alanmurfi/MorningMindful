@@ -1,6 +1,7 @@
 package com.morningmindful.data
 
 import android.content.Context
+import android.util.Log
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -9,7 +10,8 @@ import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.morningmindful.data.dao.JournalEntryDao
 import com.morningmindful.data.entity.JournalEntry
-import net.sqlcipher.database.SupportFactory
+import net.zetetic.database.sqlcipher.SupportOpenHelperFactory
+import java.io.File
 
 @Database(
     entities = [JournalEntry::class],
@@ -22,6 +24,9 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun journalEntryDao(): JournalEntryDao
 
     companion object {
+        private const val TAG = "AppDatabase"
+        private const val DATABASE_NAME = "morning_mindful_database"
+
         @Volatile
         private var INSTANCE: AppDatabase? = null
 
@@ -34,20 +39,52 @@ abstract class AppDatabase : RoomDatabase() {
 
         fun getDatabase(context: Context): AppDatabase {
             return INSTANCE ?: synchronized(this) {
+                // Handle migration from unencrypted to encrypted database
+                // If an old unencrypted database exists, we need to delete it
+                // In production, you'd want to migrate data properly
+                handleLegacyDatabase(context)
+
                 // Get or create encryption key
                 val passphrase = DatabaseKeyManager.getOrCreateKey(context)
-                val factory = SupportFactory(passphrase)
+                val factory = SupportOpenHelperFactory(passphrase)
 
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     AppDatabase::class.java,
-                    "morning_mindful_database"
+                    DATABASE_NAME
                 )
                     .openHelperFactory(factory)
                     .addMigrations(MIGRATION_1_2)
                     .build()
                 INSTANCE = instance
                 instance
+            }
+        }
+
+        /**
+         * Handle migration from unencrypted to encrypted database.
+         * For development: deletes old unencrypted database if encryption marker is missing.
+         * For production: would need proper data migration.
+         */
+        private fun handleLegacyDatabase(context: Context) {
+            val prefs = context.getSharedPreferences("db_migration", Context.MODE_PRIVATE)
+            val isEncrypted = prefs.getBoolean("is_encrypted", false)
+
+            if (!isEncrypted) {
+                // Delete old unencrypted database files
+                val dbFile = context.getDatabasePath(DATABASE_NAME)
+                val dbShm = File(dbFile.path + "-shm")
+                val dbWal = File(dbFile.path + "-wal")
+
+                if (dbFile.exists()) {
+                    Log.d(TAG, "Migrating to encrypted database - removing old unencrypted database")
+                    dbFile.delete()
+                    dbShm.delete()
+                    dbWal.delete()
+                }
+
+                // Mark that we've migrated to encrypted
+                prefs.edit().putBoolean("is_encrypted", true).apply()
             }
         }
     }

@@ -18,6 +18,10 @@ class MorningMindfulApp : Application() {
     override fun onCreate() {
         super.onCreate()
         instance = this
+
+        // Load SQLCipher native library before any database access
+        System.loadLibrary("sqlcipher")
+
         createNotificationChannel()
     }
 

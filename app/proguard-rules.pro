@@ -31,8 +31,7 @@
 # Keep Security & Encryption classes
 # ============================================
 -keep class androidx.security.crypto.** { *; }
--keep class net.sqlcipher.** { *; }
--keep class net.sqlcipher.database.** { *; }
+-keep class net.zetetic.database.sqlcipher.** { *; }
 
 # ============================================
 # General Android rules
