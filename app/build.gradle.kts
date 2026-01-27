@@ -16,6 +16,11 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        // AdMob IDs - override in local.properties for production
+        buildConfigField("String", "ADMOB_APP_ID", "\"ca-app-pub-3940256099942544~3347511713\"")
+        buildConfigField("String", "ADMOB_BANNER_ID", "\"ca-app-pub-3940256099942544/6300978111\"")
+        manifestPlaceholders["ADMOB_APP_ID"] = "ca-app-pub-3940256099942544~3347511713"
     }
 
     buildTypes {
@@ -27,6 +32,20 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            // Production AdMob IDs - set in local.properties:
+            // ADMOB_APP_ID_PROD=ca-app-pub-YOUR_REAL_ID
+            // ADMOB_BANNER_ID_PROD=ca-app-pub-YOUR_REAL_BANNER_ID
+            val props = project.rootProject.file("local.properties")
+            if (props.exists()) {
+                val localProps = java.util.Properties().apply { load(props.inputStream()) }
+                localProps.getProperty("ADMOB_APP_ID_PROD")?.let {
+                    buildConfigField("String", "ADMOB_APP_ID", "\"$it\"")
+                    manifestPlaceholders["ADMOB_APP_ID"] = it
+                }
+                localProps.getProperty("ADMOB_BANNER_ID_PROD")?.let {
+                    buildConfigField("String", "ADMOB_BANNER_ID", "\"$it\"")
+                }
+            }
         }
         debug {
             isMinifyEnabled = false
@@ -41,6 +60,7 @@ android {
     }
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
 }
 
@@ -63,6 +83,13 @@ dependencies {
     implementation("androidx.room:room-runtime:2.6.1")
     implementation("androidx.room:room-ktx:2.6.1")
     ksp("androidx.room:room-compiler:2.6.1")
+
+    // Security: SQLCipher for encrypted database
+    implementation("net.zetetic:android-database-sqlcipher:4.5.4")
+    implementation("androidx.sqlite:sqlite-ktx:2.4.0")
+
+    // Security: Encrypted SharedPreferences
+    implementation("androidx.security:security-crypto:1.1.0-alpha06")
 
     // Kotlin Symbol Processing workaround
     implementation("com.google.devtools.ksp:symbol-processing-api:2.0.21-1.0.28")

@@ -9,6 +9,7 @@ import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.morningmindful.data.dao.JournalEntryDao
 import com.morningmindful.data.entity.JournalEntry
+import net.sqlcipher.database.SupportFactory
 
 @Database(
     entities = [JournalEntry::class],
@@ -33,11 +34,16 @@ abstract class AppDatabase : RoomDatabase() {
 
         fun getDatabase(context: Context): AppDatabase {
             return INSTANCE ?: synchronized(this) {
+                // Get or create encryption key
+                val passphrase = DatabaseKeyManager.getOrCreateKey(context)
+                val factory = SupportFactory(passphrase)
+
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     AppDatabase::class.java,
                     "morning_mindful_database"
                 )
+                    .openHelperFactory(factory)
                     .addMigrations(MIGRATION_1_2)
                     .build()
                 INSTANCE = instance

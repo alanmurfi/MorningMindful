@@ -28,9 +28,11 @@
 -keep class com.google.ads.** { *; }
 
 # ============================================
-# Keep DataStore
+# Keep Security & Encryption classes
 # ============================================
--keep class androidx.datastore.** { *; }
+-keep class androidx.security.crypto.** { *; }
+-keep class net.sqlcipher.** { *; }
+-keep class net.sqlcipher.database.** { *; }
 
 # ============================================
 # General Android rules

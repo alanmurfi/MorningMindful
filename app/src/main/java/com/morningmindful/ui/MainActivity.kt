@@ -13,6 +13,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.MobileAds
+import com.morningmindful.BuildConfig
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.morningmindful.databinding.ActivityMainBinding
 import com.morningmindful.service.AppBlockerAccessibilityService
@@ -45,6 +46,9 @@ class MainActivity : AppCompatActivity() {
         MobileAds.initialize(this) { initializationStatus ->
             Log.d("MainActivity", "AdMob initialized: $initializationStatus")
         }
+
+        // Set ad unit ID from BuildConfig (allows different IDs for debug/release)
+        binding.adView.adUnitId = BuildConfig.ADMOB_BANNER_ID
 
         // Load a banner ad
         val adRequest = AdRequest.Builder().build()
