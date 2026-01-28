@@ -13,10 +13,10 @@ import com.morningmindful.databinding.ActivityEntryDetailBinding
 import com.morningmindful.ui.journal.JournalActivity
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
+import java.time.Instant
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
-import java.util.Date
 import java.util.Locale
 
 class EntryDetailActivity : AppCompatActivity() {
@@ -31,7 +31,8 @@ class EntryDetailActivity : AppCompatActivity() {
     }
 
     private val dateFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG)
-    private val timeFormatter = SimpleDateFormat("h:mm a", Locale.getDefault())
+    private val timeFormatter = DateTimeFormatter.ofPattern("h:mm a", Locale.getDefault())
+        .withZone(ZoneId.systemDefault())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,7 +63,7 @@ class EntryDetailActivity : AppCompatActivity() {
                         binding.dateHeader.text = entry.date.format(dateFormatter)
                         binding.journalContent.text = entry.content
                         binding.wordCountText.text = "${entry.wordCount} words"
-                        binding.timestampText.text = "Written at ${timeFormatter.format(Date(entry.createdAt))}"
+                        binding.timestampText.text = "Written at ${timeFormatter.format(Instant.ofEpochMilli(entry.createdAt))}"
 
                         // Show mood if present
                         if (entry.mood != null) {
