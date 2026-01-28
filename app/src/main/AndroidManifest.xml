@@ -71,6 +71,7 @@
             android:name=".ui.journal.JournalActivity"
             android:exported="false"
             android:launchMode="singleTop"
+            android:windowSoftInputMode="adjustResize|stateVisible"
             android:theme="@style/Theme.MorningMindful" />
 
         <!-- Settings Activity -->
