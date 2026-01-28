@@ -84,6 +84,46 @@ If you have questions or concerns about this Privacy Policy, please contact us a
 
 **Email:** alanwmurphy@gmail.com
 
+## Your Rights (GDPR - European Users)
+
+If you are located in the European Economic Area (EEA), you have certain data protection rights. Since all your data is stored locally on your device and we do not have access to it, you maintain full control over your data at all times. You have the right to:
+
+- **Access**: Your data is stored on your device and accessible through the app
+- **Rectification**: You can edit or delete your journal entries within the app
+- **Erasure**: You can delete all data by uninstalling the app or clearing app data
+- **Data portability**: Your data remains on your device under your control
+- **Withdraw consent**: You can stop using the app at any time and delete all data
+
+For any questions regarding your rights, please contact us at the email address provided above.
+
+## Your Rights (CCPA - California Residents)
+
+If you are a California resident, the California Consumer Privacy Act (CCPA) provides you with specific rights regarding your personal information:
+
+- **Right to Know**: You have the right to know what personal information we collect. As stated above, all data is stored locally on your device only.
+- **Right to Delete**: You can delete your data by uninstalling the app or clearing app data in Android settings.
+- **Right to Non-Discrimination**: We do not discriminate against you for exercising your CCPA rights.
+- **Right to Opt-Out**: We do not sell your personal information to third parties.
+
+To exercise any of these rights, please contact us at the email address provided above.
+
+## Information Collected by Third-Party Services
+
+### Google AdMob
+
+Our app uses Google AdMob for advertising. AdMob may collect and process certain information including:
+
+- Device identifiers (Advertising ID)
+- IP address
+- Device information (model, operating system)
+- Ad interaction data (views, clicks)
+- General location (based on IP address)
+
+This data is collected by Google, not by us, and is subject to [Google's Privacy Policy](https://policies.google.com/privacy). You can opt out of personalized advertising by:
+
+- Going to your device Settings → Google → Ads → Opt out of Ads Personalization
+- Or visiting [Google Ads Settings](https://adssettings.google.com)
+
 ## Your Consent
 
 By using Morning Mindful, you consent to this Privacy Policy.
