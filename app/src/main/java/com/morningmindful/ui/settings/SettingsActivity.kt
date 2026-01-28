@@ -142,6 +142,24 @@ class SettingsActivity : AppCompatActivity() {
                 .setNegativeButton("Cancel", null)
                 .show()
         }
+
+        // Privacy Policy
+        binding.privacyPolicyButton.setOnClickListener {
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(PRIVACY_POLICY_URL))
+            startActivity(intent)
+        }
+
+        // App version
+        try {
+            val packageInfo = packageManager.getPackageInfo(packageName, 0)
+            binding.appVersion.text = packageInfo.versionName
+        } catch (e: PackageManager.NameNotFoundException) {
+            binding.appVersion.text = "1.0"
+        }
+    }
+
+    companion object {
+        private const val PRIVACY_POLICY_URL = "https://alanmurfi.github.io/MorningMindful/"
     }
 
     private fun observeViewModel() {

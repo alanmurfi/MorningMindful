@@ -19,8 +19,8 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        // AdMob App ID for manifest - override in local.properties for production
-        manifestPlaceholders["ADMOB_APP_ID"] = "ca-app-pub-3940256099942544~3347511713"
+        // AdMob App ID for manifest
+        manifestPlaceholders["ADMOB_APP_ID"] = "ca-app-pub-2156328556769594~5392742414"
     }
 
     buildTypes {
@@ -32,15 +32,6 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            // Production AdMob App ID - set in local.properties:
-            // ADMOB_APP_ID_PROD=ca-app-pub-YOUR_REAL_ID
-            val props = project.rootProject.file("local.properties")
-            if (props.exists()) {
-                val localProps = Properties().apply { load(props.inputStream()) }
-                localProps.getProperty("ADMOB_APP_ID_PROD")?.let {
-                    manifestPlaceholders["ADMOB_APP_ID"] = it
-                }
-            }
         }
         debug {
             isMinifyEnabled = false

@@ -19,6 +19,6 @@
     <string name="notification_title">Morning Mindful Active</string>
     <string name="notification_text">Complete your journal to unlock apps</string>
 
-    <!-- AdMob - Test IDs for debug builds (override in release with build flavors or manifest placeholders) -->
-    <string name="admob_banner_id">ca-app-pub-3940256099942544/6300978111</string>
+    <!-- AdMob -->
+    <string name="admob_banner_id">ca-app-pub-2156328556769594/9298964301</string>
 </resources>
