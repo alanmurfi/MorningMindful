@@ -82,3 +82,4 @@ lint/tmp/
 # Secrets - NEVER commit these
 *.env
 secrets.properties
+keystore.properties
