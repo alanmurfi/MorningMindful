@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.morningmindful.R
 import com.morningmindful.data.entity.Moods
 import com.morningmindful.databinding.ActivityEntryDetailBinding
 import com.morningmindful.ui.journal.JournalActivity
@@ -68,8 +69,8 @@ class EntryDetailActivity : AppCompatActivity() {
                     if (entry != null) {
                         binding.dateHeader.text = entry.date.format(dateFormatter)
                         binding.journalContent.text = entry.content
-                        binding.wordCountText.text = "${entry.wordCount} words"
-                        binding.timestampText.text = "Written at ${timeFormatter.format(Instant.ofEpochMilli(entry.createdAt))}"
+                        binding.wordCountText.text = getString(R.string.word_count_display, entry.wordCount)
+                        binding.timestampText.text = getString(R.string.written_at, timeFormatter.format(Instant.ofEpochMilli(entry.createdAt)))
 
                         // Show mood if present
                         if (entry.mood != null) {
@@ -77,7 +78,7 @@ class EntryDetailActivity : AppCompatActivity() {
                             binding.moodEmoji.text = entry.mood
                             // Find mood label
                             val moodLabel = Moods.ALL.find { it.first == entry.mood }?.second ?: ""
-                            binding.moodLabel.text = "Feeling $moodLabel"
+                            binding.moodLabel.text = getString(R.string.feeling_mood, moodLabel)
                         } else {
                             binding.moodContainer.visibility = View.GONE
                         }

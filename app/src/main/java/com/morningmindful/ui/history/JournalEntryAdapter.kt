@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.morningmindful.R
 import com.morningmindful.data.entity.JournalEntry
 import com.morningmindful.databinding.ItemJournalEntryBinding
 import java.time.format.DateTimeFormatter
@@ -45,7 +46,7 @@ class JournalEntryAdapter(
         fun bind(entry: JournalEntry) {
             binding.entryDate.text = entry.date.format(dateFormatter)
             binding.entryPreview.text = entry.content
-            binding.entryWordCount.text = "${entry.wordCount} words"
+            binding.entryWordCount.text = binding.root.context.getString(R.string.word_count_display, entry.wordCount)
             binding.entryMood.text = entry.mood ?: ""
             binding.entryMood.visibility = if (entry.mood != null) {
                 android.view.View.VISIBLE

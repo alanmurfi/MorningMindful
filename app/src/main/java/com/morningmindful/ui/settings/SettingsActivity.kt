@@ -13,6 +13,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.slider.Slider
+import com.morningmindful.R
 import com.morningmindful.databinding.ActivitySettingsBinding
 import com.morningmindful.service.AppBlockerAccessibilityService
 import com.morningmindful.util.BlockedApps
@@ -55,7 +56,7 @@ class SettingsActivity : AppCompatActivity() {
             if (fromUser) {
                 viewModel.setBlockingDuration(value.toInt())
             }
-            binding.durationValue.text = "${value.toInt()} minutes"
+            binding.durationValue.text = getString(R.string.duration_minutes, value.toInt())
         }
 
         // Word count slider
@@ -63,7 +64,7 @@ class SettingsActivity : AppCompatActivity() {
             if (fromUser) {
                 viewModel.setRequiredWordCount(value.toInt())
             }
-            binding.wordCountValue.text = "${value.toInt()} words"
+            binding.wordCountValue.text = getString(R.string.word_count_setting, value.toInt())
         }
 
         // Morning start slider
@@ -122,24 +123,24 @@ class SettingsActivity : AppCompatActivity() {
         // Reset today's progress
         binding.resetTodayButton.setOnClickListener {
             MaterialAlertDialogBuilder(this)
-                .setTitle("Reset Today's Progress?")
-                .setMessage("This will delete today's journal entry so app blocking will activate again. Use this for testing or if you want to redo your journal.")
-                .setPositiveButton("Reset") { _, _ ->
+                .setTitle(R.string.reset_today_title)
+                .setMessage(R.string.reset_today_message)
+                .setPositiveButton(R.string.reset) { _, _ ->
                     viewModel.resetTodayProgress()
                 }
-                .setNegativeButton("Cancel", null)
+                .setNegativeButton(R.string.cancel, null)
                 .show()
         }
 
         // Reset to defaults
         binding.resetDefaultsButton.setOnClickListener {
             MaterialAlertDialogBuilder(this)
-                .setTitle("Reset All Settings?")
-                .setMessage("This will reset all settings and blocked apps to their default values.")
-                .setPositiveButton("Reset") { _, _ ->
+                .setTitle(R.string.reset_settings_title)
+                .setMessage(R.string.reset_settings_message)
+                .setPositiveButton(R.string.reset) { _, _ ->
                     viewModel.resetToDefaults()
                 }
-                .setNegativeButton("Cancel", null)
+                .setNegativeButton(R.string.cancel, null)
                 .show()
         }
 
@@ -154,7 +155,7 @@ class SettingsActivity : AppCompatActivity() {
             val packageInfo = packageManager.getPackageInfo(packageName, 0)
             binding.appVersion.text = packageInfo.versionName
         } catch (e: PackageManager.NameNotFoundException) {
-            binding.appVersion.text = "1.0"
+            binding.appVersion.text = getString(R.string.default_version)
         }
     }
 
@@ -176,7 +177,7 @@ class SettingsActivity : AppCompatActivity() {
                 launch {
                     viewModel.blockingDurationMinutes.collectLatest { minutes ->
                         binding.durationSlider.value = minutes.toFloat()
-                        binding.durationValue.text = "$minutes minutes"
+                        binding.durationValue.text = getString(R.string.duration_minutes, minutes)
                     }
                 }
 
@@ -184,7 +185,7 @@ class SettingsActivity : AppCompatActivity() {
                 launch {
                     viewModel.requiredWordCount.collectLatest { count ->
                         binding.wordCountSlider.value = count.toFloat()
-                        binding.wordCountValue.text = "$count words"
+                        binding.wordCountValue.text = getString(R.string.word_count_setting, count)
                     }
                 }
 
@@ -217,11 +218,11 @@ class SettingsActivity : AppCompatActivity() {
 
     private fun formatHour(hour: Int): String {
         return when {
-            hour == 0 -> "12:00 AM"
-            hour < 12 -> "$hour:00 AM"
-            hour == 12 -> "12:00 PM"
-            hour == 24 -> "12:00 AM (next day)"
-            else -> "${hour - 12}:00 PM"
+            hour == 0 -> getString(R.string.time_12am)
+            hour < 12 -> getString(R.string.time_am, hour)
+            hour == 12 -> getString(R.string.time_12pm)
+            hour == 24 -> getString(R.string.time_12am_next_day)
+            else -> getString(R.string.time_pm, hour - 12)
         }
     }
 
@@ -229,12 +230,12 @@ class SettingsActivity : AppCompatActivity() {
         val hasAccessibility = AppBlockerAccessibilityService.isServiceRunning
         val hasOverlay = Settings.canDrawOverlays(this)
 
-        binding.accessibilityStatus.text = if (hasAccessibility) "Enabled" else "Disabled"
+        binding.accessibilityStatus.text = if (hasAccessibility) getString(R.string.status_enabled) else getString(R.string.status_disabled)
         binding.accessibilityStatus.setTextColor(
             getColor(if (hasAccessibility) android.R.color.holo_green_dark else android.R.color.holo_red_dark)
         )
 
-        binding.overlayStatus.text = if (hasOverlay) "Enabled" else "Disabled"
+        binding.overlayStatus.text = if (hasOverlay) getString(R.string.status_enabled) else getString(R.string.status_disabled)
         binding.overlayStatus.setTextColor(
             getColor(if (hasOverlay) android.R.color.holo_green_dark else android.R.color.holo_red_dark)
         )
@@ -300,12 +301,12 @@ class SettingsActivity : AppCompatActivity() {
         val appNames = installedApps.map { it.second }.toTypedArray()
 
         MaterialAlertDialogBuilder(this)
-            .setTitle("Select App to Block")
+            .setTitle(R.string.select_app_to_block)
             .setItems(appNames) { _, which ->
                 val selectedPackage = installedApps[which].first
                 viewModel.toggleBlockedApp(selectedPackage, true)
             }
-            .setNegativeButton("Cancel", null)
+            .setNegativeButton(R.string.cancel, null)
             .show()
     }
 }

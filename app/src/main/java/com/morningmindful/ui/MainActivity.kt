@@ -14,6 +14,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.MobileAds
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.morningmindful.R
 import com.morningmindful.databinding.ActivityMainBinding
 import com.morningmindful.service.AppBlockerAccessibilityService
 import com.morningmindful.ui.history.HistoryActivity
@@ -97,7 +98,7 @@ class MainActivity : AppCompatActivity() {
 
                 launch {
                     viewModel.currentStreak.collectLatest { streak ->
-                        binding.currentStreakValue.text = "$streak days"
+                        binding.currentStreakValue.text = getString(R.string.streak_days, streak)
                     }
                 }
 
@@ -125,12 +126,12 @@ class MainActivity : AppCompatActivity() {
                 launch {
                     viewModel.journalCompletedToday.collectLatest { completed ->
                         if (completed) {
-                            binding.todayStatusText.text = "Journal completed today"
+                            binding.todayStatusText.text = getString(R.string.journal_completed_today)
                             binding.todayStatusIcon.setImageResource(android.R.drawable.ic_menu_day)
-                            binding.writeJournalButton.text = "View Today's Entry"
+                            binding.writeJournalButton.text = getString(R.string.view_todays_entry)
                         } else {
-                            binding.todayStatusText.text = "No journal entry yet today"
-                            binding.writeJournalButton.text = "Write Now"
+                            binding.todayStatusText.text = getString(R.string.no_journal_yet)
+                            binding.writeJournalButton.text = getString(R.string.write_now)
                         }
                     }
                 }
@@ -156,19 +157,19 @@ class MainActivity : AppCompatActivity() {
         val hasOverlay = Settings.canDrawOverlays(this)
 
         val message = buildString {
-            append("Morning Mindful needs these permissions to block apps:\n\n")
+            append(getString(R.string.permissions_needed_intro))
             if (!hasAccessibility) {
-                append("• Accessibility Service - to detect when blocked apps open\n")
+                append(getString(R.string.accessibility_permission_needed))
             }
             if (!hasOverlay) {
-                append("• Display over other apps - to show the journal screen\n")
+                append(getString(R.string.overlay_permission_needed))
             }
         }
 
         MaterialAlertDialogBuilder(this)
-            .setTitle("Setup Permissions")
+            .setTitle(R.string.setup_permissions)
             .setMessage(message)
-            .setPositiveButton("Open Settings") { _, _ ->
+            .setPositiveButton(R.string.open_settings) { _, _ ->
                 if (!hasAccessibility) {
                     startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
                 } else if (!hasOverlay) {
@@ -179,7 +180,7 @@ class MainActivity : AppCompatActivity() {
                     startActivity(intent)
                 }
             }
-            .setNegativeButton("Later", null)
+            .setNegativeButton(R.string.later, null)
             .show()
     }
 

@@ -61,7 +61,7 @@ class JournalActivity : AppCompatActivity() {
 
     private fun updateHeaderForEditMode() {
         if (viewModel.isEditingPastEntry) {
-            binding.headerText.text = "Edit Entry"
+            binding.headerText.text = getString(R.string.edit_entry)
             binding.blockedAppMessage.visibility = View.GONE
         }
     }
@@ -171,7 +171,7 @@ class JournalActivity : AppCompatActivity() {
                 launch {
                     viewModel.wordCount.collectLatest { count ->
                         val required = viewModel.requiredWordCount.value
-                        binding.wordCountText.text = "$count / $required words"
+                        binding.wordCountText.text = getString(R.string.word_count_format, count, required)
 
                         val progress = (count.toFloat() / required * 100).toInt().coerceIn(0, 100)
                         binding.wordCountProgress.progress = progress
@@ -218,7 +218,7 @@ class JournalActivity : AppCompatActivity() {
                             is JournalViewModel.SaveState.Saving -> {
                                 binding.saveButton.isEnabled = false
                                 binding.saveDraftButton.isEnabled = false
-                                binding.saveButton.text = "Saving..."
+                                binding.saveButton.text = getString(R.string.saving)
                             }
                             is JournalViewModel.SaveState.Success -> {
                                 showSuccessAndClose()
@@ -273,7 +273,7 @@ class JournalActivity : AppCompatActivity() {
         if (blockedApp != null) {
             val appName = BlockedApps.getAppDisplayName(blockedApp)
             binding.blockedAppMessage.visibility = View.VISIBLE
-            binding.blockedAppMessage.text = "You tried to open $appName.\nComplete your morning journal first."
+            binding.blockedAppMessage.text = getString(R.string.blocked_app_message, appName)
         } else {
             binding.blockedAppMessage.visibility = View.GONE
         }
@@ -290,9 +290,9 @@ class JournalActivity : AppCompatActivity() {
     private fun showBlockingMessage() {
         val remaining = viewModel.remainingTimeFormatted.value
         MaterialAlertDialogBuilder(this)
-            .setTitle("Morning Mindfulness Active")
-            .setMessage("Complete your journal entry or wait $remaining to continue.")
-            .setPositiveButton("Keep Writing") { dialog, _ ->
+            .setTitle(R.string.morning_mindfulness_active)
+            .setMessage(getString(R.string.complete_or_wait_message, remaining))
+            .setPositiveButton(R.string.keep_writing) { dialog, _ ->
                 dialog.dismiss()
             }
             .show()
@@ -300,12 +300,12 @@ class JournalActivity : AppCompatActivity() {
 
     private fun showSkipConfirmation() {
         MaterialAlertDialogBuilder(this)
-            .setTitle("Skip Journaling?")
-            .setMessage("The blocking period has ended. You can skip today's journal, but writing helps start your day mindfully.")
-            .setPositiveButton("Skip Today") { _, _ ->
+            .setTitle(R.string.skip_journaling_title)
+            .setMessage(R.string.skip_journaling_message)
+            .setPositiveButton(R.string.skip_today) { _, _ ->
                 finish()
             }
-            .setNegativeButton("Keep Writing") { dialog, _ ->
+            .setNegativeButton(R.string.keep_writing) { dialog, _ ->
                 dialog.dismiss()
             }
             .show()
@@ -327,9 +327,9 @@ class JournalActivity : AppCompatActivity() {
 
     private fun showError(message: String) {
         MaterialAlertDialogBuilder(this)
-            .setTitle("Error")
+            .setTitle(R.string.error)
             .setMessage(message)
-            .setPositiveButton("OK", null)
+            .setPositiveButton(R.string.ok, null)
             .show()
     }
 

@@ -64,11 +64,11 @@ class MorningBlockerService : Service() {
         val seconds = (remainingSeconds % 60).toInt()
 
         val contentText = if (BlockingState.journalCompletedToday.value) {
-            "Journal completed! Have a mindful day."
+            getString(R.string.notification_journal_completed)
         } else if (remainingSeconds > 0) {
-            "Complete your journal to unlock apps. Time remaining: ${minutes}m ${seconds}s"
+            getString(R.string.notification_time_remaining, minutes, seconds)
         } else {
-            "Morning routine complete"
+            getString(R.string.notification_routine_complete)
         }
 
         // Intent to open journal activity
@@ -81,7 +81,7 @@ class MorningBlockerService : Service() {
         )
 
         return NotificationCompat.Builder(this, MorningMindfulApp.NOTIFICATION_CHANNEL_ID)
-            .setContentTitle("Morning Mindful")
+            .setContentTitle(getString(R.string.app_name))
             .setContentText(contentText)
             .setSmallIcon(R.drawable.ic_notification)
             .setOngoing(true)

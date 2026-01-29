@@ -4,7 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
+import android.content.Context
 import com.morningmindful.MorningMindfulApp
+import com.morningmindful.R
 import com.morningmindful.data.entity.JournalEntry
 import com.morningmindful.data.repository.JournalRepository
 import com.morningmindful.data.repository.SettingsRepository
@@ -22,6 +24,7 @@ import java.time.LocalDate
 class JournalViewModel(
     private val journalRepository: JournalRepository,
     private val settingsRepository: SettingsRepository,
+    private val context: Context,
     private val editDate: LocalDate? = null
 ) : ViewModel() {
 
@@ -100,7 +103,7 @@ class JournalViewModel(
         val required = requiredWordCount.value
 
         if (words < required) {
-            _saveState.value = SaveState.Error("Please write at least $required words")
+            _saveState.value = SaveState.Error(context.getString(R.string.error_minimum_words, required))
             return
         }
 
@@ -118,7 +121,7 @@ class JournalViewModel(
                 _saveState.value = SaveState.Success
 
             } catch (e: Exception) {
-                _saveState.value = SaveState.Error("Failed to save: ${e.message}")
+                _saveState.value = SaveState.Error(context.getString(R.string.error_failed_to_save, e.message ?: ""))
             }
         }
     }
@@ -131,7 +134,7 @@ class JournalViewModel(
         val words = _wordCount.value
 
         if (text.isBlank()) {
-            _saveState.value = SaveState.Error("Nothing to save")
+            _saveState.value = SaveState.Error(context.getString(R.string.error_nothing_to_save))
             return
         }
 
@@ -143,7 +146,7 @@ class JournalViewModel(
                 _saveState.value = SaveState.DraftSaved
 
             } catch (e: Exception) {
-                _saveState.value = SaveState.Error("Failed to save: ${e.message}")
+                _saveState.value = SaveState.Error(context.getString(R.string.error_failed_to_save, e.message ?: ""))
             }
         }
     }
@@ -199,16 +202,16 @@ class JournalViewModel(
 
     private fun getRandomPrompt(): String {
         val prompts = listOf(
-            "What are you grateful for this morning?",
-            "What's one thing you want to accomplish today?",
-            "How are you feeling right now? Why might that be?",
-            "What's been on your mind lately?",
-            "Describe your ideal day. What would make today great?",
-            "What's one small thing you can do today to take care of yourself?",
-            "Write about something you're looking forward to.",
-            "What would you tell your younger self?",
-            "What's a challenge you're facing? How might you approach it?",
-            "Describe a moment recently that brought you joy."
+            context.getString(R.string.prompt_grateful),
+            context.getString(R.string.prompt_accomplish),
+            context.getString(R.string.prompt_feeling),
+            context.getString(R.string.prompt_on_mind),
+            context.getString(R.string.prompt_ideal_day),
+            context.getString(R.string.prompt_self_care),
+            context.getString(R.string.prompt_looking_forward),
+            context.getString(R.string.prompt_younger_self),
+            context.getString(R.string.prompt_challenge),
+            context.getString(R.string.prompt_joy)
         )
         return prompts.random()
     }
@@ -228,7 +231,8 @@ class JournalViewModel(
                 val app = MorningMindfulApp.getInstance()
                 return JournalViewModel(
                     app.journalRepository,
-                    app.settingsRepository
+                    app.settingsRepository,
+                    app.applicationContext
                 ) as T
             }
         }
@@ -241,6 +245,7 @@ class JournalViewModel(
                     return JournalViewModel(
                         app.journalRepository,
                         app.settingsRepository,
+                        app.applicationContext,
                         editDate
                     ) as T
                 }

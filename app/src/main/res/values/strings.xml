@@ -11,6 +11,76 @@
     <string name="skip_today">Skip Today</string>
     <string name="journal_saved">Journal Saved!</string>
     <string name="have_a_mindful_day">Have a mindful day.</string>
+    <string name="edit_entry">Edit Entry</string>
+    <string name="word_count_format">%1$d / %2$d words</string>
+    <string name="saving">Saving…</string>
+    <string name="blocked_app_message">You tried to open %1$s.\nComplete your morning journal first.</string>
+    <string name="morning_mindfulness_active">Morning Mindfulness Active</string>
+    <string name="complete_or_wait_message">Complete your journal entry or wait %1$s to continue.</string>
+    <string name="keep_writing">Keep Writing</string>
+    <string name="skip_journaling_title">Skip Journaling?</string>
+    <string name="skip_journaling_message">The blocking period has ended. You can skip today\'s journal, but writing helps start your day mindfully.</string>
+    <string name="error">Error</string>
+    <string name="ok">OK</string>
+
+    <!-- Main Activity -->
+    <string name="streak_days">%1$d days</string>
+    <string name="journal_completed_today">Journal completed today</string>
+    <string name="view_todays_entry">View Today\'s Entry</string>
+    <string name="no_journal_yet">No journal entry yet today</string>
+    <string name="write_now">Write Now</string>
+    <string name="permissions_needed_intro">Morning Mindful needs these permissions to block apps:\n\n</string>
+    <string name="accessibility_permission_needed">• Accessibility Service - to detect when blocked apps open\n</string>
+    <string name="overlay_permission_needed">• Display over other apps - to show the journal screen\n</string>
+    <string name="setup_permissions">Setup Permissions</string>
+    <string name="open_settings">Open Settings</string>
+    <string name="later">Later</string>
+
+    <!-- Settings Activity -->
+    <string name="duration_minutes">%1$d minutes</string>
+    <string name="word_count_setting">%1$d words</string>
+    <string name="reset_today_title">Reset Today\'s Progress?</string>
+    <string name="reset_today_message">This will delete today\'s journal entry so app blocking will activate again. Use this for testing or if you want to redo your journal.</string>
+    <string name="reset">Reset</string>
+    <string name="cancel">Cancel</string>
+    <string name="reset_settings_title">Reset All Settings?</string>
+    <string name="reset_settings_message">This will reset all settings and blocked apps to their default values.</string>
+    <string name="default_version">1.0</string>
+    <string name="status_enabled">Enabled</string>
+    <string name="status_disabled">Disabled</string>
+    <string name="select_app_to_block">Select App to Block</string>
+    <string name="time_12am">12:00 AM</string>
+    <string name="time_am">%1$d:00 AM</string>
+    <string name="time_12pm">12:00 PM</string>
+    <string name="time_12am_next_day">12:00 AM (next day)</string>
+    <string name="time_pm">%1$d:00 PM</string>
+
+    <!-- Entry Detail Activity -->
+    <string name="word_count_display">%1$d words</string>
+    <string name="written_at">Written at %1$s</string>
+    <string name="feeling_mood">Feeling %1$s</string>
+
+    <!-- Notification Service -->
+    <string name="notification_journal_completed">Journal completed! Have a mindful day.</string>
+    <string name="notification_time_remaining">Complete your journal to unlock apps. Time remaining: %1$dm %2$ds</string>
+    <string name="notification_routine_complete">Morning routine complete</string>
+
+    <!-- Journal Prompts -->
+    <string name="prompt_grateful">What are you grateful for this morning?</string>
+    <string name="prompt_accomplish">What\'s one thing you want to accomplish today?</string>
+    <string name="prompt_feeling">How are you feeling right now? Why might that be?</string>
+    <string name="prompt_on_mind">What\'s been on your mind lately?</string>
+    <string name="prompt_ideal_day">Describe your ideal day. What would make today great?</string>
+    <string name="prompt_self_care">What\'s one small thing you can do today to take care of yourself?</string>
+    <string name="prompt_looking_forward">Write about something you\'re looking forward to.</string>
+    <string name="prompt_younger_self">What would you tell your younger self?</string>
+    <string name="prompt_challenge">What\'s a challenge you\'re facing? How might you approach it?</string>
+    <string name="prompt_joy">Describe a moment recently that brought you joy.</string>
+
+    <!-- Error Messages -->
+    <string name="error_minimum_words">Please write at least %1$d words</string>
+    <string name="error_failed_to_save">Failed to save: %1$s</string>
+    <string name="error_nothing_to_save">Nothing to save</string>
 
     <!-- Accessibility Service -->
     <string name="accessibility_service_description">Morning Mindful uses accessibility to detect when you open blocked apps during your morning mindfulness period. This allows the app to redirect you to your journal instead. No personal data is collected or shared.</string>
