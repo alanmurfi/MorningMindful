@@ -4,7 +4,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
-import android.provider.Settings
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
@@ -12,11 +11,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.slider.Slider
 import com.morningmindful.R
 import com.morningmindful.databinding.ActivitySettingsBinding
-import com.morningmindful.service.AppBlockerAccessibilityService
 import com.morningmindful.util.BlockedApps
+import com.morningmindful.util.PermissionUtils
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -109,15 +107,11 @@ class SettingsActivity : AppCompatActivity() {
 
         // Permission buttons
         binding.accessibilityPermissionButton.setOnClickListener {
-            startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+            startActivity(PermissionUtils.getAccessibilitySettingsIntent())
         }
 
         binding.overlayPermissionButton.setOnClickListener {
-            val intent = Intent(
-                Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                Uri.parse("package:$packageName")
-            )
-            startActivity(intent)
+            startActivity(PermissionUtils.getOverlaySettingsIntent(this))
         }
 
         // Reset today's progress
@@ -227,8 +221,8 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun updatePermissionStatus() {
-        val hasAccessibility = AppBlockerAccessibilityService.isServiceRunning
-        val hasOverlay = Settings.canDrawOverlays(this)
+        val hasAccessibility = PermissionUtils.hasAccessibilityPermission()
+        val hasOverlay = PermissionUtils.hasOverlayPermission(this)
 
         binding.accessibilityStatus.text = if (hasAccessibility) getString(R.string.status_enabled) else getString(R.string.status_disabled)
         binding.accessibilityStatus.setTextColor(

@@ -32,7 +32,13 @@ class JournalActivity : AppCompatActivity() {
     private lateinit var binding: ActivityJournalBinding
 
     private val editDate: LocalDate? by lazy {
-        intent.getStringExtra(EXTRA_EDIT_DATE)?.let { LocalDate.parse(it) }
+        intent.getStringExtra(EXTRA_EDIT_DATE)?.let { dateString ->
+            try {
+                LocalDate.parse(dateString)
+            } catch (e: Exception) {
+                null // Invalid date format, treat as new entry
+            }
+        }
     }
 
     private val viewModel: JournalViewModel by viewModels {

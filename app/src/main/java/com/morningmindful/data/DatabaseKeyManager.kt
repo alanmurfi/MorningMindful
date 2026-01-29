@@ -2,6 +2,7 @@ package com.morningmindful.data
 
 import android.content.Context
 import android.util.Base64
+import android.util.Log
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 import java.security.SecureRandom
@@ -12,6 +13,7 @@ import java.security.SecureRandom
  */
 object DatabaseKeyManager {
 
+    private const val TAG = "DatabaseKeyManager"
     private const val PREFS_FILE = "db_key_prefs"
     private const val KEY_DB_PASSPHRASE = "db_passphrase"
     private const val KEY_DB_PASSPHRASE_V2 = "db_passphrase_v2" // Base64 encoded
@@ -35,8 +37,10 @@ object DatabaseKeyManager {
                 EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
             )
 
-            encryptedPrefs.getString(KEY_DB_PASSPHRASE, null) != null
+            encryptedPrefs.getString(KEY_DB_PASSPHRASE, null) != null ||
+                    encryptedPrefs.getString(KEY_DB_PASSPHRASE_V2, null) != null
         } catch (e: Exception) {
+            Log.e(TAG, "Error checking for existing key", e)
             false
         }
     }

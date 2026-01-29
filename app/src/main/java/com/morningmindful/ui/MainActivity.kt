@@ -1,9 +1,7 @@
 package com.morningmindful.ui
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
-import android.provider.Settings
 import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
@@ -16,10 +14,10 @@ import com.google.android.gms.ads.MobileAds
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.morningmindful.R
 import com.morningmindful.databinding.ActivityMainBinding
-import com.morningmindful.service.AppBlockerAccessibilityService
 import com.morningmindful.ui.history.HistoryActivity
 import com.morningmindful.ui.journal.JournalActivity
 import com.morningmindful.ui.settings.SettingsActivity
+import com.morningmindful.util.PermissionUtils
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -140,10 +138,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun checkPermissions() {
-        val hasAccessibility = AppBlockerAccessibilityService.isServiceRunning
-        val hasOverlay = Settings.canDrawOverlays(this)
-
-        if (!hasAccessibility || !hasOverlay) {
+        if (!PermissionUtils.hasAllPermissions(this)) {
             binding.permissionWarning.visibility = View.VISIBLE
             binding.setupPermissionsButton.visibility = View.VISIBLE
         } else {
@@ -153,8 +148,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showPermissionsDialog() {
-        val hasAccessibility = AppBlockerAccessibilityService.isServiceRunning
-        val hasOverlay = Settings.canDrawOverlays(this)
+        val hasAccessibility = PermissionUtils.hasAccessibilityPermission()
+        val hasOverlay = PermissionUtils.hasOverlayPermission(this)
 
         val message = buildString {
             append(getString(R.string.permissions_needed_intro))
@@ -170,13 +165,7 @@ class MainActivity : AppCompatActivity() {
             .setTitle(R.string.setup_permissions)
             .setMessage(message)
             .setPositiveButton(R.string.open_settings) { _, _ ->
-                if (!hasAccessibility) {
-                    startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
-                } else if (!hasOverlay) {
-                    val intent = Intent(
-                        Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                        Uri.parse("package:$packageName")
-                    )
+                PermissionUtils.getNextMissingPermissionIntent(this)?.let { intent ->
                     startActivity(intent)
                 }
             }
