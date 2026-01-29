@@ -1,6 +1,7 @@
 package com.morningmindful.data
 
 import android.content.Context
+import android.util.Base64
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 import java.security.SecureRandom
@@ -13,6 +14,7 @@ object DatabaseKeyManager {
 
     private const val PREFS_FILE = "db_key_prefs"
     private const val KEY_DB_PASSPHRASE = "db_passphrase"
+    private const val KEY_DB_PASSPHRASE_V2 = "db_passphrase_v2" // Base64 encoded
     private const val KEY_LENGTH = 32 // 256 bits
 
     /**
@@ -42,6 +44,9 @@ object DatabaseKeyManager {
     /**
      * Gets the existing database encryption key or creates a new one.
      * The key is stored securely using Android Keystore-backed encryption.
+     *
+     * Migration note: Keys are now stored as Base64 (v2). Old ISO-8859-1 keys
+     * are automatically migrated on first access.
      */
     fun getOrCreateKey(context: Context): ByteArray {
         val masterKey = MasterKey.Builder(context)
@@ -56,19 +61,31 @@ object DatabaseKeyManager {
             EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
         )
 
-        // Check if we already have a key
-        val existingKey = encryptedPrefs.getString(KEY_DB_PASSPHRASE, null)
-        if (existingKey != null) {
-            return existingKey.toByteArray(Charsets.ISO_8859_1)
+        // Check for new Base64-encoded key (v2)
+        val existingKeyV2 = encryptedPrefs.getString(KEY_DB_PASSPHRASE_V2, null)
+        if (existingKeyV2 != null) {
+            return Base64.decode(existingKeyV2, Base64.NO_WRAP)
+        }
+
+        // Check for legacy ISO-8859-1 key and migrate it
+        val legacyKey = encryptedPrefs.getString(KEY_DB_PASSPHRASE, null)
+        if (legacyKey != null) {
+            val keyBytes = legacyKey.toByteArray(Charsets.ISO_8859_1)
+            // Migrate to Base64 encoding
+            encryptedPrefs.edit()
+                .putString(KEY_DB_PASSPHRASE_V2, Base64.encodeToString(keyBytes, Base64.NO_WRAP))
+                .remove(KEY_DB_PASSPHRASE) // Remove legacy key
+                .apply()
+            return keyBytes
         }
 
         // Generate a new random key
         val newKey = ByteArray(KEY_LENGTH)
         SecureRandom().nextBytes(newKey)
 
-        // Store the key securely
+        // Store the key securely using Base64 encoding
         encryptedPrefs.edit()
-            .putString(KEY_DB_PASSPHRASE, String(newKey, Charsets.ISO_8859_1))
+            .putString(KEY_DB_PASSPHRASE_V2, Base64.encodeToString(newKey, Base64.NO_WRAP))
             .apply()
 
         return newKey
