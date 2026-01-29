@@ -49,8 +49,14 @@ class EntryDetailActivity : AppCompatActivity() {
         }
 
         binding.editButton.setOnClickListener {
-            // Navigate to journal activity to edit
-            startActivity(Intent(this, JournalActivity::class.java))
+            // Navigate to journal activity to edit this entry
+            val entry = viewModel.entry.value
+            if (entry != null) {
+                val intent = Intent(this, JournalActivity::class.java).apply {
+                    putExtra(JournalActivity.EXTRA_EDIT_DATE, entry.date.toString())
+                }
+                startActivity(intent)
+            }
             finish()
         }
     }

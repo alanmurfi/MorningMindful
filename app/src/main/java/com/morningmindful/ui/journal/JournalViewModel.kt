@@ -21,8 +21,13 @@ import java.time.LocalDate
 
 class JournalViewModel(
     private val journalRepository: JournalRepository,
-    private val settingsRepository: SettingsRepository
+    private val settingsRepository: SettingsRepository,
+    private val editDate: LocalDate? = null
 ) : ViewModel() {
+
+    // Whether we're editing a past entry
+    val isEditingPastEntry: Boolean = editDate != null && editDate != LocalDate.now()
+    private val targetDate: LocalDate = editDate ?: LocalDate.now()
 
     // Current journal text
     private val _journalText = MutableStateFlow("")
@@ -48,8 +53,8 @@ class JournalViewModel(
     private val _saveState = MutableStateFlow<SaveState>(SaveState.Idle)
     val saveState: StateFlow<SaveState> = _saveState.asStateFlow()
 
-    // Existing entry for today (if resuming)
-    val existingEntry: StateFlow<JournalEntry?> = journalRepository.getTodayEntry()
+    // Existing entry for the target date (today or past entry being edited)
+    val existingEntry: StateFlow<JournalEntry?> = journalRepository.getEntryByDate(targetDate)
         .stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
     // Journal prompt
@@ -105,8 +110,10 @@ class JournalViewModel(
             try {
                 saveEntry(text, words)
 
-                // Mark journal as completed - this unlocks blocking
-                BlockingState.onJournalCompleted()
+                // Mark journal as completed - this unlocks blocking (only for today's entry)
+                if (!isEditingPastEntry) {
+                    BlockingState.onJournalCompleted()
+                }
 
                 _saveState.value = SaveState.Success
 
@@ -145,7 +152,7 @@ class JournalViewModel(
         val existingId = existingEntry.value?.id
         val entry = JournalEntry(
             id = existingId ?: 0,
-            date = LocalDate.now(),
+            date = targetDate,
             content = text,
             wordCount = words,
             mood = _selectedMood.value,
@@ -181,7 +188,7 @@ class JournalViewModel(
 
     private fun loadExistingEntry() {
         viewModelScope.launch {
-            val entry = journalRepository.getTodayEntry().first()
+            val entry = journalRepository.getEntryByDate(targetDate).first()
             if (entry != null) {
                 _journalText.value = entry.content
                 _wordCount.value = entry.wordCount
@@ -223,6 +230,20 @@ class JournalViewModel(
                     app.journalRepository,
                     app.settingsRepository
                 ) as T
+            }
+        }
+
+        fun createFactory(editDate: LocalDate?): ViewModelProvider.Factory {
+            return object : ViewModelProvider.Factory {
+                @Suppress("UNCHECKED_CAST")
+                override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
+                    val app = MorningMindfulApp.getInstance()
+                    return JournalViewModel(
+                        app.journalRepository,
+                        app.settingsRepository,
+                        editDate
+                    ) as T
+                }
             }
         }
     }

@@ -21,6 +21,7 @@ import com.morningmindful.util.BlockedApps
 import com.morningmindful.util.BlockingState
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 
 /**
  * Journal entry screen where users write their morning reflection.
@@ -29,10 +30,18 @@ import kotlinx.coroutines.launch
 class JournalActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityJournalBinding
-    private val viewModel: JournalViewModel by viewModels { JournalViewModel.Factory }
+
+    private val editDate: LocalDate? by lazy {
+        intent.getStringExtra(EXTRA_EDIT_DATE)?.let { LocalDate.parse(it) }
+    }
+
+    private val viewModel: JournalViewModel by viewModels {
+        JournalViewModel.createFactory(editDate)
+    }
 
     companion object {
         const val EXTRA_BLOCKED_APP = "blocked_app"
+        const val EXTRA_EDIT_DATE = "edit_date"
     }
 
     private val moodViews = mutableMapOf<String, MaterialCardView>()
@@ -47,6 +56,14 @@ class JournalActivity : AppCompatActivity() {
         observeViewModel()
         handleBlockedAppMessage()
         setupBackPressHandler()
+        updateHeaderForEditMode()
+    }
+
+    private fun updateHeaderForEditMode() {
+        if (viewModel.isEditingPastEntry) {
+            binding.headerText.text = "Edit Entry"
+            binding.blockedAppMessage.visibility = View.GONE
+        }
     }
 
     private fun setupUI() {
@@ -82,6 +99,11 @@ class JournalActivity : AppCompatActivity() {
     }
 
     private fun handleBackPress() {
+        // If editing a past entry, always allow closing
+        if (viewModel.isEditingPastEntry) {
+            finish()
+            return
+        }
         // If blocking is still active, show message instead of closing
         if (BlockingState.shouldBlock()) {
             showBlockingMessage()
@@ -160,9 +182,16 @@ class JournalActivity : AppCompatActivity() {
                     }
                 }
 
-                // Timer - show when there's remaining blocking time
+                // Timer - show when there's remaining blocking time (not when editing past entries)
                 launch {
                     viewModel.remainingTimeFormatted.collectLatest { time ->
+                        // Hide timer when editing past entries
+                        if (viewModel.isEditingPastEntry) {
+                            binding.timerText.visibility = View.GONE
+                            binding.skipButton.visibility = View.GONE
+                            return@collectLatest
+                        }
+
                         val remainingSeconds = BlockingState.getRemainingSeconds()
 
                         if (remainingSeconds > 0) {
