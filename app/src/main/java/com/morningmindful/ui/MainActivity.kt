@@ -12,6 +12,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.MobileAds
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.morningmindful.BuildConfig
 import com.morningmindful.R
 import com.morningmindful.databinding.ActivityMainBinding
 import com.morningmindful.ui.history.HistoryActivity
@@ -48,7 +49,10 @@ class MainActivity : AppCompatActivity() {
             Log.d("MainActivity", "AdMob initialized: $initializationStatus")
         }
 
-        // Load a banner ad (adUnitId is set in XML via @string/admob_banner_id)
+        // Set adUnitId from BuildConfig (loaded from secrets.properties)
+        binding.adView.adUnitId = BuildConfig.ADMOB_BANNER_ID
+
+        // Load a banner ad
         val adRequest = AdRequest.Builder().build()
         binding.adView.loadAd(adRequest)
     }

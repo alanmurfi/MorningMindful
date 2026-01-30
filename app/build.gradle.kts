@@ -16,6 +16,13 @@ if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(keystorePropertiesFile.inputStream())
 }
 
+// Load secrets (AdMob IDs, etc.) - these should NOT be in version control
+val secretsPropertiesFile = rootProject.file("secrets.properties")
+val secretsProperties = Properties()
+if (secretsPropertiesFile.exists()) {
+    secretsProperties.load(secretsPropertiesFile.inputStream())
+}
+
 android {
     namespace = "com.morningmindful"
     compileSdk = 34
@@ -40,8 +47,13 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        // AdMob App ID for manifest
-        manifestPlaceholders["ADMOB_APP_ID"] = "ca-app-pub-2156328556769594~5392742414"
+        // AdMob App ID for manifest - loaded from secrets.properties
+        val admobAppId = secretsProperties.getProperty("ADMOB_APP_ID", "")
+        manifestPlaceholders["ADMOB_APP_ID"] = admobAppId
+
+        // AdMob Banner ID - exposed via BuildConfig
+        val admobBannerId = secretsProperties.getProperty("ADMOB_BANNER_ID", "")
+        buildConfigField("String", "ADMOB_BANNER_ID", "\"$admobBannerId\"")
     }
 
     buildTypes {

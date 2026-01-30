@@ -1,12 +1,16 @@
 # MorningMindful ProGuard Rules
 
 # ============================================
-# Security: Strip debug logs in release builds
+# Security: Strip ALL logs in release builds
+# This prevents information disclosure via logcat
 # ============================================
 -assumenosideeffects class android.util.Log {
     public static int v(...);
     public static int d(...);
     public static int i(...);
+    public static int w(...);
+    public static int e(...);
+    public static int wtf(...);
 }
 
 # ============================================

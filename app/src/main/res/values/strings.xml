@@ -96,6 +96,4 @@
     <string name="notification_title">Morning Mindful Active</string>
     <string name="notification_text">Complete your journal to unlock apps</string>
 
-    <!-- AdMob -->
-    <string name="admob_banner_id">ca-app-pub-2156328556769594/9298964301</string>
 </resources>
