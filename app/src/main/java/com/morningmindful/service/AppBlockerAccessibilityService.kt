@@ -12,19 +12,31 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import java.time.LocalTime
 
 /**
  * Accessibility Service that monitors app launches and redirects to the journal
  * when a blocked app is opened during the morning blocking period.
+ *
+ * Performance: Uses reactive caching to avoid blocking the accessibility thread.
+ * All settings are cached locally and updated via Flow.collect() in the background.
  */
 class AppBlockerAccessibilityService : AccessibilityService() {
 
     private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
+
+    // Cached blocked packages - updated reactively
     private var blockedPackages: Set<String> = BlockedApps.DEFAULT_BLOCKED_PACKAGES
+
+    // Cached settings - updated reactively (no runBlocking needed)
+    private var isBlockingEnabled = true
+    private var morningStartHour = 5
+    private var morningEndHour = 10
+    private var requiredWordCount = 200
+    private var todayJournalWordCount = 0
+
+    // Rate limiting for redirects
     private var lastBlockedPackage: String? = null
     private var lastBlockTime: Long = 0
 
@@ -40,7 +52,6 @@ class AppBlockerAccessibilityService : AccessibilityService() {
     override fun onCreate() {
         super.onCreate()
         Log.d(TAG, "Accessibility Service created")
-        loadBlockedApps()
     }
 
     override fun onServiceConnected() {
@@ -48,18 +59,8 @@ class AppBlockerAccessibilityService : AccessibilityService() {
         isServiceRunning = true
         Log.d(TAG, "Accessibility Service connected")
 
-        // Check if journal was already completed today
-        serviceScope.launch {
-            try {
-                val app = MorningMindfulApp.getInstance()
-                val todayEntry = app.journalRepository.getTodayEntry().first()
-                if (todayEntry != null && todayEntry.wordCount >= getRequiredWordCount()) {
-                    BlockingState.setJournalCompletedToday(true)
-                }
-            } catch (e: Exception) {
-                Log.e(TAG, "Error checking today's journal", e)
-            }
-        }
+        // Start all reactive listeners - no blocking calls
+        startSettingsListeners()
     }
 
     override fun onDestroy() {
@@ -67,6 +68,95 @@ class AppBlockerAccessibilityService : AccessibilityService() {
         isServiceRunning = false
         serviceScope.cancel()
         Log.d(TAG, "Accessibility Service destroyed")
+    }
+
+    /**
+     * Start reactive listeners for all settings and journal state.
+     * These run in the background and update cached values automatically.
+     * No runBlocking needed - the accessibility thread is never blocked.
+     */
+    private fun startSettingsListeners() {
+        val app = MorningMindfulApp.getInstance()
+
+        // Listen to blocking enabled setting
+        serviceScope.launch {
+            try {
+                app.settingsRepository.isBlockingEnabled.collect { enabled ->
+                    isBlockingEnabled = enabled
+                    Log.d(TAG, "Settings updated: isBlockingEnabled = $enabled")
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Error listening to isBlockingEnabled", e)
+            }
+        }
+
+        // Listen to morning start hour
+        serviceScope.launch {
+            try {
+                app.settingsRepository.morningStartHour.collect { hour ->
+                    morningStartHour = hour
+                    Log.d(TAG, "Settings updated: morningStartHour = $hour")
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Error listening to morningStartHour", e)
+            }
+        }
+
+        // Listen to morning end hour
+        serviceScope.launch {
+            try {
+                app.settingsRepository.morningEndHour.collect { hour ->
+                    morningEndHour = hour
+                    Log.d(TAG, "Settings updated: morningEndHour = $hour")
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Error listening to morningEndHour", e)
+            }
+        }
+
+        // Listen to required word count
+        serviceScope.launch {
+            try {
+                app.settingsRepository.requiredWordCount.collect { count ->
+                    requiredWordCount = count
+                    Log.d(TAG, "Settings updated: requiredWordCount = $count")
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Error listening to requiredWordCount", e)
+            }
+        }
+
+        // Listen to blocked apps list
+        serviceScope.launch {
+            try {
+                app.settingsRepository.blockedApps.collect { apps ->
+                    blockedPackages = apps
+                    Log.d(TAG, "Loaded ${blockedPackages.size} blocked apps")
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Error loading blocked apps, using defaults", e)
+                blockedPackages = BlockedApps.DEFAULT_BLOCKED_PACKAGES
+            }
+        }
+
+        // Listen to journal entry changes - this is the key optimization
+        // Instead of querying the database on every accessibility event,
+        // we cache the word count and update it reactively
+        serviceScope.launch {
+            try {
+                app.journalRepository.getTodayEntry().collect { entry ->
+                    todayJournalWordCount = entry?.wordCount ?: 0
+                    Log.d(TAG, "Journal updated: todayJournalWordCount = $todayJournalWordCount")
+
+                    // Update BlockingState if journal is completed
+                    if (todayJournalWordCount >= requiredWordCount) {
+                        BlockingState.setJournalCompletedToday(true)
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Error listening to journal entry", e)
+            }
+        }
     }
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
@@ -92,6 +182,7 @@ class AppBlockerAccessibilityService : AccessibilityService() {
         }
 
         // Check if blocking should be active (morning window + not journaled)
+        // This is now instant - no database queries, just cached values
         if (!shouldBlockNow()) {
             Log.d(TAG, "Blocking not active right now")
             return
@@ -111,48 +202,38 @@ class AppBlockerAccessibilityService : AccessibilityService() {
     }
 
     /**
-     * Check if we should block right now based on:
+     * Check if we should block right now based on cached values.
+     *
+     * This method is now instant (no blocking) because all values are cached
+     * and updated reactively by the Flow listeners in startSettingsListeners().
+     *
+     * Checks:
      * 1. Blocking is enabled in settings
      * 2. Current time is within morning window
-     * 3. Journal not completed today
+     * 3. Journal not completed today (word count < required)
      */
     private fun shouldBlockNow(): Boolean {
-        return try {
-            runBlocking {
-                val app = MorningMindfulApp.getInstance()
-
-                // Check if blocking is enabled
-                val isEnabled = app.settingsRepository.isBlockingEnabled.first()
-                if (!isEnabled) {
-                    Log.d(TAG, "Blocking disabled in settings")
-                    return@runBlocking false
-                }
-
-                // Check morning window
-                val currentHour = LocalTime.now().hour
-                val morningStart = app.settingsRepository.morningStartHour.first()
-                val morningEnd = app.settingsRepository.morningEndHour.first()
-
-                if (currentHour < morningStart || currentHour >= morningEnd) {
-                    Log.d(TAG, "Outside morning window: $currentHour not in $morningStart-$morningEnd")
-                    return@runBlocking false
-                }
-
-                // Check if already journaled today
-                val requiredWords = app.settingsRepository.requiredWordCount.first()
-                val todayEntry = app.journalRepository.getTodayEntry().first()
-                if (todayEntry != null && todayEntry.wordCount >= requiredWords) {
-                    Log.d(TAG, "Journal already completed today (${todayEntry.wordCount} words)")
-                    return@runBlocking false
-                }
-
-                Log.d(TAG, "Blocking is active! Morning window: $morningStart-$morningEnd, current: $currentHour")
-                true
-            }
-        } catch (e: Exception) {
-            Log.e(TAG, "Error checking block status", e)
-            false
+        // Check if blocking is enabled (cached value)
+        if (!isBlockingEnabled) {
+            Log.d(TAG, "Blocking disabled in settings")
+            return false
         }
+
+        // Check morning window (cached values)
+        val currentHour = LocalTime.now().hour
+        if (currentHour < morningStartHour || currentHour >= morningEndHour) {
+            Log.d(TAG, "Outside morning window: $currentHour not in $morningStartHour-$morningEndHour")
+            return false
+        }
+
+        // Check if already journaled today (cached values)
+        if (todayJournalWordCount >= requiredWordCount) {
+            Log.d(TAG, "Journal already completed today ($todayJournalWordCount words)")
+            return false
+        }
+
+        Log.d(TAG, "Blocking is active! Morning window: $morningStartHour-$morningEndHour, current: $currentHour")
+        return true
     }
 
     override fun onInterrupt() {
@@ -191,37 +272,5 @@ class AppBlockerAccessibilityService : AccessibilityService() {
         return systemPackages.contains(packageName) ||
                 packageName.startsWith("com.android.") ||
                 packageName.startsWith("android.")
-    }
-
-    /**
-     * Load blocked apps from settings.
-     */
-    private fun loadBlockedApps() {
-        serviceScope.launch {
-            try {
-                val app = MorningMindfulApp.getInstance()
-                app.settingsRepository.blockedApps.collect { apps ->
-                    blockedPackages = apps
-                    Log.d(TAG, "Loaded ${blockedPackages.size} blocked apps")
-                }
-            } catch (e: Exception) {
-                Log.e(TAG, "Error loading blocked apps, using defaults", e)
-                blockedPackages = BlockedApps.DEFAULT_BLOCKED_PACKAGES
-            }
-        }
-    }
-
-    /**
-     * Get required word count from settings.
-     */
-    private fun getRequiredWordCount(): Int {
-        return try {
-            runBlocking {
-                val app = MorningMindfulApp.getInstance()
-                app.settingsRepository.requiredWordCount.first()
-            }
-        } catch (e: Exception) {
-            200  // Default
-        }
     }
 }

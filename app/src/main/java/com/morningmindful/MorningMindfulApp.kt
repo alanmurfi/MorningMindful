@@ -4,6 +4,7 @@ import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.os.Build
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.morningmindful.data.repository.JournalRepository
 import com.morningmindful.data.repository.SettingsRepository
 import com.morningmindful.data.AppDatabase
@@ -21,6 +22,10 @@ class MorningMindfulApp : Application() {
 
         // Load SQLCipher native library before any database access
         System.loadLibrary("sqlcipher")
+
+        // Initialize Firebase Crashlytics
+        // Disable in debug builds to avoid noise during development
+        FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(!BuildConfig.DEBUG)
 
         createNotificationChannel()
     }

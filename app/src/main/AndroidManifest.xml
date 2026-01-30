@@ -38,6 +38,16 @@
         <package android:name="com.reddit.frontpage" />
         <package android:name="com.netflix.mediaclient" />
         <package android:name="com.Slack" />
+        <!-- Browsers -->
+        <package android:name="com.android.chrome" />
+        <package android:name="org.mozilla.firefox" />
+        <package android:name="com.sec.android.app.sbrowser" />
+        <package android:name="com.microsoft.emmx" />
+        <package android:name="com.opera.browser" />
+        <package android:name="com.opera.mini.native" />
+        <package android:name="com.brave.browser" />
+        <package android:name="com.duckduckgo.mobile.android" />
+        <package android:name="com.UCMobile.intl" />
     </queries>
 
     <application
@@ -56,6 +66,12 @@
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="${ADMOB_APP_ID}" />
+
+        <!-- Resolve conflict between AdMob and Firebase Analytics ad services config -->
+        <property
+            android:name="android.adservices.AD_SERVICES_CONFIG"
+            android:resource="@xml/gma_ad_services_config"
+            tools:replace="android:resource" />
 
         <!-- Main Activity -->
         <activity

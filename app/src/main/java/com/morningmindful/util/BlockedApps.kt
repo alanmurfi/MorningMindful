@@ -42,6 +42,17 @@ object BlockedApps {
         // Dating
         "com.tinder",
         "com.bumble.app",
+
+        // Browsers (to prevent web access to blocked services)
+        "com.android.chrome",                 // Chrome
+        "org.mozilla.firefox",                // Firefox
+        "com.sec.android.app.sbrowser",       // Samsung Internet
+        "com.microsoft.emmx",                 // Edge
+        "com.opera.browser",                  // Opera
+        "com.opera.mini.native",              // Opera Mini
+        "com.brave.browser",                  // Brave
+        "com.duckduckgo.mobile.android",      // DuckDuckGo
+        "com.UCMobile.intl",                  // UC Browser
     )
 
     /**
@@ -74,6 +85,16 @@ object BlockedApps {
             "com.microsoft.office.outlook" -> "Outlook"
             "com.google.android.youtube" -> "YouTube"
             "com.google.android.apps.messaging" -> "Messages"
+            // Browsers
+            "com.android.chrome" -> "Chrome"
+            "org.mozilla.firefox" -> "Firefox"
+            "com.sec.android.app.sbrowser" -> "Samsung Internet"
+            "com.microsoft.emmx" -> "Edge"
+            "com.opera.browser" -> "Opera"
+            "com.opera.mini.native" -> "Opera Mini"
+            "com.brave.browser" -> "Brave"
+            "com.duckduckgo.mobile.android" -> "DuckDuckGo"
+            "com.UCMobile.intl" -> "UC Browser"
             else -> packageName.substringAfterLast(".")
         }
     }
@@ -86,6 +107,7 @@ object BlockedApps {
         MESSAGING,
         EMAIL,
         ENTERTAINMENT,
+        BROWSERS,
         OTHER
     }
 
@@ -106,6 +128,11 @@ object BlockedApps {
 
             "com.google.android.youtube", "com.netflix.mediaclient", "com.hbo.hbonow"
             -> AppCategory.ENTERTAINMENT
+
+            "com.android.chrome", "org.mozilla.firefox", "com.sec.android.app.sbrowser",
+            "com.microsoft.emmx", "com.opera.browser", "com.opera.mini.native",
+            "com.brave.browser", "com.duckduckgo.mobile.android", "com.UCMobile.intl"
+            -> AppCategory.BROWSERS
 
             else -> AppCategory.OTHER
         }

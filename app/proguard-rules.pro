@@ -58,3 +58,10 @@
 -keepclassmembers class kotlinx.coroutines.** {
     volatile <fields>;
 }
+
+# ============================================
+# Firebase Crashlytics
+# ============================================
+-keep class com.google.firebase.crashlytics.** { *; }
+-keep class com.google.firebase.** { *; }
+-keep public class * extends java.lang.Exception
