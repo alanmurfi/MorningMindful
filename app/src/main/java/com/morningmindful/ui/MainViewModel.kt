@@ -33,6 +33,9 @@ class MainViewModel(
     val currentStreak: StateFlow<Int> = journalRepository.getCurrentStreak()
         .stateIn(viewModelScope, SharingStarted.Eagerly, 0)
 
+    val longestStreak: StateFlow<Int> = journalRepository.getLongestStreak()
+        .stateIn(viewModelScope, SharingStarted.Eagerly, 0)
+
     // Recent entries
     val recentEntries: StateFlow<List<JournalEntry>> = journalRepository.getRecentEntries(10)
         .stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())

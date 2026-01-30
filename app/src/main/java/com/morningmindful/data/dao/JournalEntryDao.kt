@@ -44,4 +44,11 @@ interface JournalEntryDao {
         WHERE date >= :startDate AND date <= :endDate
     """)
     fun getStreakCount(startDate: LocalDate, endDate: LocalDate): Flow<Int>
+
+    /**
+     * Get all dates with journal entries, ordered descending.
+     * Used for calculating streaks.
+     */
+    @Query("SELECT DISTINCT date FROM journal_entries ORDER BY date DESC")
+    suspend fun getAllEntryDates(): List<LocalDate>
 }

@@ -53,11 +53,35 @@ class JournalRepository(private val journalEntryDao: JournalEntryDao) {
      */
     fun getCurrentStreak(): Flow<Int> {
         return journalEntryDao.getAllEntries().map { entries ->
-            calculateStreak(entries.map { it.date })
+            calculateCurrentStreak(entries.map { it.date })
         }
     }
 
-    private fun calculateStreak(dates: List<LocalDate>): Int {
+    /**
+     * Calculate longest streak ever achieved.
+     */
+    fun getLongestStreak(): Flow<Int> {
+        return journalEntryDao.getAllEntries().map { entries ->
+            calculateLongestStreak(entries.map { it.date })
+        }
+    }
+
+    /**
+     * Get streak statistics as a data class.
+     */
+    fun getStreakStats(): Flow<StreakStats> {
+        return journalEntryDao.getAllEntries().map { entries ->
+            val dates = entries.map { it.date }
+            StreakStats(
+                currentStreak = calculateCurrentStreak(dates),
+                longestStreak = calculateLongestStreak(dates),
+                totalEntries = entries.size,
+                totalWords = entries.sumOf { it.wordCount }
+            )
+        }
+    }
+
+    private fun calculateCurrentStreak(dates: List<LocalDate>): Int {
         if (dates.isEmpty()) return 0
 
         val sortedDates = dates.sortedDescending().distinct()
@@ -85,4 +109,33 @@ class JournalRepository(private val journalEntryDao: JournalEntryDao) {
 
         return streak
     }
+
+    private fun calculateLongestStreak(dates: List<LocalDate>): Int {
+        if (dates.isEmpty()) return 0
+
+        val sortedDates = dates.sorted().distinct()
+        var longestStreak = 1
+        var currentStreak = 1
+
+        for (i in 1 until sortedDates.size) {
+            if (sortedDates[i - 1].plusDays(1) == sortedDates[i]) {
+                currentStreak++
+                longestStreak = maxOf(longestStreak, currentStreak)
+            } else {
+                currentStreak = 1
+            }
+        }
+
+        return longestStreak
+    }
 }
+
+/**
+ * Data class containing streak statistics.
+ */
+data class StreakStats(
+    val currentStreak: Int,
+    val longestStreak: Int,
+    val totalEntries: Int,
+    val totalWords: Int
+)

@@ -25,6 +25,13 @@
 
     <!-- Main Activity -->
     <string name="streak_days">%1$d days</string>
+    <string name="streak_day">1 day</string>
+    <string name="current_streak">Current Streak</string>
+    <string name="longest_streak">Longest Streak</string>
+    <string name="streak_fire">🔥 %1$d day streak!</string>
+    <string name="streak_fire_plural">🔥 %1$d day streak!</string>
+    <string name="no_streak">Start your streak today!</string>
+    <string name="new_record">🎉 New record!</string>
     <string name="journal_completed_today">Journal completed today</string>
     <string name="view_todays_entry">View Today\'s Entry</string>
     <string name="no_journal_yet">No journal entry yet today</string>
