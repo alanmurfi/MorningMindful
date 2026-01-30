@@ -67,6 +67,14 @@ android {
         viewBinding = true
         buildConfig = true
     }
+
+    // Include native debug symbols for Play Console crash reporting (SQLCipher)
+    ndkVersion = "26.1.10909125"
+    packaging {
+        jniLibs {
+            keepDebugSymbols += "**/*.so"
+        }
+    }
 }
 
 dependencies {
