@@ -65,3 +65,10 @@
 -keep class com.google.firebase.crashlytics.** { *; }
 -keep class com.google.firebase.** { *; }
 -keep public class * extends java.lang.Exception
+
+# ============================================
+# Hilt Dependency Injection
+# ============================================
+-keep class dagger.hilt.** { *; }
+-keep class javax.inject.** { *; }
+-keep class * extends dagger.hilt.android.internal.managers.ViewComponentManager$FragmentContextWrapper { *; }

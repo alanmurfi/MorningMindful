@@ -1,21 +1,21 @@
 package com.morningmindful.ui.settings
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.CreationExtras
-import com.morningmindful.MorningMindfulApp
 import com.morningmindful.data.repository.JournalRepository
 import com.morningmindful.data.repository.SettingsRepository
 import com.morningmindful.util.BlockedApps
 import com.morningmindful.util.BlockingState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class SettingsViewModel(
+@HiltViewModel
+class SettingsViewModel @Inject constructor(
     private val settingsRepository: SettingsRepository,
     private val journalRepository: JournalRepository
 ) : ViewModel() {
@@ -102,16 +102,6 @@ class SettingsViewModel(
             }
             // Reset the blocking state
             BlockingState.forceReset()
-        }
-    }
-
-    companion object {
-        val Factory: ViewModelProvider.Factory = object : ViewModelProvider.Factory {
-            @Suppress("UNCHECKED_CAST")
-            override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
-                val app = MorningMindfulApp.getInstance()
-                return SettingsViewModel(app.settingsRepository, app.journalRepository) as T
-            }
         }
     }
 }

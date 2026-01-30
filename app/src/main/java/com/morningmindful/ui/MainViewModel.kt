@@ -1,13 +1,11 @@
 package com.morningmindful.ui
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.CreationExtras
-import com.morningmindful.MorningMindfulApp
 import com.morningmindful.data.entity.JournalEntry
 import com.morningmindful.data.repository.JournalRepository
 import com.morningmindful.data.repository.SettingsRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -16,8 +14,14 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class MainViewModel(
+/**
+ * ViewModel for the main screen.
+ * Uses Hilt for dependency injection - no manual Factory needed.
+ */
+@HiltViewModel
+class MainViewModel @Inject constructor(
     private val journalRepository: JournalRepository,
     private val settingsRepository: SettingsRepository
 ) : ViewModel() {
@@ -72,19 +76,6 @@ class MainViewModel(
             journalRepository.getTodayEntry().collect { todayEntry ->
                 val requiredWords = settingsRepository.requiredWordCount.first()
                 _journalCompletedToday.value = todayEntry != null && todayEntry.wordCount >= requiredWords
-            }
-        }
-    }
-
-    companion object {
-        val Factory: ViewModelProvider.Factory = object : ViewModelProvider.Factory {
-            @Suppress("UNCHECKED_CAST")
-            override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
-                val app = MorningMindfulApp.getInstance()
-                return MainViewModel(
-                    app.journalRepository,
-                    app.settingsRepository
-                ) as T
             }
         }
     }

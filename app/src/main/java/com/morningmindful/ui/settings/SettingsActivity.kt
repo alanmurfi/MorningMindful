@@ -15,13 +15,15 @@ import com.morningmindful.R
 import com.morningmindful.databinding.ActivitySettingsBinding
 import com.morningmindful.util.BlockedApps
 import com.morningmindful.util.PermissionUtils
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class SettingsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySettingsBinding
-    private val viewModel: SettingsViewModel by viewModels { SettingsViewModel.Factory }
+    private val viewModel: SettingsViewModel by viewModels()
     private lateinit var blockedAppsAdapter: BlockedAppsAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -10,13 +10,15 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.morningmindful.databinding.ActivityHistoryBinding
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class HistoryActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityHistoryBinding
-    private val viewModel: HistoryViewModel by viewModels { HistoryViewModel.Factory }
+    private val viewModel: HistoryViewModel by viewModels()
     private lateinit var adapter: JournalEntryAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {

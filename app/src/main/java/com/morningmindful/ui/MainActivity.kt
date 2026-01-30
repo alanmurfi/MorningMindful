@@ -18,16 +18,19 @@ import com.morningmindful.ui.history.HistoryActivity
 import com.morningmindful.ui.journal.JournalActivity
 import com.morningmindful.ui.settings.SettingsActivity
 import com.morningmindful.util.PermissionUtils
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 /**
  * Main activity showing journal history, stats, and access to settings.
+ * Annotated with @AndroidEntryPoint to enable Hilt injection.
  */
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private val viewModel: MainViewModel by viewModels { MainViewModel.Factory }
+    private val viewModel: MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

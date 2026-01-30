@@ -19,6 +19,7 @@ import com.morningmindful.data.entity.Moods
 import com.morningmindful.databinding.ActivityJournalBinding
 import com.morningmindful.util.BlockedApps
 import com.morningmindful.util.BlockingState
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -27,23 +28,13 @@ import java.time.LocalDate
  * Journal entry screen where users write their morning reflection.
  * This screen appears when trying to open a blocked app during the morning period.
  */
+@AndroidEntryPoint
 class JournalActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityJournalBinding
 
-    private val editDate: LocalDate? by lazy {
-        intent.getStringExtra(EXTRA_EDIT_DATE)?.let { dateString ->
-            try {
-                LocalDate.parse(dateString)
-            } catch (e: Exception) {
-                null // Invalid date format, treat as new entry
-            }
-        }
-    }
-
-    private val viewModel: JournalViewModel by viewModels {
-        JournalViewModel.createFactory(editDate)
-    }
+    // ViewModel is now injected by Hilt - edit_date is pulled from SavedStateHandle
+    private val viewModel: JournalViewModel by viewModels()
 
     companion object {
         const val EXTRA_BLOCKED_APP = "blocked_app"

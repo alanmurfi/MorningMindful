@@ -7,14 +7,20 @@ import android.os.Build
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.morningmindful.data.repository.JournalRepository
 import com.morningmindful.data.repository.SettingsRepository
-import com.morningmindful.data.AppDatabase
+import dagger.hilt.android.HiltAndroidApp
+import javax.inject.Inject
 
+/**
+ * Application class annotated with @HiltAndroidApp to enable Hilt dependency injection.
+ *
+ * Hilt generates all the Dagger components and injects dependencies automatically.
+ */
+@HiltAndroidApp
 class MorningMindfulApp : Application() {
 
-    // Lazy initialization of database and repositories
-    val database: AppDatabase by lazy { AppDatabase.getDatabase(this) }
-    val journalRepository: JournalRepository by lazy { JournalRepository(database.journalEntryDao()) }
-    val settingsRepository: SettingsRepository by lazy { SettingsRepository(this) }
+    // Injected by Hilt - available after onCreate()
+    @Inject lateinit var journalRepository: JournalRepository
+    @Inject lateinit var settingsRepository: SettingsRepository
 
     override fun onCreate() {
         super.onCreate()

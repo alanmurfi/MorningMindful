@@ -12,6 +12,7 @@ import com.morningmindful.R
 import com.morningmindful.data.entity.Moods
 import com.morningmindful.databinding.ActivityEntryDetailBinding
 import com.morningmindful.ui.journal.JournalActivity
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.time.Instant
@@ -20,12 +21,11 @@ import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import java.util.Locale
 
+@AndroidEntryPoint
 class EntryDetailActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityEntryDetailBinding
-    private val viewModel: EntryDetailViewModel by viewModels {
-        EntryDetailViewModel.Factory(intent.getLongExtra(EXTRA_ENTRY_ID, -1))
-    }
+    private val viewModel: EntryDetailViewModel by viewModels()
 
     companion object {
         const val EXTRA_ENTRY_ID = "entry_id"

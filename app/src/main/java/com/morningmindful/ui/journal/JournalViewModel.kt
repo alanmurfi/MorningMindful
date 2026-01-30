@@ -2,15 +2,14 @@ package com.morningmindful.ui.journal
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.CreationExtras
-import com.morningmindful.MorningMindfulApp
 import com.morningmindful.R
 import com.morningmindful.data.entity.JournalEntry
 import com.morningmindful.data.repository.JournalRepository
 import com.morningmindful.data.repository.SettingsRepository
 import com.morningmindful.util.BlockingState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -20,19 +19,31 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.time.LocalDate
+import javax.inject.Inject
 
 /**
  * ViewModel for the Journal screen.
  *
  * Uses AndroidViewModel to safely hold Application context (no memory leak).
- * Application context lives for the entire app lifecycle, so it's safe to hold.
+ * Uses Hilt for dependency injection.
+ * Uses SavedStateHandle to get the edit date from Intent extras.
  */
-class JournalViewModel(
+@HiltViewModel
+class JournalViewModel @Inject constructor(
     application: Application,
     private val journalRepository: JournalRepository,
     private val settingsRepository: SettingsRepository,
-    private val editDate: LocalDate? = null
+    savedStateHandle: SavedStateHandle
 ) : AndroidViewModel(application) {
+
+    // Get edit date from SavedStateHandle (populated from Intent extras)
+    private val editDate: LocalDate? = savedStateHandle.get<String>(EXTRA_EDIT_DATE)?.let {
+        try {
+            LocalDate.parse(it)
+        } catch (e: Exception) {
+            null
+        }
+    }
 
     // Whether we're editing a past entry
     val isEditingPastEntry: Boolean = editDate != null && editDate != LocalDate.now()
@@ -236,31 +247,7 @@ class JournalViewModel(
     }
 
     companion object {
-        val Factory: ViewModelProvider.Factory = object : ViewModelProvider.Factory {
-            @Suppress("UNCHECKED_CAST")
-            override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
-                val app = MorningMindfulApp.getInstance()
-                return JournalViewModel(
-                    app,
-                    app.journalRepository,
-                    app.settingsRepository
-                ) as T
-            }
-        }
-
-        fun createFactory(editDate: LocalDate?): ViewModelProvider.Factory {
-            return object : ViewModelProvider.Factory {
-                @Suppress("UNCHECKED_CAST")
-                override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
-                    val app = MorningMindfulApp.getInstance()
-                    return JournalViewModel(
-                        app,
-                        app.journalRepository,
-                        app.settingsRepository,
-                        editDate
-                    ) as T
-                }
-            }
-        }
+        // Must match JournalActivity.EXTRA_EDIT_DATE for SavedStateHandle to work
+        const val EXTRA_EDIT_DATE = "edit_date"
     }
 }
