@@ -1,6 +1,8 @@
 package com.morningmindful.data
 
+import android.content.ContentValues
 import android.content.Context
+import android.database.sqlite.SQLiteDatabase
 import android.util.Log
 import androidx.room.Database
 import androidx.room.Room
@@ -14,6 +16,7 @@ import com.morningmindful.data.dao.JournalEntryDao
 import com.morningmindful.data.entity.JournalEntry
 import net.zetetic.database.sqlcipher.SupportOpenHelperFactory
 import java.io.File
+import java.time.LocalDate
 
 @Database(
     entities = [JournalEntry::class],
@@ -65,8 +68,7 @@ abstract class AppDatabase : RoomDatabase() {
 
         /**
          * Handle migration from unencrypted to encrypted database.
-         * For development: deletes old unencrypted database if encryption marker is missing.
-         * For production: would need proper data migration.
+         * This properly migrates data from old unencrypted database to new encrypted one.
          */
         private fun handleLegacyDatabase(context: Context) {
             val masterKey = MasterKey.Builder(context)
@@ -81,26 +83,168 @@ abstract class AppDatabase : RoomDatabase() {
                 EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
             )
 
-            val isEncrypted = encryptedPrefs.getBoolean("is_encrypted", false)
+            val migrationCompleted = encryptedPrefs.getBoolean("migration_completed_v2", false)
 
-            if (!isEncrypted) {
+            if (!migrationCompleted) {
                 val dbFile = context.getDatabasePath(DATABASE_NAME)
                 val keyExists = DatabaseKeyManager.hasExistingKey(context)
 
-                // Only delete database if it exists AND no encryption key exists
-                // This means it's truly an old unencrypted database, not an encrypted
-                // one where just the migration flag was tampered with
+                // Only migrate if old database exists AND no encryption key exists yet
+                // This means it's truly an old unencrypted database
                 if (dbFile.exists() && !keyExists) {
-                    Log.d(TAG, "Migrating to encrypted database - removing old unencrypted database")
-                    val dbShm = File(dbFile.path + "-shm")
-                    val dbWal = File(dbFile.path + "-wal")
-                    dbFile.delete()
-                    dbShm.delete()
-                    dbWal.delete()
+                    Log.d(TAG, "Found legacy unencrypted database - migrating data")
+                    migrateUnencryptedToEncrypted(context, dbFile)
                 }
 
-                // Mark that we've migrated to encrypted
-                encryptedPrefs.edit().putBoolean("is_encrypted", true).apply()
+                // Mark migration as completed
+                encryptedPrefs.edit().putBoolean("migration_completed_v2", true).apply()
+            }
+        }
+
+        /**
+         * Migrate data from unencrypted SQLite database to encrypted SQLCipher database.
+         * Preserves all journal entries during the migration.
+         */
+        private fun migrateUnencryptedToEncrypted(context: Context, oldDbFile: File) {
+            val tempDbName = "temp_migration_db"
+            val tempDbFile = context.getDatabasePath(tempDbName)
+
+            try {
+                // Step 1: Read all data from unencrypted database
+                val entries = readEntriesFromUnencryptedDb(oldDbFile)
+                Log.d(TAG, "Read ${entries.size} entries from unencrypted database")
+
+                if (entries.isEmpty()) {
+                    // No data to migrate, just delete old database
+                    deleteOldDatabaseFiles(oldDbFile)
+                    return
+                }
+
+                // Step 2: Delete old unencrypted database
+                deleteOldDatabaseFiles(oldDbFile)
+
+                // Step 3: Create new encrypted database and insert data
+                val passphrase = DatabaseKeyManager.getOrCreateKey(context)
+                val factory = SupportOpenHelperFactory(passphrase)
+
+                val tempDb = Room.databaseBuilder(
+                    context.applicationContext,
+                    AppDatabase::class.java,
+                    DATABASE_NAME
+                )
+                    .openHelperFactory(factory)
+                    .addMigrations(MIGRATION_1_2)
+                    .build()
+
+                // Insert migrated entries
+                entries.forEach { entry ->
+                    tempDb.journalEntryDao().insertEntry(entry)
+                }
+
+                Log.d(TAG, "Successfully migrated ${entries.size} entries to encrypted database")
+                tempDb.close()
+
+            } catch (e: Exception) {
+                Log.e(TAG, "Error during migration, data may be lost", e)
+                // If migration fails, delete old database to prevent crash loop
+                deleteOldDatabaseFiles(oldDbFile)
+            } finally {
+                // Clean up temp file if it exists
+                if (tempDbFile.exists()) {
+                    tempDbFile.delete()
+                }
+            }
+        }
+
+        /**
+         * Read journal entries from an unencrypted SQLite database.
+         */
+        private fun readEntriesFromUnencryptedDb(dbFile: File): List<JournalEntry> {
+            val entries = mutableListOf<JournalEntry>()
+
+            try {
+                val db = SQLiteDatabase.openDatabase(
+                    dbFile.absolutePath,
+                    null,
+                    SQLiteDatabase.OPEN_READONLY
+                )
+
+                // Check if table exists
+                val tableCheckCursor = db.rawQuery(
+                    "SELECT name FROM sqlite_master WHERE type='table' AND name='journal_entries'",
+                    null
+                )
+                val tableExists = tableCheckCursor.moveToFirst()
+                tableCheckCursor.close()
+
+                if (!tableExists) {
+                    db.close()
+                    return entries
+                }
+
+                // Read all entries
+                val cursor = db.rawQuery("SELECT * FROM journal_entries", null)
+
+                while (cursor.moveToNext()) {
+                    try {
+                        val idIndex = cursor.getColumnIndex("id")
+                        val dateIndex = cursor.getColumnIndex("date")
+                        val contentIndex = cursor.getColumnIndex("content")
+                        val wordCountIndex = cursor.getColumnIndex("wordCount")
+                        val createdAtIndex = cursor.getColumnIndex("createdAt")
+                        val updatedAtIndex = cursor.getColumnIndex("updatedAt")
+                        val moodIndex = cursor.getColumnIndex("mood")
+
+                        // Parse date string to LocalDate
+                        val dateString = if (dateIndex >= 0) cursor.getString(dateIndex) else null
+                        val date = try {
+                            if (dateString != null) LocalDate.parse(dateString) else LocalDate.now()
+                        } catch (e: Exception) {
+                            LocalDate.now()
+                        }
+
+                        val entry = JournalEntry(
+                            id = if (idIndex >= 0) cursor.getLong(idIndex) else 0,
+                            date = date,
+                            content = if (contentIndex >= 0) cursor.getString(contentIndex) ?: "" else "",
+                            wordCount = if (wordCountIndex >= 0) cursor.getInt(wordCountIndex) else 0,
+                            createdAt = if (createdAtIndex >= 0) cursor.getLong(createdAtIndex) else System.currentTimeMillis(),
+                            updatedAt = if (updatedAtIndex >= 0) cursor.getLong(updatedAtIndex) else System.currentTimeMillis(),
+                            mood = if (moodIndex >= 0) cursor.getString(moodIndex) else null
+                        )
+                        entries.add(entry)
+                    } catch (e: Exception) {
+                        Log.e(TAG, "Error reading entry, skipping", e)
+                    }
+                }
+
+                cursor.close()
+                db.close()
+
+            } catch (e: Exception) {
+                Log.e(TAG, "Error opening unencrypted database", e)
+            }
+
+            return entries
+        }
+
+        /**
+         * Delete old database files (main db, shm, wal).
+         */
+        private fun deleteOldDatabaseFiles(dbFile: File) {
+            try {
+                val dbShm = File(dbFile.path + "-shm")
+                val dbWal = File(dbFile.path + "-wal")
+                val dbJournal = File(dbFile.path + "-journal")
+
+                dbFile.delete()
+                dbShm.delete()
+                dbWal.delete()
+                dbJournal.delete()
+
+                Log.d(TAG, "Deleted old database files")
+            } catch (e: Exception) {
+                Log.e(TAG, "Error deleting old database files", e)
             }
         }
     }

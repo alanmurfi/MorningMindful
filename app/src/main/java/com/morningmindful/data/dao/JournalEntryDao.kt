@@ -15,6 +15,13 @@ interface JournalEntryDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(entry: JournalEntry): Long
 
+    /**
+     * Blocking insert for database migration.
+     * Only use during app initialization for data migration.
+     */
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertEntry(entry: JournalEntry): Long
+
     @Update
     suspend fun update(entry: JournalEntry)
 
