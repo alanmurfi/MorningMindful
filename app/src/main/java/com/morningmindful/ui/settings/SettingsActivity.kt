@@ -6,12 +6,12 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.morningmindful.MorningMindfulApp
 import com.morningmindful.R
 import com.morningmindful.databinding.ActivitySettingsBinding
 import com.morningmindful.data.repository.SettingsRepository
@@ -150,8 +150,13 @@ class SettingsActivity : AppCompatActivity() {
                 else -> SettingsRepository.THEME_MODE_SYSTEM
             }
             viewModel.setThemeMode(themeMode)
-            // Apply the theme immediately
-            MorningMindfulApp.getInstance().applyThemeMode()
+            // Apply the theme immediately (directly, not via repository which may not have saved yet)
+            val nightMode = when (themeMode) {
+                SettingsRepository.THEME_MODE_LIGHT -> AppCompatDelegate.MODE_NIGHT_NO
+                SettingsRepository.THEME_MODE_DARK -> AppCompatDelegate.MODE_NIGHT_YES
+                else -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+            }
+            AppCompatDelegate.setDefaultNightMode(nightMode)
         }
 
         // Privacy Policy
