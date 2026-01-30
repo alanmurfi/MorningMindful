@@ -158,12 +158,16 @@ class JournalViewModel(
     }
 
     private suspend fun saveEntry(text: String, words: Int) {
+        // Sanitize inputs before saving
+        val sanitizedContent = JournalEntry.sanitizeContent(text)
+        val sanitizedWordCount = JournalEntry.sanitizeWordCount(words)
+
         val existingId = existingEntry.value?.id
         val entry = JournalEntry(
             id = existingId ?: 0,
             date = targetDate,
-            content = text,
-            wordCount = words,
+            content = sanitizedContent,
+            wordCount = sanitizedWordCount,
             mood = _selectedMood.value,
             createdAt = existingEntry.value?.createdAt ?: System.currentTimeMillis(),
             updatedAt = System.currentTimeMillis()
