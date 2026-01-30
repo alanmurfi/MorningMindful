@@ -1,7 +1,10 @@
 package com.morningmindful.service
 
 import android.accessibilityservice.AccessibilityService
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.util.Log
 import android.view.accessibility.AccessibilityEvent
 import com.morningmindful.MorningMindfulApp
@@ -40,6 +43,12 @@ class AppBlockerAccessibilityService : AccessibilityService() {
     private var lastBlockedPackage: String? = null
     private var lastBlockTime: Long = 0
 
+    // Blocking duration (cached)
+    private var blockingDurationMinutes = 15
+
+    // Screen unlock receiver for starting the timer
+    private var unlockReceiver: BroadcastReceiver? = null
+
     companion object {
         private const val TAG = "AppBlockerService"
         private const val BLOCK_COOLDOWN_MS = 1000L  // Prevent rapid-fire redirects
@@ -61,13 +70,84 @@ class AppBlockerAccessibilityService : AccessibilityService() {
 
         // Start all reactive listeners - no blocking calls
         startSettingsListeners()
+
+        // Register unlock receiver dynamically (manifest-declared doesn't work reliably on newer Android)
+        registerUnlockReceiver()
     }
 
     override fun onDestroy() {
         super.onDestroy()
         isServiceRunning = false
         serviceScope.cancel()
+        unregisterUnlockReceiver()
         Log.d(TAG, "Accessibility Service destroyed")
+    }
+
+    /**
+     * Register a dynamic broadcast receiver for USER_PRESENT (screen unlock).
+     * Manifest-declared receivers don't work reliably for this broadcast on Android 8+.
+     */
+    private fun registerUnlockReceiver() {
+        if (unlockReceiver != null) return
+
+        unlockReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                if (intent?.action == Intent.ACTION_USER_PRESENT) {
+                    Log.d(TAG, "Screen unlocked (USER_PRESENT)")
+                    handleScreenUnlock()
+                }
+            }
+        }
+
+        val filter = IntentFilter(Intent.ACTION_USER_PRESENT)
+        registerReceiver(unlockReceiver, filter)
+        Log.d(TAG, "Unlock receiver registered")
+    }
+
+    private fun unregisterUnlockReceiver() {
+        unlockReceiver?.let {
+            try {
+                unregisterReceiver(it)
+                Log.d(TAG, "Unlock receiver unregistered")
+            } catch (e: Exception) {
+                Log.e(TAG, "Error unregistering unlock receiver", e)
+            }
+        }
+        unlockReceiver = null
+    }
+
+    /**
+     * Handle screen unlock - start the blocking timer if within morning window.
+     */
+    private fun handleScreenUnlock() {
+        // Check if blocking is enabled
+        if (!isBlockingEnabled) {
+            Log.d(TAG, "Blocking is disabled in settings")
+            return
+        }
+
+        // Check if we're within the morning window
+        val currentHour = LocalTime.now().hour
+        if (currentHour < morningStartHour || currentHour >= morningEndHour) {
+            Log.d(TAG, "Outside morning window ($morningStartHour:00 - $morningEndHour:00), current hour: $currentHour")
+            return
+        }
+        Log.d(TAG, "Within morning window ($morningStartHour:00 - $morningEndHour:00)")
+
+        // Check if already journaled today
+        if (todayJournalWordCount >= requiredWordCount) {
+            Log.d(TAG, "Journal already completed today")
+            BlockingState.setJournalCompletedToday(true)
+            return
+        }
+
+        // Start blocking period with timer
+        BlockingState.onFirstUnlock(blockingDurationMinutes)
+        Log.d(TAG, "Started blocking period for $blockingDurationMinutes minutes")
+
+        // Start foreground service to maintain blocking state and show notification
+        val serviceIntent = Intent(this, MorningBlockerService::class.java)
+        startForegroundService(serviceIntent)
     }
 
     /**
@@ -139,6 +219,18 @@ class AppBlockerAccessibilityService : AccessibilityService() {
             }
         }
 
+        // Listen to blocking duration
+        serviceScope.launch {
+            try {
+                app.settingsRepository.blockingDurationMinutes.collect { minutes ->
+                    blockingDurationMinutes = minutes
+                    Log.d(TAG, "Settings updated: blockingDurationMinutes = $minutes")
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Error listening to blockingDurationMinutes", e)
+            }
+        }
+
         // Listen to journal entry changes - this is the key optimization
         // Instead of querying the database on every accessibility event,
         // we cache the word count and update it reactively
@@ -198,6 +290,17 @@ class AppBlockerAccessibilityService : AccessibilityService() {
         lastBlockTime = now
 
         Log.d(TAG, "Blocking app: $packageName")
+
+        // Start timer if not already started (fallback in case unlock wasn't detected)
+        if (BlockingState.blockingEndTime.value == null) {
+            Log.d(TAG, "Timer not started yet, starting now as fallback")
+            BlockingState.onFirstUnlock(blockingDurationMinutes)
+
+            // Also start the foreground service for notification
+            val serviceIntent = Intent(this, MorningBlockerService::class.java)
+            startForegroundService(serviceIntent)
+        }
+
         redirectToJournal(packageName)
     }
 
