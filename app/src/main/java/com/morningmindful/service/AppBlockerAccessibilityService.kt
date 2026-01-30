@@ -255,8 +255,19 @@ class AppBlockerAccessibilityService : AccessibilityService() {
 
     /**
      * Check if a package is a system package that shouldn't be blocked.
+     * Note: Chrome (com.android.chrome) is NOT a system package and CAN be blocked.
      */
     private fun isSystemPackage(packageName: String): Boolean {
+        // Explicit list of blockable apps that start with "com.android."
+        val blockableAndroidApps = setOf(
+            "com.android.chrome",  // Chrome browser - can be blocked
+        )
+
+        // If it's in the blockable list, it's NOT a system package
+        if (blockableAndroidApps.contains(packageName)) {
+            return false
+        }
+
         val systemPackages = setOf(
             "com.android.systemui",
             "com.android.launcher",

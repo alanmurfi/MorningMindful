@@ -26,6 +26,10 @@ class SettingsRepository(private val context: Context) {
         private const val KEY_HAS_COMPLETED_ONBOARDING = "has_completed_onboarding"
         private const val KEY_MORNING_START_HOUR = "morning_start_hour"
         private const val KEY_MORNING_END_HOUR = "morning_end_hour"
+        private const val KEY_BLOCKED_APPS_VERSION = "blocked_apps_version"
+
+        // Increment this when adding new default blocked apps
+        private const val CURRENT_BLOCKED_APPS_VERSION = 2  // v2 adds browsers
     }
 
     private val encryptedPrefs: SharedPreferences by lazy {
@@ -56,11 +60,46 @@ class SettingsRepository(private val context: Context) {
         _isBlockingEnabled.value = encryptedPrefs.getBoolean(KEY_IS_BLOCKING_ENABLED, true)
         _blockingDurationMinutes.value = encryptedPrefs.getInt(KEY_BLOCKING_DURATION_MINUTES, 15)
         _requiredWordCount.value = encryptedPrefs.getInt(KEY_REQUIRED_WORD_COUNT, 200)
-        _blockedApps.value = encryptedPrefs.getStringSet(KEY_BLOCKED_APPS, null)
-            ?: BlockedApps.DEFAULT_BLOCKED_PACKAGES
         _hasCompletedOnboarding.value = encryptedPrefs.getBoolean(KEY_HAS_COMPLETED_ONBOARDING, false)
         _morningStartHour.value = encryptedPrefs.getInt(KEY_MORNING_START_HOUR, 5)
         _morningEndHour.value = encryptedPrefs.getInt(KEY_MORNING_END_HOUR, 10)
+
+        // Load blocked apps with migration for new default apps
+        _blockedApps.value = loadBlockedAppsWithMigration()
+    }
+
+    /**
+     * Load blocked apps, merging in any new default apps added in updates.
+     * This ensures users get new blocked apps (like browsers) without losing their customizations.
+     */
+    private fun loadBlockedAppsWithMigration(): Set<String> {
+        val savedVersion = encryptedPrefs.getInt(KEY_BLOCKED_APPS_VERSION, 1)
+        val savedApps = encryptedPrefs.getStringSet(KEY_BLOCKED_APPS, null)
+
+        // First install - use defaults
+        if (savedApps == null) {
+            encryptedPrefs.edit()
+                .putInt(KEY_BLOCKED_APPS_VERSION, CURRENT_BLOCKED_APPS_VERSION)
+                .apply()
+            return BlockedApps.DEFAULT_BLOCKED_PACKAGES
+        }
+
+        // Already up to date
+        if (savedVersion >= CURRENT_BLOCKED_APPS_VERSION) {
+            return savedApps
+        }
+
+        // Migration needed - merge new defaults with user's existing apps
+        val mergedApps = savedApps.toMutableSet()
+        mergedApps.addAll(BlockedApps.DEFAULT_BLOCKED_PACKAGES)
+
+        // Save merged list and update version
+        encryptedPrefs.edit()
+            .putStringSet(KEY_BLOCKED_APPS, mergedApps)
+            .putInt(KEY_BLOCKED_APPS_VERSION, CURRENT_BLOCKED_APPS_VERSION)
+            .apply()
+
+        return mergedApps
     }
 
     // Whether blocking is enabled
