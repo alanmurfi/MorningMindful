@@ -38,6 +38,9 @@ class SettingsViewModel @Inject constructor(
     val morningEndHour: StateFlow<Int> = settingsRepository.morningEndHour
         .stateIn(viewModelScope, SharingStarted.Eagerly, 10)
 
+    val themeMode: StateFlow<Int> = settingsRepository.themeMode
+        .stateIn(viewModelScope, SharingStarted.Eagerly, SettingsRepository.THEME_MODE_SYSTEM)
+
     fun setBlockingEnabled(enabled: Boolean) {
         viewModelScope.launch {
             settingsRepository.setBlockingEnabled(enabled)
@@ -75,6 +78,12 @@ class SettingsViewModel @Inject constructor(
     fun setMorningEndHour(hour: Int) {
         viewModelScope.launch {
             settingsRepository.setMorningEndHour(hour)
+        }
+    }
+
+    fun setThemeMode(mode: Int) {
+        viewModelScope.launch {
+            settingsRepository.setThemeMode(mode)
         }
     }
 

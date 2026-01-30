@@ -4,6 +4,7 @@ import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.os.Build
+import androidx.appcompat.app.AppCompatDelegate
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.morningmindful.data.repository.JournalRepository
 import com.morningmindful.data.repository.SettingsRepository
@@ -33,7 +34,24 @@ class MorningMindfulApp : Application() {
         // Disable in debug builds to avoid noise during development
         FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(!BuildConfig.DEBUG)
 
+        // Apply saved theme mode
+        applyThemeMode()
+
         createNotificationChannel()
+    }
+
+    /**
+     * Apply the saved theme mode preference.
+     * Called at app startup and when theme preference changes.
+     */
+    fun applyThemeMode() {
+        val themeMode = settingsRepository.getThemeModeSync()
+        val nightMode = when (themeMode) {
+            SettingsRepository.THEME_MODE_LIGHT -> AppCompatDelegate.MODE_NIGHT_NO
+            SettingsRepository.THEME_MODE_DARK -> AppCompatDelegate.MODE_NIGHT_YES
+            else -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+        }
+        AppCompatDelegate.setDefaultNightMode(nightMode)
     }
 
     private fun createNotificationChannel() {

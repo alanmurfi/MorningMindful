@@ -11,8 +11,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.morningmindful.MorningMindfulApp
 import com.morningmindful.R
 import com.morningmindful.databinding.ActivitySettingsBinding
+import com.morningmindful.data.repository.SettingsRepository
 import com.morningmindful.util.BlockedApps
 import com.morningmindful.util.PermissionUtils
 import dagger.hilt.android.AndroidEntryPoint
@@ -140,6 +142,18 @@ class SettingsActivity : AppCompatActivity() {
                 .show()
         }
 
+        // Theme radio group
+        binding.themeRadioGroup.setOnCheckedChangeListener { _, checkedId ->
+            val themeMode = when (checkedId) {
+                R.id.themeLightRadio -> SettingsRepository.THEME_MODE_LIGHT
+                R.id.themeDarkRadio -> SettingsRepository.THEME_MODE_DARK
+                else -> SettingsRepository.THEME_MODE_SYSTEM
+            }
+            viewModel.setThemeMode(themeMode)
+            // Apply the theme immediately
+            MorningMindfulApp.getInstance().applyThemeMode()
+        }
+
         // Privacy Policy
         binding.privacyPolicyButton.setOnClickListener {
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(PRIVACY_POLICY_URL))
@@ -206,6 +220,18 @@ class SettingsActivity : AppCompatActivity() {
                     viewModel.morningEndHour.collectLatest { hour ->
                         binding.morningEndSlider.value = hour.toFloat()
                         binding.morningEndValue.text = formatHour(hour)
+                    }
+                }
+
+                // Theme mode
+                launch {
+                    viewModel.themeMode.collectLatest { mode ->
+                        val radioId = when (mode) {
+                            SettingsRepository.THEME_MODE_LIGHT -> R.id.themeLightRadio
+                            SettingsRepository.THEME_MODE_DARK -> R.id.themeDarkRadio
+                            else -> R.id.themeSystemRadio
+                        }
+                        binding.themeRadioGroup.check(radioId)
                     }
                 }
             }

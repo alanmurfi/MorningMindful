@@ -27,9 +27,15 @@ class SettingsRepository(private val context: Context) {
         private const val KEY_MORNING_START_HOUR = "morning_start_hour"
         private const val KEY_MORNING_END_HOUR = "morning_end_hour"
         private const val KEY_BLOCKED_APPS_VERSION = "blocked_apps_version"
+        private const val KEY_THEME_MODE = "theme_mode"
 
         // Increment this when adding new default blocked apps
         private const val CURRENT_BLOCKED_APPS_VERSION = 2  // v2 adds browsers
+
+        // Theme mode constants
+        const val THEME_MODE_SYSTEM = 0
+        const val THEME_MODE_LIGHT = 1
+        const val THEME_MODE_DARK = 2
     }
 
     private val encryptedPrefs: SharedPreferences by lazy {
@@ -54,6 +60,7 @@ class SettingsRepository(private val context: Context) {
     private val _hasCompletedOnboarding = MutableStateFlow(false)
     private val _morningStartHour = MutableStateFlow(5)
     private val _morningEndHour = MutableStateFlow(10)
+    private val _themeMode = MutableStateFlow(THEME_MODE_SYSTEM)
 
     init {
         // Load initial values from encrypted storage
@@ -63,6 +70,7 @@ class SettingsRepository(private val context: Context) {
         _hasCompletedOnboarding.value = encryptedPrefs.getBoolean(KEY_HAS_COMPLETED_ONBOARDING, false)
         _morningStartHour.value = encryptedPrefs.getInt(KEY_MORNING_START_HOUR, 5)
         _morningEndHour.value = encryptedPrefs.getInt(KEY_MORNING_END_HOUR, 10)
+        _themeMode.value = encryptedPrefs.getInt(KEY_THEME_MODE, THEME_MODE_SYSTEM)
 
         // Load blocked apps with migration for new default apps
         _blockedApps.value = loadBlockedAppsWithMigration()
@@ -216,5 +224,23 @@ class SettingsRepository(private val context: Context) {
      */
     fun isWithinMorningWindow(currentHour: Int, startHour: Int, endHour: Int): Boolean {
         return currentHour in startHour until endHour
+    }
+
+    // Theme mode (system, light, dark)
+    val themeMode: Flow<Int> = _themeMode.asStateFlow()
+
+    suspend fun setThemeMode(mode: Int) {
+        withContext(Dispatchers.IO) {
+            val bounded = mode.coerceIn(THEME_MODE_SYSTEM, THEME_MODE_DARK)
+            encryptedPrefs.edit().putInt(KEY_THEME_MODE, bounded).apply()
+            _themeMode.value = bounded
+        }
+    }
+
+    /**
+     * Get the current theme mode value synchronously (for app startup).
+     */
+    fun getThemeModeSync(): Int {
+        return encryptedPrefs.getInt(KEY_THEME_MODE, THEME_MODE_SYSTEM)
     }
 }

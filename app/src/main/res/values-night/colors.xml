@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Primary colors (slightly lighter for dark mode visibility) -->
+    <color name="primary">#8B7EED</color>
+    <color name="primary_dark">#6B5CE7</color>
+    <color name="primary_light">#A99DF3</color>
+
+    <!-- Background colors (dark theme) -->
+    <color name="background">#121212</color>
+    <color name="surface">#1E1E1E</color>
+
+    <!-- Text colors (inverted for dark mode) -->
+    <color name="text_primary">#E8EAED</color>
+    <color name="text_secondary">#A0AEC0</color>
+    <color name="text_tertiary">#6B7280</color>
+
+    <!-- Semantic colors -->
+    <color name="success">#68D391</color>
+    <color name="warning_background">#2D1B1B</color>
+    <color name="warning_text">#FC8181</color>
+    <color name="divider">#2D3748</color>
+
+    <!-- Progress bar colors -->
+    <color name="progress_start">#8B7EED</color>
+    <color name="progress_end">#68D391</color>
+    <color name="progress_background">#2D3748</color>
+</resources>

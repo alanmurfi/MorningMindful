@@ -121,4 +121,35 @@ class SettingsActivityTest {
         onView(withId(R.id.backButton))
             .check(matches(isDisplayed()))
     }
+
+    @Test
+    fun settingsActivity_displaysThemeSection() {
+        ActivityScenario.launch(SettingsActivity::class.java)
+
+        // Check that appearance section header exists
+        onView(withText("Appearance"))
+            .check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun settingsActivity_displaysThemeRadioGroup() {
+        ActivityScenario.launch(SettingsActivity::class.java)
+
+        // Check that theme radio group is displayed
+        onView(withId(R.id.themeRadioGroup))
+            .check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun settingsActivity_displaysThemeOptions() {
+        ActivityScenario.launch(SettingsActivity::class.java)
+
+        // Check that all theme options are displayed
+        onView(withId(R.id.themeSystemRadio))
+            .check(matches(isDisplayed()))
+        onView(withId(R.id.themeLightRadio))
+            .check(matches(isDisplayed()))
+        onView(withId(R.id.themeDarkRadio))
+            .check(matches(isDisplayed()))
+    }
 }
