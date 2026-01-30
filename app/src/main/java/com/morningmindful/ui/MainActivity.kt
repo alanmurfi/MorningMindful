@@ -44,17 +44,30 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initializeAds() {
-        // Initialize the Mobile Ads SDK
-        MobileAds.initialize(this) { initializationStatus ->
-            Log.d("MainActivity", "AdMob initialized: $initializationStatus")
+        try {
+            // Check if AdMob Banner ID is configured
+            val bannerId = BuildConfig.ADMOB_BANNER_ID
+            if (bannerId.isNullOrBlank()) {
+                Log.w("MainActivity", "AdMob Banner ID not configured, hiding ad view")
+                binding.adView.visibility = android.view.View.GONE
+                return
+            }
+
+            // Initialize the Mobile Ads SDK
+            MobileAds.initialize(this) { initializationStatus ->
+                Log.d("MainActivity", "AdMob initialized: $initializationStatus")
+            }
+
+            // Set adUnitId from BuildConfig (loaded from secrets.properties)
+            binding.adView.adUnitId = bannerId
+
+            // Load a banner ad
+            val adRequest = AdRequest.Builder().build()
+            binding.adView.loadAd(adRequest)
+        } catch (e: Exception) {
+            Log.e("MainActivity", "Error initializing ads", e)
+            binding.adView.visibility = android.view.View.GONE
         }
-
-        // Set adUnitId from BuildConfig (loaded from secrets.properties)
-        binding.adView.adUnitId = BuildConfig.ADMOB_BANNER_ID
-
-        // Load a banner ad
-        val adRequest = AdRequest.Builder().build()
-        binding.adView.loadAd(adRequest)
     }
 
     override fun onResume() {
