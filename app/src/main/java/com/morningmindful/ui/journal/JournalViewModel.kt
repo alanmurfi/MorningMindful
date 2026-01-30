@@ -1,10 +1,10 @@
 package com.morningmindful.ui.journal
 
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
-import android.content.Context
 import com.morningmindful.MorningMindfulApp
 import com.morningmindful.R
 import com.morningmindful.data.entity.JournalEntry
@@ -21,12 +21,18 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
+/**
+ * ViewModel for the Journal screen.
+ *
+ * Uses AndroidViewModel to safely hold Application context (no memory leak).
+ * Application context lives for the entire app lifecycle, so it's safe to hold.
+ */
 class JournalViewModel(
+    application: Application,
     private val journalRepository: JournalRepository,
     private val settingsRepository: SettingsRepository,
-    private val context: Context,
     private val editDate: LocalDate? = null
-) : ViewModel() {
+) : AndroidViewModel(application) {
 
     // Whether we're editing a past entry
     val isEditingPastEntry: Boolean = editDate != null && editDate != LocalDate.now()
@@ -103,7 +109,7 @@ class JournalViewModel(
         val required = requiredWordCount.value
 
         if (words < required) {
-            _saveState.value = SaveState.Error(context.getString(R.string.error_minimum_words, required))
+            _saveState.value = SaveState.Error(getApplication<Application>().getString(R.string.error_minimum_words, required))
             return
         }
 
@@ -121,7 +127,7 @@ class JournalViewModel(
                 _saveState.value = SaveState.Success
 
             } catch (e: Exception) {
-                _saveState.value = SaveState.Error(context.getString(R.string.error_failed_to_save, e.message ?: ""))
+                _saveState.value = SaveState.Error(getApplication<Application>().getString(R.string.error_failed_to_save, e.message ?: ""))
             }
         }
     }
@@ -134,7 +140,7 @@ class JournalViewModel(
         val words = _wordCount.value
 
         if (text.isBlank()) {
-            _saveState.value = SaveState.Error(context.getString(R.string.error_nothing_to_save))
+            _saveState.value = SaveState.Error(getApplication<Application>().getString(R.string.error_nothing_to_save))
             return
         }
 
@@ -146,7 +152,7 @@ class JournalViewModel(
                 _saveState.value = SaveState.DraftSaved
 
             } catch (e: Exception) {
-                _saveState.value = SaveState.Error(context.getString(R.string.error_failed_to_save, e.message ?: ""))
+                _saveState.value = SaveState.Error(getApplication<Application>().getString(R.string.error_failed_to_save, e.message ?: ""))
             }
         }
     }
@@ -201,17 +207,18 @@ class JournalViewModel(
     }
 
     private fun getRandomPrompt(): String {
+        val app = getApplication<Application>()
         val prompts = listOf(
-            context.getString(R.string.prompt_grateful),
-            context.getString(R.string.prompt_accomplish),
-            context.getString(R.string.prompt_feeling),
-            context.getString(R.string.prompt_on_mind),
-            context.getString(R.string.prompt_ideal_day),
-            context.getString(R.string.prompt_self_care),
-            context.getString(R.string.prompt_looking_forward),
-            context.getString(R.string.prompt_younger_self),
-            context.getString(R.string.prompt_challenge),
-            context.getString(R.string.prompt_joy)
+            app.getString(R.string.prompt_grateful),
+            app.getString(R.string.prompt_accomplish),
+            app.getString(R.string.prompt_feeling),
+            app.getString(R.string.prompt_on_mind),
+            app.getString(R.string.prompt_ideal_day),
+            app.getString(R.string.prompt_self_care),
+            app.getString(R.string.prompt_looking_forward),
+            app.getString(R.string.prompt_younger_self),
+            app.getString(R.string.prompt_challenge),
+            app.getString(R.string.prompt_joy)
         )
         return prompts.random()
     }
@@ -227,12 +234,12 @@ class JournalViewModel(
     companion object {
         val Factory: ViewModelProvider.Factory = object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
-            override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
+            override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
                 val app = MorningMindfulApp.getInstance()
                 return JournalViewModel(
+                    app,
                     app.journalRepository,
-                    app.settingsRepository,
-                    app.applicationContext
+                    app.settingsRepository
                 ) as T
             }
         }
@@ -240,12 +247,12 @@ class JournalViewModel(
         fun createFactory(editDate: LocalDate?): ViewModelProvider.Factory {
             return object : ViewModelProvider.Factory {
                 @Suppress("UNCHECKED_CAST")
-                override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
+                override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
                     val app = MorningMindfulApp.getInstance()
                     return JournalViewModel(
+                        app,
                         app.journalRepository,
                         app.settingsRepository,
-                        app.applicationContext,
                         editDate
                     ) as T
                 }
