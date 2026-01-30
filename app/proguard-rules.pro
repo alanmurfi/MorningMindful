@@ -28,6 +28,12 @@
 -keep class com.google.ads.** { *; }
 
 # ============================================
+# Keep Google Play Billing
+# ============================================
+-keep class com.android.billingclient.** { *; }
+-keep class com.android.vending.billing.** { *; }
+
+# ============================================
 # Keep Security & Encryption classes
 # ============================================
 -keep class androidx.security.crypto.** { *; }

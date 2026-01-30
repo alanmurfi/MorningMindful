@@ -95,6 +95,12 @@
             android:exported="false"
             android:theme="@style/Theme.MorningMindful" />
 
+        <!-- Upgrade Activity -->
+        <activity
+            android:name=".ui.upgrade.UpgradeActivity"
+            android:exported="false"
+            android:theme="@style/Theme.MorningMindful" />
+
         <!-- Accessibility Service for detecting app launches -->
         <service
             android:name=".service.AppBlockerAccessibilityService"

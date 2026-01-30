@@ -5,6 +5,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.os.Build
 import com.morningmindful.data.repository.JournalRepository
+import com.morningmindful.data.repository.PremiumRepository
 import com.morningmindful.data.repository.SettingsRepository
 import com.morningmindful.data.AppDatabase
 
@@ -14,6 +15,7 @@ class MorningMindfulApp : Application() {
     val database: AppDatabase by lazy { AppDatabase.getDatabase(this) }
     val journalRepository: JournalRepository by lazy { JournalRepository(database.journalEntryDao()) }
     val settingsRepository: SettingsRepository by lazy { SettingsRepository(this) }
+    val premiumRepository: PremiumRepository by lazy { PremiumRepository(this) }
 
     override fun onCreate() {
         super.onCreate()

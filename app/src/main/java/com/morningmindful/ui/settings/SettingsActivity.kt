@@ -5,6 +5,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
+import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
@@ -13,8 +14,10 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.slider.Slider
+import com.morningmindful.MorningMindfulApp
 import com.morningmindful.databinding.ActivitySettingsBinding
 import com.morningmindful.service.AppBlockerAccessibilityService
+import com.morningmindful.ui.upgrade.UpgradeActivity
 import com.morningmindful.util.BlockedApps
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -37,6 +40,18 @@ class SettingsActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         updatePermissionStatus()
+        updatePremiumStatus()
+    }
+
+    private fun updatePremiumStatus() {
+        val app = application as MorningMindfulApp
+        val isPremium = app.premiumRepository.hasPremiumAccess()
+
+        if (isPremium) {
+            binding.upgradeCard.visibility = View.GONE
+        } else {
+            binding.upgradeCard.visibility = View.VISIBLE
+        }
     }
 
     private fun setupUI() {
@@ -147,6 +162,11 @@ class SettingsActivity : AppCompatActivity() {
         binding.privacyPolicyButton.setOnClickListener {
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(PRIVACY_POLICY_URL))
             startActivity(intent)
+        }
+
+        // Upgrade to Premium
+        binding.upgradeCard.setOnClickListener {
+            startActivity(Intent(this, UpgradeActivity::class.java))
         }
 
         // App version

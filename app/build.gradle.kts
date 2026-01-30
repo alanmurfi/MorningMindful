@@ -113,6 +113,9 @@ dependencies {
     // Google AdMob
     implementation("com.google.android.gms:play-services-ads:23.0.0")
 
+    // Google Play Billing
+    implementation("com.android.billingclient:billing-ktx:6.1.0")
+
     // Testing
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

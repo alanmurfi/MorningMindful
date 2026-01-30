@@ -14,6 +14,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.MobileAds
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.morningmindful.MorningMindfulApp
 import com.morningmindful.databinding.ActivityMainBinding
 import com.morningmindful.service.AppBlockerAccessibilityService
 import com.morningmindful.ui.history.HistoryActivity
@@ -41,6 +42,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initializeAds() {
+        val app = application as MorningMindfulApp
+
+        // Hide ads for premium users
+        if (app.premiumRepository.hasPremiumAccess()) {
+            binding.adView.visibility = View.GONE
+            return
+        }
+
         // Initialize the Mobile Ads SDK
         MobileAds.initialize(this) { initializationStatus ->
             Log.d("MainActivity", "AdMob initialized: $initializationStatus")
