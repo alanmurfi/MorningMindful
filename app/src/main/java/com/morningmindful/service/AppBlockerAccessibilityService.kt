@@ -295,11 +295,11 @@ class AppBlockerAccessibilityService : AccessibilityService() {
         if (BlockingState.blockingEndTime.value == null) {
             Log.d(TAG, "Timer not started yet, starting now as fallback")
             BlockingState.onFirstUnlock(blockingDurationMinutes)
-
-            // Also start the foreground service for notification
-            val serviceIntent = Intent(this, MorningBlockerService::class.java)
-            startForegroundService(serviceIntent)
         }
+
+        // Always ensure the foreground service is running for notification
+        val serviceIntent = Intent(this, MorningBlockerService::class.java)
+        startForegroundService(serviceIntent)
 
         redirectToJournal(packageName)
     }

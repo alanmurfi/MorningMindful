@@ -25,7 +25,7 @@ if (secretsPropertiesFile.exists()) {
 
 android {
     namespace = "com.morningmindful"
-    compileSdk = 34
+    compileSdk = 35
 
     signingConfigs {
         create("release") {
@@ -41,9 +41,9 @@ android {
     defaultConfig {
         applicationId = "com.morningmindful"
         minSdk = 26
-        targetSdk = 34
-        versionCode = 2
-        versionName = "1.0.1"
+        targetSdk = 35
+        versionCode = 5
+        versionName = "1.0.4"
 
         testInstrumentationRunner = "com.morningmindful.HiltTestRunner"
 
@@ -66,6 +66,10 @@ android {
                 "proguard-rules.pro"
             )
             signingConfig = signingConfigs.getByName("release")
+            // Include native debug symbols for Play Store crash analysis
+            ndk {
+                debugSymbolLevel = "FULL"
+            }
         }
         debug {
             isMinifyEnabled = false
