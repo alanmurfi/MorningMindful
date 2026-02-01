@@ -419,9 +419,10 @@
                             android:textSize="14sp" />
 
                         <TextView
+                            android:id="@+id/accessibilityDescription"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Required to detect app launches"
+                            android:text="Required for Full Block mode only"
                             android:textColor="@color/text_tertiary"
                             android:textSize="12sp" />
 

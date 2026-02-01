@@ -110,7 +110,7 @@
     <string name="onboarding_window_desc">When should blocking be active?\n\nOutside these hours, your apps won\'t be blocked.</string>
 
     <string name="onboarding_perm_accessibility_title">Accessibility Permission</string>
-    <string name="onboarding_perm_accessibility_desc">We need this permission to detect when you open blocked apps.\n\nAndroid shows a warning, but we only use it to see which app you opened - nothing else.</string>
+    <string name="onboarding_perm_accessibility_desc">This permission is required for Full Block mode to instantly detect and block apps.\n\nAndroid shows a warning, but we only use it to see which app you opened - nothing else.</string>
 
     <string name="onboarding_perm_overlay_title">Display Permission</string>
     <string name="onboarding_perm_overlay_desc">We need this permission to show the journal screen when you open a blocked app.</string>
@@ -140,6 +140,11 @@
     <string name="blocking_mode_full_title">Full Block</string>
     <string name="blocking_mode_full_desc">Apps are blocked instantly.\nRequires Accessibility permission.</string>
     <string name="blocking_mode_gentle_title">Gentle Reminder</string>
-    <string name="blocking_mode_gentle_desc">Shows a reminder you can dismiss.\nNo special permission needed.</string>
+    <string name="blocking_mode_gentle_desc">Shows a reminder you can dismiss.\nNo Accessibility permission needed.</string>
+
+    <!-- Permission prompts -->
+    <string name="revoke_accessibility_title">Revoke Accessibility Permission?</string>
+    <string name="revoke_accessibility_message">Gentle Reminder mode doesn\'t need Accessibility permission. Would you like to disable it to save battery?\n\nTap \"Open Settings\" and turn off Morning Mindful.</string>
+    <string name="no_thanks">No thanks</string>
 
 </resources>

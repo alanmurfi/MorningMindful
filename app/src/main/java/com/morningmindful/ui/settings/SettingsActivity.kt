@@ -132,6 +132,12 @@ class SettingsActivity : AppCompatActivity() {
             }
             viewModel.setBlockingMode(mode)
             updatePermissionVisibility(mode)
+
+            // If switching to gentle mode and accessibility is still enabled, offer to disable it
+            if (mode == SettingsRepository.BLOCKING_MODE_GENTLE &&
+                PermissionUtils.hasAccessibilityPermission()) {
+                showRevokeAccessibilityDialog()
+            }
         }
 
         // Reset today's progress
@@ -354,6 +360,17 @@ class SettingsActivity : AppCompatActivity() {
         } catch (e: PackageManager.NameNotFoundException) {
             packageName.substringAfterLast(".")
         }
+    }
+
+    private fun showRevokeAccessibilityDialog() {
+        MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.revoke_accessibility_title)
+            .setMessage(R.string.revoke_accessibility_message)
+            .setPositiveButton(R.string.open_settings) { _, _ ->
+                startActivity(PermissionUtils.getAccessibilitySettingsIntent())
+            }
+            .setNegativeButton(R.string.no_thanks, null)
+            .show()
     }
 
     private fun showInstalledAppsDialog() {
