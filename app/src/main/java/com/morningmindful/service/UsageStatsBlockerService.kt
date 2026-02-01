@@ -51,7 +51,10 @@ class UsageStatsBlockerService : Service() {
     // Prevent showing overlay repeatedly for same app
     private var lastReminderPackage: String? = null
     private var lastReminderTime: Long = 0
-    private val REMINDER_COOLDOWN_MS = 30_000L // 30 seconds cooldown per app
+    private val REMINDER_COOLDOWN_MS = 300_000L // 5 minutes cooldown
+
+    // Track when user leaves blocked app to reset cooldown
+    private var previousForegroundPackage: String? = null
 
     companion object {
         private const val TAG = "UsageStatsBlocker"
@@ -193,12 +196,28 @@ class UsageStatsBlockerService : Service() {
         val foregroundPackage = getForegroundPackage() ?: return
 
         // Skip our own app
-        if (foregroundPackage == packageName) return
+        if (foregroundPackage == packageName) {
+            previousForegroundPackage = foregroundPackage
+            return
+        }
+
+        // Check if user left a blocked app - reset cooldown so next blocked app triggers immediately
+        val wasInBlockedApp = previousForegroundPackage != null &&
+            blockedPackages.contains(previousForegroundPackage) &&
+            previousForegroundPackage != foregroundPackage
+
+        if (wasInBlockedApp) {
+            Log.d(TAG, "User left blocked app ($previousForegroundPackage), resetting cooldown")
+            lastReminderPackage = null
+            lastReminderTime = 0
+        }
+
+        previousForegroundPackage = foregroundPackage
 
         // Check if it's a blocked app
         if (!blockedPackages.contains(foregroundPackage)) return
 
-        // Check cooldown - don't spam user
+        // Check cooldown - don't spam user (5 min cooldown, but resets when they leave blocked app)
         val now = System.currentTimeMillis()
         if (foregroundPackage == lastReminderPackage &&
             now - lastReminderTime < REMINDER_COOLDOWN_MS) {
