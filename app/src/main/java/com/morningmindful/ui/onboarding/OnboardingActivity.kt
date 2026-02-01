@@ -1,8 +1,11 @@
 package com.morningmindful.ui.onboarding
 
+import android.Manifest
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.view.View
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
@@ -22,6 +25,14 @@ class OnboardingActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityOnboardingBinding
     private lateinit var adapter: OnboardingPagerAdapter
+
+    // Notification permission launcher
+    private val notificationPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        // Refresh the adapter to show updated permission status
+        adapter.notifyDataSetChanged()
+    }
 
     // Settings values to be saved
     var blockingDuration: Int = 15
@@ -81,7 +92,7 @@ class OnboardingActivity : AppCompatActivity() {
     private fun updateDots(position: Int) {
         val dots = listOf(
             binding.dot1, binding.dot2, binding.dot3, binding.dot4,
-            binding.dot5, binding.dot6, binding.dot7, binding.dot8
+            binding.dot5, binding.dot6, binding.dot7, binding.dot8, binding.dot9
         )
         dots.forEachIndexed { index, dot ->
             dot.isSelected = index == position
@@ -119,5 +130,11 @@ class OnboardingActivity : AppCompatActivity() {
         super.onResume()
         // Refresh permission status when returning from settings
         adapter.notifyDataSetChanged()
+    }
+
+    fun requestNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+        }
     }
 }

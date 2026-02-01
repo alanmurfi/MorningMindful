@@ -1,10 +1,13 @@
 package com.morningmindful.ui.onboarding
 
+import android.Manifest
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
@@ -28,6 +31,7 @@ class OnboardingPagerAdapter(
             return if (isGentleMode) {
                 listOf(
                     OnboardingPage.WELCOME,
+                    OnboardingPage.PERMISSION_NOTIFICATIONS,
                     OnboardingPage.BLOCKING_MODE,
                     OnboardingPage.BLOCKING_DURATION,
                     OnboardingPage.WORD_COUNT,
@@ -39,6 +43,7 @@ class OnboardingPagerAdapter(
             } else {
                 listOf(
                     OnboardingPage.WELCOME,
+                    OnboardingPage.PERMISSION_NOTIFICATIONS,
                     OnboardingPage.BLOCKING_MODE,
                     OnboardingPage.BLOCKING_DURATION,
                     OnboardingPage.WORD_COUNT,
@@ -99,6 +104,30 @@ class OnboardingPagerAdapter(
             gentleReminderCard.visibility = View.GONE
 
             when (page) {
+                OnboardingPage.PERMISSION_NOTIFICATIONS -> {
+                    actionButton.visibility = View.VISIBLE
+                    statusText.visibility = View.VISIBLE
+
+                    val hasPermission = PermissionUtils.hasNotificationPermission(activity)
+                    if (hasPermission) {
+                        statusText.text = "✓ Permission granted"
+                        statusText.setTextColor(itemView.context.getColor(R.color.success))
+                        actionButton.text = "Enabled"
+                        actionButton.isEnabled = false
+                    } else {
+                        statusText.text = "Tap to allow notifications"
+                        statusText.setTextColor(itemView.context.getColor(R.color.text_secondary))
+                        actionButton.text = "Allow Notifications"
+                        actionButton.isEnabled = true
+                        actionButton.setOnClickListener {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                activity.requestNotificationPermission()
+                            } else {
+                                PermissionUtils.openNotificationSettings(activity)
+                            }
+                        }
+                    }
+                }
                 OnboardingPage.BLOCKING_MODE -> {
                     fullBlockCard.visibility = View.VISIBLE
                     gentleReminderCard.visibility = View.VISIBLE
@@ -297,6 +326,11 @@ enum class OnboardingPage(
         R.drawable.ic_sun,
         R.string.onboarding_window_title,
         R.string.onboarding_window_desc
+    ),
+    PERMISSION_NOTIFICATIONS(
+        R.drawable.ic_notification,
+        R.string.onboarding_perm_notifications_title,
+        R.string.onboarding_perm_notifications_desc
     ),
     PERMISSION_ACCESSIBILITY(
         R.drawable.ic_settings,

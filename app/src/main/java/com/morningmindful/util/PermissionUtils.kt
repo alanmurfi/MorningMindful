@@ -1,12 +1,15 @@
 package com.morningmindful.util
 
+import android.Manifest
 import android.app.AppOpsManager
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Process
 import android.provider.Settings
+import androidx.core.content.ContextCompat
 import com.morningmindful.service.AppBlockerAccessibilityService
 
 /**
@@ -114,5 +117,43 @@ object PermissionUtils {
      */
     fun openUsageStatsSettings(context: Context) {
         context.startActivity(getUsageStatsSettingsIntent())
+    }
+
+    /**
+     * Check if notification permission is granted.
+     * Required for Android 13+ (API 33+).
+     */
+    fun hasNotificationPermission(context: Context): Boolean {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) == PackageManager.PERMISSION_GRANTED
+        } else {
+            // Before Android 13, notifications are allowed by default
+            true
+        }
+    }
+
+    /**
+     * Get intent to open notification settings for this app.
+     */
+    fun getNotificationSettingsIntent(context: Context): Intent {
+        return Intent().apply {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                action = Settings.ACTION_APP_NOTIFICATION_SETTINGS
+                putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
+            } else {
+                action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+                data = Uri.parse("package:${context.packageName}")
+            }
+        }
+    }
+
+    /**
+     * Open notification settings directly.
+     */
+    fun openNotificationSettings(context: Context) {
+        context.startActivity(getNotificationSettingsIntent(context))
     }
 }

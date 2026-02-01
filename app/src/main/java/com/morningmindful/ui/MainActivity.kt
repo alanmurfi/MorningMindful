@@ -23,9 +23,11 @@ import com.morningmindful.ui.settings.SettingsActivity
 import kotlinx.coroutines.flow.first
 import com.morningmindful.util.PermissionUtils
 import com.morningmindful.data.repository.SettingsRepository
+import com.morningmindful.service.UsageStatsBlockerService
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.time.LocalTime
 
 /**
  * Main activity showing journal history, stats, and access to settings.
@@ -91,6 +93,48 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
         checkPermissions()
         viewModel.refreshTodayStatus()
+        startGentleReminderServiceIfNeeded()
+    }
+
+    private fun startGentleReminderServiceIfNeeded() {
+        lifecycleScope.launch {
+            val settings = MorningMindfulApp.getInstance().settingsRepository
+
+            // Check if blocking is enabled and in gentle mode
+            val isEnabled = settings.isBlockingEnabled.first()
+            val blockingMode = settings.blockingMode.first()
+
+            if (!isEnabled || blockingMode != SettingsRepository.BLOCKING_MODE_GENTLE) {
+                return@launch
+            }
+
+            // Check if we're in the morning window
+            val currentHour = LocalTime.now().hour
+            val startHour = settings.morningStartHour.first()
+            val endHour = settings.morningEndHour.first()
+
+            if (currentHour < startHour || currentHour >= endHour) {
+                Log.d("MainActivity", "Outside morning window, not starting gentle reminder service")
+                return@launch
+            }
+
+            // Check if service is already running
+            if (UsageStatsBlockerService.isServiceRunning) {
+                Log.d("MainActivity", "Gentle reminder service already running")
+                return@launch
+            }
+
+            // Check if permissions are granted
+            if (!PermissionUtils.hasUsageStatsPermission(this@MainActivity) ||
+                !PermissionUtils.hasOverlayPermission(this@MainActivity)) {
+                Log.d("MainActivity", "Missing permissions for gentle reminder")
+                return@launch
+            }
+
+            // Start the service
+            Log.d("MainActivity", "Starting gentle reminder service")
+            UsageStatsBlockerService.start(this@MainActivity)
+        }
     }
 
     private fun setupUI() {

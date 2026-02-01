@@ -172,17 +172,10 @@ class UsageStatsBlockerService : Service() {
     }
 
     private fun checkForegroundApp() {
-        // Check if we should stop the service
-        if (!BlockingState.shouldBlock()) {
-            Log.d(TAG, "Blocking period ended, stopping service")
-            stopSelf()
-            return
-        }
-
         // Check if we're in the morning window - stop service to save battery if outside
         val currentHour = LocalTime.now().hour
         if (currentHour < morningStartHour || currentHour >= morningEndHour) {
-            Log.d(TAG, "Outside morning window, stopping service to save battery")
+            Log.d(TAG, "Outside morning window ($morningStartHour:00 - $morningEndHour:00), current: $currentHour, stopping service")
             stopSelf()
             return
         }
@@ -193,6 +186,8 @@ class UsageStatsBlockerService : Service() {
             stopSelf()
             return
         }
+
+        Log.d(TAG, "Checking foreground app... blocked packages: $blockedPackages")
 
         // Get foreground app
         val foregroundPackage = getForegroundPackage() ?: return
@@ -219,19 +214,28 @@ class UsageStatsBlockerService : Service() {
 
     private fun getForegroundPackage(): String? {
         val usageStatsManager = getSystemService(Context.USAGE_STATS_SERVICE) as? UsageStatsManager
-            ?: return null
+        if (usageStatsManager == null) {
+            Log.e(TAG, "UsageStatsManager is null")
+            return null
+        }
 
         val now = System.currentTimeMillis()
         val stats = usageStatsManager.queryUsageStats(
             UsageStatsManager.INTERVAL_DAILY,
-            now - 10_000, // Last 10 seconds
+            now - 60_000, // Last 60 seconds for better detection
             now
         )
 
-        if (stats.isNullOrEmpty()) return null
+        if (stats.isNullOrEmpty()) {
+            Log.w(TAG, "No usage stats available - permission may not be granted")
+            return null
+        }
 
         // Get most recently used app
-        return stats.maxByOrNull { it.lastTimeUsed }?.packageName
+        val mostRecent = stats.maxByOrNull { it.lastTimeUsed }
+        val packageName = mostRecent?.packageName
+        Log.d(TAG, "Foreground app detected: $packageName")
+        return packageName
     }
 
     private fun showReminderOverlay(blockedPackage: String) {
