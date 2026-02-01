@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">晨间正念</string>
+
+    <!-- Journal Activity -->
+    <string name="good_morning">早上好</string>
+    <string name="journal_hint">开始写下你的想法…</string>
+    <string name="save_entry">保存并解锁</string>
+    <string name="save_draft">保存草稿</string>
+    <string name="draft_saved">草稿已保存！</string>
+    <string name="skip_today">跳过今天</string>
+    <string name="journal_saved">日记已保存！</string>
+    <string name="have_a_mindful_day">祝你拥有正念的一天。</string>
+    <string name="edit_entry">编辑日记</string>
+    <string name="word_count_format">%1$d / %2$d 字</string>
+    <string name="saving">保存中…</string>
+    <string name="blocked_app_message">你尝试打开 %1$s。\n请先完成你的晨间日记。</string>
+    <string name="morning_mindfulness_active">晨间正念已激活</string>
+    <string name="complete_or_wait_message">完成你的日记或等待 %1$s 后继续。</string>
+    <string name="keep_writing">继续写作</string>
+    <string name="skip_journaling_title">跳过写日记？</string>
+    <string name="skip_journaling_message">限制时间已结束。你可以跳过今天的日记，但写作有助于开启正念的一天。</string>
+    <string name="error">错误</string>
+    <string name="ok">确定</string>
+
+    <!-- Main Activity -->
+    <string name="streak_days">%1$d 天</string>
+    <string name="streak_day">1 天</string>
+    <string name="current_streak">当前连续</string>
+    <string name="longest_streak">最长连续</string>
+    <string name="streak_fire">%1$d 天连续！</string>
+    <string name="streak_fire_plural">%1$d 天连续！</string>
+    <string name="no_streak">今天开始你的连续记录！</string>
+    <string name="new_record">新纪录！</string>
+    <string name="journal_completed_today">今日日记已完成</string>
+    <string name="view_todays_entry">查看今日日记</string>
+    <string name="no_journal_yet">今天还没有写日记</string>
+    <string name="write_now">立即写作</string>
+    <string name="permissions_needed_intro">晨间正念需要以下权限来限制应用：\n\n</string>
+    <string name="accessibility_permission_needed">• 无障碍服务 - 用于检测受限应用的打开\n</string>
+    <string name="overlay_permission_needed">• 悬浮窗权限 - 用于显示日记界面\n</string>
+    <string name="setup_permissions">设置权限</string>
+    <string name="open_settings">打开设置</string>
+    <string name="later">稍后</string>
+
+    <!-- Settings Activity -->
+    <string name="duration_minutes">%1$d 分钟</string>
+    <string name="word_count_setting">%1$d 字</string>
+    <string name="reset_today_title">重置今日进度？</string>
+    <string name="reset_today_message">这将删除今天的日记，应用限制将再次激活。可用于测试或重新写日记。</string>
+    <string name="reset">重置</string>
+    <string name="cancel">取消</string>
+    <string name="reset_settings_title">重置所有设置？</string>
+    <string name="reset_settings_message">这将把所有设置和受限应用恢复为默认值。</string>
+    <string name="default_version">1.0</string>
+    <string name="status_enabled">已启用</string>
+    <string name="status_disabled">已禁用</string>
+    <string name="select_app_to_block">选择要限制的应用</string>
+    <string name="time_12am">凌晨 12:00</string>
+    <string name="time_am">上午 %1$d:00</string>
+    <string name="time_12pm">中午 12:00</string>
+    <string name="time_12am_next_day">凌晨 12:00（次日）</string>
+    <string name="time_pm">下午 %1$d:00</string>
+
+    <!-- Entry Detail Activity -->
+    <string name="word_count_display">%1$d 字</string>
+    <string name="written_at">写于 %1$s</string>
+    <string name="feeling_mood">心情：%1$s</string>
+
+    <!-- Notification Service -->
+    <string name="notification_journal_completed">日记已完成！祝你拥有正念的一天。</string>
+    <string name="notification_time_remaining">完成日记以解锁应用。剩余时间：%1$d分%2$d秒</string>
+    <string name="notification_routine_complete">晨间例程已完成</string>
+
+    <!-- Journal Prompts -->
+    <string name="prompt_grateful">今天早上你感激什么？</string>
+    <string name="prompt_accomplish">今天你想完成什么事情？</string>
+    <string name="prompt_feeling">你现在感觉如何？为什么会有这种感觉？</string>
+    <string name="prompt_on_mind">最近你在想什么？</string>
+    <string name="prompt_ideal_day">描述你理想的一天。什么会让今天变得美好？</string>
+    <string name="prompt_self_care">今天你可以做什么小事来照顾自己？</string>
+    <string name="prompt_looking_forward">写一些你期待的事情。</string>
+    <string name="prompt_younger_self">你想对年轻时的自己说什么？</string>
+    <string name="prompt_challenge">你正面临什么挑战？你会如何应对？</string>
+    <string name="prompt_joy">描述最近给你带来快乐的一个时刻。</string>
+
+    <!-- Error Messages -->
+    <string name="error_minimum_words">请至少写 %1$d 字</string>
+    <string name="error_failed_to_save">保存失败：%1$s</string>
+    <string name="error_nothing_to_save">没有内容可保存</string>
+
+    <!-- Accessibility Service -->
+    <string name="accessibility_service_description">晨间正念使用无障碍服务来检测你在晨间正念时段打开受限应用。这允许应用将你重定向到日记页面。不会收集或分享任何个人数据。</string>
+
+    <!-- Notifications -->
+    <string name="notification_title">晨间正念已激活</string>
+    <string name="notification_text">完成日记以解锁应用</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_welcome_title">欢迎使用晨间正念</string>
+    <string name="onboarding_welcome_desc">用正念开始你的早晨。\n\n这个应用通过在你写完简短日记之前温和地限制社交媒体，帮助你打破刷手机的习惯。</string>
+
+    <string name="onboarding_duration_title">限制时长</string>
+    <string name="onboarding_duration_desc">解锁手机后应用应该被限制多长时间？</string>
+
+    <string name="onboarding_wordcount_title">字数要求</string>
+    <string name="onboarding_wordcount_desc">你想写多少字来解锁应用？</string>
+
+    <string name="onboarding_window_title">晨间时段</string>
+    <string name="onboarding_window_desc">限制应该在什么时间段内激活？\n\n在这些时间之外，你的应用不会被限制。</string>
+
+    <string name="onboarding_perm_accessibility_title">无障碍权限</string>
+    <string name="onboarding_perm_accessibility_desc">完全限制模式需要此权限才能即时检测和限制应用。\n\n系统会显示警告，但我们仅用它来查看你打开了哪个应用 - 没有其他用途。</string>
+
+    <string name="onboarding_perm_overlay_title">悬浮窗权限</string>
+    <string name="onboarding_perm_overlay_desc">我们需要此权限在你打开受限应用时显示日记界面。</string>
+
+    <string name="onboarding_perm_usage_stats_title">使用情况访问权限</string>
+    <string name="onboarding_perm_usage_stats_desc">我们需要此权限来查看你正在使用哪个应用，以便显示温和提醒。</string>
+
+    <string name="onboarding_perm_notifications_title">允许通知</string>
+    <string name="onboarding_perm_notifications_desc">我们需要此权限来显示提醒并让你知道晨间例程何时激活。</string>
+
+    <string name="onboarding_ready_title">准备就绪！</string>
+    <string name="onboarding_ready_desc">限制功能已启用。\n\n你可以随时更改这些设置。\n\n享受你的正念早晨！</string>
+
+    <string name="next">下一步</string>
+    <string name="back">返回</string>
+    <string name="skip">跳过</string>
+    <string name="get_started">开始使用</string>
+
+    <!-- Gentle Reminder Mode -->
+    <string name="gentle_reminder_title">正念时刻</string>
+    <string name="open_journal">打开日记</string>
+    <string name="continue_anyway">仍然继续</string>
+
+    <!-- Blocking Mode Selection -->
+    <string name="onboarding_mode_title">选择限制方式</string>
+    <string name="onboarding_mode_desc">你希望应用如何工作？</string>
+    <string name="blocking_mode_full_title">完全限制</string>
+    <string name="blocking_mode_full_desc">应用会立即被限制。\n需要无障碍权限。</string>
+    <string name="blocking_mode_gentle_title">温和提醒</string>
+    <string name="blocking_mode_gentle_desc">显示可关闭的提醒。\n不需要无障碍权限。</string>
+
+    <!-- Permission prompts -->
+    <string name="revoke_accessibility_title">撤销无障碍权限？</string>
+    <string name="revoke_accessibility_message">温和提醒模式不需要无障碍权限。你想禁用它以节省电量吗？\n\n点击"打开设置"并关闭晨间正念。</string>
+    <string name="no_thanks">不用了</string>
+
+</resources>
