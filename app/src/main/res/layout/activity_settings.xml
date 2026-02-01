@@ -40,6 +40,17 @@
 
         </LinearLayout>
 
+        <!-- Redo Introduction -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/redoIntroButton"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/redo_introduction"
+            app:icon="@drawable/ic_refresh"
+            app:iconGravity="textStart" />
+
         <!-- Blocking Enabled -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"

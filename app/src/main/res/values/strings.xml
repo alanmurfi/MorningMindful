@@ -147,4 +147,7 @@
     <string name="revoke_accessibility_message">Gentle Reminder mode doesn\'t need Accessibility permission. Would you like to disable it to save battery?\n\nTap \"Open Settings\" and turn off Morning Mindful.</string>
     <string name="no_thanks">No thanks</string>
 
+    <!-- Settings -->
+    <string name="redo_introduction">Redo Introduction</string>
+
 </resources>

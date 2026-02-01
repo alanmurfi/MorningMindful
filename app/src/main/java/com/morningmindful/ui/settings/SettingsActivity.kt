@@ -16,6 +16,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.morningmindful.R
 import com.morningmindful.databinding.ActivitySettingsBinding
 import com.morningmindful.data.repository.SettingsRepository
+import com.morningmindful.ui.onboarding.OnboardingActivity
 import com.morningmindful.util.BlockedApps
 import com.morningmindful.util.PermissionUtils
 import dagger.hilt.android.AndroidEntryPoint
@@ -47,6 +48,12 @@ class SettingsActivity : AppCompatActivity() {
         // Back button
         binding.backButton.setOnClickListener {
             finish()
+        }
+
+        // Redo introduction button
+        binding.redoIntroButton.setOnClickListener {
+            val intent = Intent(this, OnboardingActivity::class.java)
+            startActivity(intent)
         }
 
         // Blocking enabled switch

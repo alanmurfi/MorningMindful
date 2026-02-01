@@ -147,4 +147,7 @@
     <string name="revoke_accessibility_message">温和提醒模式不需要无障碍权限。你想禁用它以节省电量吗？\n\n点击"打开设置"并关闭晨间正念。</string>
     <string name="no_thanks">不用了</string>
 
+    <!-- Settings -->
+    <string name="redo_introduction">重新开始引导</string>
+
 </resources>
