@@ -17,6 +17,7 @@ class ReminderOverlayActivity : AppCompatActivity() {
 
     companion object {
         const val EXTRA_BLOCKED_APP = "blocked_app"
+        private const val MAX_PACKAGE_NAME_LENGTH = 256
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,7 +25,13 @@ class ReminderOverlayActivity : AppCompatActivity() {
         binding = ActivityReminderOverlayBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val blockedPackage = intent.getStringExtra(EXTRA_BLOCKED_APP) ?: ""
+        // Validate the intent extra to prevent injection attacks
+        val blockedPackage = validatePackageName(intent.getStringExtra(EXTRA_BLOCKED_APP))
+        if (blockedPackage == null) {
+            // Invalid or missing package name - close activity
+            finish()
+            return
+        }
         val appName = BlockedApps.getAppDisplayName(blockedPackage)
 
         binding.messageText.text = "You opened $appName\n\nTake a moment to write in your journal first?"
@@ -46,5 +53,23 @@ class ReminderOverlayActivity : AppCompatActivity() {
         super.onBackPressed()
         // Allow back press to dismiss
         finish()
+    }
+
+    /**
+     * Validate package name to prevent injection attacks.
+     * Returns sanitized package name or null if invalid.
+     */
+    private fun validatePackageName(packageName: String?): String? {
+        if (packageName.isNullOrBlank()) return null
+
+        // Check length
+        if (packageName.length > MAX_PACKAGE_NAME_LENGTH) return null
+
+        // Valid Android package names only contain alphanumeric, dots, and underscores
+        // They must start with a letter and contain at least one dot
+        val packageNameRegex = Regex("^[a-zA-Z][a-zA-Z0-9_]*(\\.[a-zA-Z][a-zA-Z0-9_]*)+$")
+        if (!packageNameRegex.matches(packageName)) return null
+
+        return packageName
     }
 }

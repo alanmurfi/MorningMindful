@@ -1,6 +1,7 @@
 package com.morningmindful.util
 
 import android.Manifest
+import android.accessibilityservice.AccessibilityServiceInfo
 import android.app.AppOpsManager
 import android.content.Context
 import android.content.Intent
@@ -9,7 +10,9 @@ import android.net.Uri
 import android.os.Build
 import android.os.Process
 import android.provider.Settings
+import android.view.accessibility.AccessibilityManager
 import androidx.core.content.ContextCompat
+import com.morningmindful.MorningMindfulApp
 import com.morningmindful.service.AppBlockerAccessibilityService
 
 /**
@@ -19,10 +22,28 @@ import com.morningmindful.service.AppBlockerAccessibilityService
 object PermissionUtils {
 
     /**
-     * Check if accessibility service is enabled.
+     * Check if accessibility service is enabled by querying the actual system state.
+     * This is more reliable than relying on the service's static variable.
      */
     fun hasAccessibilityPermission(): Boolean {
-        return AppBlockerAccessibilityService.isServiceRunning
+        return try {
+            val context = MorningMindfulApp.getInstance()
+            val accessibilityManager = context.getSystemService(Context.ACCESSIBILITY_SERVICE) as? AccessibilityManager
+                ?: return false
+
+            val enabledServices = accessibilityManager.getEnabledAccessibilityServiceList(
+                AccessibilityServiceInfo.FEEDBACK_GENERIC
+            )
+
+            val ourServiceId = "${context.packageName}/${AppBlockerAccessibilityService::class.java.canonicalName}"
+
+            enabledServices.any { serviceInfo ->
+                serviceInfo.id == ourServiceId
+            }
+        } catch (e: Exception) {
+            // Fall back to static variable if system query fails
+            AppBlockerAccessibilityService.isServiceRunning
+        }
     }
 
     /**
