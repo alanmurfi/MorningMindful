@@ -29,16 +29,26 @@ object PermissionUtils {
         return try {
             val context = MorningMindfulApp.getInstance()
             val accessibilityManager = context.getSystemService(Context.ACCESSIBILITY_SERVICE) as? AccessibilityManager
-                ?: return false
+                ?: return AppBlockerAccessibilityService.isServiceRunning
 
             val enabledServices = accessibilityManager.getEnabledAccessibilityServiceList(
                 AccessibilityServiceInfo.FEEDBACK_GENERIC
             )
 
-            val ourServiceId = "${context.packageName}/${AppBlockerAccessibilityService::class.java.canonicalName}"
+            // Check if our service is in the enabled list
+            // Service IDs can be formatted differently on different devices
+            val ourPackage = context.packageName
+            val ourServiceName = AppBlockerAccessibilityService::class.java.name
+            val ourServiceSimpleName = AppBlockerAccessibilityService::class.java.simpleName
 
             enabledServices.any { serviceInfo ->
-                serviceInfo.id == ourServiceId
+                val id = serviceInfo.id ?: return@any false
+                // Match by package name and service name (various formats)
+                id.startsWith(ourPackage) && (
+                    id.contains(ourServiceName) ||
+                    id.contains(ourServiceSimpleName) ||
+                    id.endsWith(".AppBlockerAccessibilityService")
+                )
             }
         } catch (e: Exception) {
             // Fall back to static variable if system query fails

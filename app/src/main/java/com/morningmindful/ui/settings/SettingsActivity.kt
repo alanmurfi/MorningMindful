@@ -220,8 +220,10 @@ class SettingsActivity : AppCompatActivity() {
                 // Blocking duration
                 launch {
                     viewModel.blockingDurationMinutes.collectLatest { minutes ->
-                        binding.durationSlider.value = minutes.toFloat()
-                        binding.durationValue.text = getString(R.string.duration_minutes, minutes)
+                        // Clamp value to slider range (5-60)
+                        val clampedMinutes = minutes.coerceIn(5, 60)
+                        binding.durationSlider.value = clampedMinutes.toFloat()
+                        binding.durationValue.text = getString(R.string.duration_minutes, clampedMinutes)
                     }
                 }
 
