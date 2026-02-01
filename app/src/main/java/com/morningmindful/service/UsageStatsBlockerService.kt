@@ -190,6 +190,13 @@ class UsageStatsBlockerService : Service() {
             return
         }
 
+        // Check if blocking timer has expired
+        if (!BlockingState.shouldBlock()) {
+            Log.d(TAG, "Blocking timer expired, stopping service")
+            stopSelf()
+            return
+        }
+
         Log.d(TAG, "Checking foreground app... blocked packages: $blockedPackages")
 
         // Get foreground app

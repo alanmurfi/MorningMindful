@@ -205,11 +205,60 @@ class JournalViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Count words in text, with support for CJK (Chinese, Japanese, Korean) characters.
+     * - For CJK characters: each character counts as one word (since CJK doesn't use spaces)
+     * - For other text: split on whitespace and count
+     */
     private fun countWords(text: String): Int {
-        return text.trim()
-            .split(Regex("\\s+"))
-            .filter { it.isNotBlank() }
-            .size
+        if (text.isBlank()) return 0
+
+        var count = 0
+        var inWord = false
+
+        for (char in text) {
+            when {
+                // CJK character ranges - each counts as one word
+                isCjkCharacter(char) -> {
+                    if (inWord) {
+                        count++ // End the current word
+                        inWord = false
+                    }
+                    count++ // Count the CJK character as a word
+                }
+                // Whitespace ends a word
+                char.isWhitespace() -> {
+                    if (inWord) {
+                        count++
+                        inWord = false
+                    }
+                }
+                // Other characters are part of a word
+                else -> {
+                    inWord = true
+                }
+            }
+        }
+
+        // Don't forget the last word if text doesn't end with whitespace
+        if (inWord) count++
+
+        return count
+    }
+
+    /**
+     * Check if a character is CJK (Chinese, Japanese, Korean).
+     * Covers the main Unicode blocks for CJK characters.
+     */
+    private fun isCjkCharacter(char: Char): Boolean {
+        val codePoint = char.code
+        return (codePoint in 0x4E00..0x9FFF) ||    // CJK Unified Ideographs
+               (codePoint in 0x3400..0x4DBF) ||    // CJK Extension A
+               (codePoint in 0x3000..0x303F) ||    // CJK Symbols and Punctuation
+               (codePoint in 0x3040..0x309F) ||    // Hiragana
+               (codePoint in 0x30A0..0x30FF) ||    // Katakana
+               (codePoint in 0xAC00..0xD7AF) ||    // Hangul Syllables (Korean)
+               (codePoint in 0x1100..0x11FF)       // Hangul Jamo (Korean)
     }
 
     private fun startTimer() {
