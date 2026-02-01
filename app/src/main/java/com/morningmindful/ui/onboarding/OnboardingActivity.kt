@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
 import com.morningmindful.MorningMindfulApp
+import com.morningmindful.R
 import com.morningmindful.data.repository.SettingsRepository
 import com.morningmindful.databinding.ActivityOnboardingBinding
 import com.morningmindful.ui.MainActivity
@@ -104,7 +105,7 @@ class OnboardingActivity : AppCompatActivity() {
         val isFirstPage = position == 0
 
         binding.backButton.visibility = if (isFirstPage) View.INVISIBLE else View.VISIBLE
-        binding.nextButton.text = if (isLastPage) "Get Started" else "Next"
+        binding.nextButton.text = if (isLastPage) getString(R.string.get_started) else getString(R.string.next)
         binding.skipButton.visibility = if (isLastPage) View.GONE else View.VISIBLE
     }
 

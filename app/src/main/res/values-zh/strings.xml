@@ -149,5 +149,76 @@
 
     <!-- Settings -->
     <string name="redo_introduction">重新开始引导</string>
+    <string name="settings_title">设置</string>
+    <string name="enable_blocking">启用限制</string>
+    <string name="enable_blocking_desc">每天早上首次解锁时限制应用</string>
+    <string name="blocking_style">限制方式</string>
+    <string name="blocking_style_desc">应用如何被限制</string>
+    <string name="blocking_duration">限制时长</string>
+    <string name="required_word_count">所需字数</string>
+    <string name="morning_window">晨间时段</string>
+    <string name="morning_window_desc">限制仅在这些时间内激活</string>
+    <string name="start_time">开始时间</string>
+    <string name="end_time">结束时间</string>
+    <string name="permissions">权限</string>
+    <string name="accessibility_service">无障碍服务</string>
+    <string name="accessibility_full_block_only">仅完全限制模式需要</string>
+    <string name="usage_access">使用情况访问</string>
+    <string name="usage_access_desc">温和提醒需要此权限</string>
+    <string name="display_over_apps">悬浮窗</string>
+    <string name="display_over_apps_desc">显示日记界面需要此权限</string>
+    <string name="blocked_apps">受限应用</string>
+    <string name="add_app">+ 添加应用</string>
+    <string name="testing_reset">测试与重置</string>
+    <string name="reset_today_progress">重置今日进度</string>
+    <string name="reset_today_progress_desc">删除今天的日记以重新激活限制</string>
+    <string name="reset_all_settings">重置所有设置</string>
+    <string name="reset_all_settings_desc">将设置和受限应用恢复为默认值</string>
+    <string name="appearance">外观</string>
+    <string name="theme">主题</string>
+    <string name="theme_desc">选择你喜欢的外观</string>
+    <string name="theme_system">跟随系统</string>
+    <string name="theme_light">浅色</string>
+    <string name="theme_dark">深色</string>
+    <string name="about">关于</string>
+    <string name="privacy_policy">隐私政策</string>
+    <string name="version">版本</string>
+
+    <!-- Onboarding extras -->
+    <string name="start_label">开始：</string>
+    <string name="end_label">结束：</string>
+    <string name="recommended">推荐</string>
+
+    <!-- Journal -->
+    <string name="how_feeling">你感觉如何？</string>
+
+    <!-- History -->
+    <string name="journal_history">日记历史</string>
+    <string name="no_entries_yet">还没有日记</string>
+    <string name="start_writing_history">开始写作，在这里查看你的历史记录</string>
+    <string name="entries">日记</string>
+
+    <!-- Blocked Apps -->
+    <string name="not_installed">未安装</string>
+
+    <!-- Main Activity extras -->
+    <string name="setup_required">需要设置</string>
+    <string name="setup_required_desc">启用权限以开始限制应用。</string>
+    <string name="setup_now">立即设置</string>
+    <string name="words_label">字数</string>
+    <string name="streak_label">连续</string>
+    <string name="recent_entries">最近日记</string>
+    <string name="view_all">查看全部</string>
+    <string name="empty_no_entries">还没有日记</string>
+    <string name="empty_start_routine">开始你的正念晨间例程！</string>
+
+    <!-- Onboarding dynamic text -->
+    <string name="permission_granted">✓ 权限已授予</string>
+    <string name="tap_to_open_settings">点击打开设置</string>
+    <string name="tap_to_allow_notifications">点击允许通知</string>
+    <string name="allow_notifications">允许通知</string>
+    <string name="enabled">已启用</string>
+    <string name="minutes_format">%1$d 分钟</string>
+    <string name="words_format">%1$d 字</string>
 
 </resources>

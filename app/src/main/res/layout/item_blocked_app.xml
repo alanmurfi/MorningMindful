@@ -37,7 +37,7 @@
                 android:background="@drawable/label_background"
                 android:paddingHorizontal="6dp"
                 android:paddingVertical="2dp"
-                android:text="Not installed"
+                android:text="@string/not_installed"
                 android:textColor="@color/text_tertiary"
                 android:textSize="10sp"
                 android:visibility="gone"

@@ -34,7 +34,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:fontFamily="sans-serif-medium"
-                android:text="Settings"
+                android:text="@string/settings_title"
                 android:textColor="@color/text_primary"
                 android:textSize="24sp" />
 
@@ -76,14 +76,14 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Enable Blocking"
+                        android:text="@string/enable_blocking"
                         android:textColor="@color/text_primary"
                         android:textSize="16sp" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Block apps on first unlock each morning"
+                        android:text="@string/enable_blocking_desc"
                         android:textColor="@color/text_secondary"
                         android:textSize="12sp" />
 
@@ -116,7 +116,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Blocking Style"
+                    android:text="@string/blocking_style"
                     android:textColor="@color/text_primary"
                     android:textSize="16sp" />
 
@@ -124,7 +124,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:text="How apps are blocked"
+                    android:text="@string/blocking_style_desc"
                     android:textColor="@color/text_secondary"
                     android:textSize="12sp" />
 
@@ -200,7 +200,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Blocking Duration"
+                        android:text="@string/blocking_duration"
                         android:textColor="@color/text_primary"
                         android:textSize="16sp" />
 
@@ -252,7 +252,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Required Word Count"
+                        android:text="@string/required_word_count"
                         android:textColor="@color/text_primary"
                         android:textSize="16sp" />
 
@@ -298,7 +298,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Morning Window"
+                    android:text="@string/morning_window"
                     android:textColor="@color/text_primary"
                     android:textSize="16sp" />
 
@@ -306,7 +306,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:text="Blocking only activates during these hours"
+                    android:text="@string/morning_window_desc"
                     android:textColor="@color/text_secondary"
                     android:textSize="12sp" />
 
@@ -321,7 +321,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Start time"
+                        android:text="@string/start_time"
                         android:textColor="@color/text_secondary"
                         android:textSize="14sp" />
 
@@ -355,7 +355,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="End time"
+                        android:text="@string/end_time"
                         android:textColor="@color/text_secondary"
                         android:textSize="14sp" />
 
@@ -387,7 +387,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:text="Permissions"
+            android:text="@string/permissions"
             android:textColor="@color/text_secondary"
             android:textSize="14sp"
             android:textStyle="bold" />
@@ -425,7 +425,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Accessibility Service"
+                            android:text="@string/accessibility_service"
                             android:textColor="@color/text_primary"
                             android:textSize="14sp" />
 
@@ -433,7 +433,7 @@
                             android:id="@+id/accessibilityDescription"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Required for Full Block mode only"
+                            android:text="@string/accessibility_full_block_only"
                             android:textColor="@color/text_tertiary"
                             android:textSize="12sp" />
 
@@ -475,14 +475,14 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Usage Access"
+                            android:text="@string/usage_access"
                             android:textColor="@color/text_primary"
                             android:textSize="14sp" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Required for gentle reminders"
+                            android:text="@string/usage_access_desc"
                             android:textColor="@color/text_tertiary"
                             android:textSize="12sp" />
 
@@ -524,14 +524,14 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Display Over Apps"
+                            android:text="@string/display_over_apps"
                             android:textColor="@color/text_primary"
                             android:textSize="14sp" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Required to show journal screen"
+                            android:text="@string/display_over_apps_desc"
                             android:textColor="@color/text_tertiary"
                             android:textSize="12sp" />
 
@@ -562,7 +562,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Blocked Apps"
+                android:text="@string/blocked_apps"
                 android:textColor="@color/text_secondary"
                 android:textSize="14sp"
                 android:textStyle="bold" />
@@ -572,7 +572,7 @@
                 style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="+ Add App"
+                android:text="@string/add_app"
                 android:textColor="@color/primary" />
 
         </LinearLayout>
@@ -599,7 +599,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:text="Testing &amp; Reset"
+            android:text="@string/testing_reset"
             android:textColor="@color/text_secondary"
             android:textSize="14sp"
             android:textStyle="bold" />
@@ -631,14 +631,14 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Reset Today's Progress"
+                        android:text="@string/reset_today_progress"
                         android:textColor="@color/text_primary"
                         android:textSize="14sp" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Delete today's journal entry so blocking activates again"
+                        android:text="@string/reset_today_progress_desc"
                         android:textColor="@color/text_tertiary"
                         android:textSize="12sp" />
 
@@ -663,14 +663,14 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Reset All Settings"
+                        android:text="@string/reset_all_settings"
                         android:textColor="@color/text_primary"
                         android:textSize="14sp" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Restore settings and blocked apps to defaults"
+                        android:text="@string/reset_all_settings_desc"
                         android:textColor="@color/text_tertiary"
                         android:textSize="12sp" />
 
@@ -685,7 +685,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:text="Appearance"
+            android:text="@string/appearance"
             android:textColor="@color/text_secondary"
             android:textSize="14sp"
             android:textStyle="bold" />
@@ -707,7 +707,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Theme"
+                    android:text="@string/theme"
                     android:textColor="@color/text_primary"
                     android:textSize="16sp" />
 
@@ -715,7 +715,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:text="Choose your preferred appearance"
+                    android:text="@string/theme_desc"
                     android:textColor="@color/text_secondary"
                     android:textSize="12sp" />
 
@@ -731,7 +731,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingVertical="8dp"
-                        android:text="System default"
+                        android:text="@string/theme_system"
                         android:textColor="@color/text_primary"
                         android:textSize="14sp" />
 
@@ -740,7 +740,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingVertical="8dp"
-                        android:text="Light"
+                        android:text="@string/theme_light"
                         android:textColor="@color/text_primary"
                         android:textSize="14sp" />
 
@@ -749,7 +749,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingVertical="8dp"
-                        android:text="Dark"
+                        android:text="@string/theme_dark"
                         android:textColor="@color/text_primary"
                         android:textSize="14sp" />
 
@@ -764,7 +764,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:text="About"
+            android:text="@string/about"
             android:textColor="@color/text_secondary"
             android:textSize="14sp"
             android:textStyle="bold" />
@@ -798,7 +798,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Privacy Policy"
+                        android:text="@string/privacy_policy"
                         android:textColor="@color/text_primary"
                         android:textSize="14sp" />
 
@@ -828,7 +828,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Version"
+                        android:text="@string/version"
                         android:textColor="@color/text_primary"
                         android:textSize="14sp" />
 

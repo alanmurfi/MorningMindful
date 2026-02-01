@@ -110,14 +110,14 @@ class OnboardingPagerAdapter(
 
                     val hasPermission = PermissionUtils.hasNotificationPermission(activity)
                     if (hasPermission) {
-                        statusText.text = "✓ Permission granted"
+                        statusText.text = itemView.context.getString(R.string.permission_granted)
                         statusText.setTextColor(itemView.context.getColor(R.color.success))
-                        actionButton.text = "Enabled"
+                        actionButton.text = itemView.context.getString(R.string.enabled)
                         actionButton.isEnabled = false
                     } else {
-                        statusText.text = "Tap to allow notifications"
+                        statusText.text = itemView.context.getString(R.string.tap_to_allow_notifications)
                         statusText.setTextColor(itemView.context.getColor(R.color.text_secondary))
-                        actionButton.text = "Allow Notifications"
+                        actionButton.text = itemView.context.getString(R.string.allow_notifications)
                         actionButton.isEnabled = true
                         actionButton.setOnClickListener {
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -149,10 +149,10 @@ class OnboardingPagerAdapter(
                     slider.valueTo = 60f
                     slider.stepSize = 5f
                     slider.value = activity.blockingDuration.toFloat()
-                    sliderValue.text = "${activity.blockingDuration} minutes"
+                    sliderValue.text = itemView.context.getString(R.string.minutes_format, activity.blockingDuration)
                     slider.addOnChangeListener { _, value, _ ->
                         activity.blockingDuration = value.toInt()
-                        sliderValue.text = "${value.toInt()} minutes"
+                        sliderValue.text = itemView.context.getString(R.string.minutes_format, value.toInt())
                     }
                 }
                 OnboardingPage.WORD_COUNT -> {
@@ -162,10 +162,10 @@ class OnboardingPagerAdapter(
                     slider.valueTo = 500f
                     slider.stepSize = 50f
                     slider.value = activity.requiredWordCount.toFloat()
-                    sliderValue.text = "${activity.requiredWordCount} words"
+                    sliderValue.text = itemView.context.getString(R.string.words_format, activity.requiredWordCount)
                     slider.addOnChangeListener { _, value, _ ->
                         activity.requiredWordCount = value.toInt()
-                        sliderValue.text = "${value.toInt()} words"
+                        sliderValue.text = itemView.context.getString(R.string.words_format, value.toInt())
                     }
                 }
                 OnboardingPage.MORNING_WINDOW -> {
@@ -204,14 +204,14 @@ class OnboardingPagerAdapter(
 
                     val hasPermission = PermissionUtils.hasAccessibilityPermission()
                     if (hasPermission) {
-                        statusText.text = "✓ Permission granted"
+                        statusText.text = itemView.context.getString(R.string.permission_granted)
                         statusText.setTextColor(itemView.context.getColor(R.color.success))
-                        actionButton.text = "Enabled"
+                        actionButton.text = itemView.context.getString(R.string.enabled)
                         actionButton.isEnabled = false
                     } else {
-                        statusText.text = "Tap to open settings"
+                        statusText.text = itemView.context.getString(R.string.tap_to_open_settings)
                         statusText.setTextColor(itemView.context.getColor(R.color.text_secondary))
-                        actionButton.text = "Open Settings"
+                        actionButton.text = itemView.context.getString(R.string.open_settings)
                         actionButton.isEnabled = true
                         actionButton.setOnClickListener {
                             PermissionUtils.openAccessibilitySettings(activity)
@@ -224,14 +224,14 @@ class OnboardingPagerAdapter(
 
                     val hasPermission = PermissionUtils.hasUsageStatsPermission(activity)
                     if (hasPermission) {
-                        statusText.text = "✓ Permission granted"
+                        statusText.text = itemView.context.getString(R.string.permission_granted)
                         statusText.setTextColor(itemView.context.getColor(R.color.success))
-                        actionButton.text = "Enabled"
+                        actionButton.text = itemView.context.getString(R.string.enabled)
                         actionButton.isEnabled = false
                     } else {
-                        statusText.text = "Tap to open settings"
+                        statusText.text = itemView.context.getString(R.string.tap_to_open_settings)
                         statusText.setTextColor(itemView.context.getColor(R.color.text_secondary))
-                        actionButton.text = "Open Settings"
+                        actionButton.text = itemView.context.getString(R.string.open_settings)
                         actionButton.isEnabled = true
                         actionButton.setOnClickListener {
                             PermissionUtils.openUsageStatsSettings(activity)
@@ -244,14 +244,14 @@ class OnboardingPagerAdapter(
 
                     val hasPermission = PermissionUtils.hasOverlayPermission(activity)
                     if (hasPermission) {
-                        statusText.text = "✓ Permission granted"
+                        statusText.text = itemView.context.getString(R.string.permission_granted)
                         statusText.setTextColor(itemView.context.getColor(R.color.success))
-                        actionButton.text = "Enabled"
+                        actionButton.text = itemView.context.getString(R.string.enabled)
                         actionButton.isEnabled = false
                     } else {
-                        statusText.text = "Tap to open settings"
+                        statusText.text = itemView.context.getString(R.string.tap_to_open_settings)
                         statusText.setTextColor(itemView.context.getColor(R.color.text_secondary))
-                        actionButton.text = "Open Settings"
+                        actionButton.text = itemView.context.getString(R.string.open_settings)
                         actionButton.isEnabled = true
                         actionButton.setOnClickListener {
                             PermissionUtils.openOverlaySettings(activity)
@@ -270,12 +270,13 @@ class OnboardingPagerAdapter(
         }
 
         private fun formatHour(hour: Int): String {
+            val context = itemView.context
             return when {
-                hour == 0 -> "12:00 AM"
-                hour < 12 -> "$hour:00 AM"
-                hour == 12 -> "12:00 PM"
-                hour == 24 -> "12:00 AM"
-                else -> "${hour - 12}:00 PM"
+                hour == 0 -> context.getString(R.string.time_12am)
+                hour < 12 -> context.getString(R.string.time_am, hour)
+                hour == 12 -> context.getString(R.string.time_12pm)
+                hour == 24 -> context.getString(R.string.time_12am)
+                else -> context.getString(R.string.time_pm, hour - 12)
             }
         }
 
