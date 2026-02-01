@@ -19,6 +19,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.time.LocalDate
+import java.time.LocalTime
 import javax.inject.Inject
 
 /**
@@ -92,7 +93,20 @@ class JournalViewModel @Inject constructor(
      * This is a fallback in case the screen unlock receiver didn't fire.
      */
     private fun ensureBlockingStarted() {
+        // Don't start blocking when editing past entries
+        if (isEditingPastEntry) return
+
         viewModelScope.launch {
+            // Check if we're within the morning window first
+            val currentHour = LocalTime.now().hour
+            val startHour = settingsRepository.morningStartHour.first()
+            val endHour = settingsRepository.morningEndHour.first()
+
+            if (currentHour < startHour || currentHour >= endHour) {
+                // Outside morning window - don't start blocking
+                return@launch
+            }
+
             // If blocking hasn't started yet and we're opening the journal,
             // start the blocking period with the configured duration
             if (BlockingState.getRemainingSeconds() <= 0 && !BlockingState.journalCompletedToday.value) {

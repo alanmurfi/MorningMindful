@@ -53,7 +53,7 @@ class SettingsRepository(private val context: Context) {
     }
 
     // StateFlows to emit changes
-    private val _isBlockingEnabled = MutableStateFlow(true)
+    private val _isBlockingEnabled = MutableStateFlow(false)
     private val _blockingDurationMinutes = MutableStateFlow(15)
     private val _requiredWordCount = MutableStateFlow(200)
     private val _blockedApps = MutableStateFlow<Set<String>>(BlockedApps.DEFAULT_BLOCKED_PACKAGES)
@@ -64,7 +64,7 @@ class SettingsRepository(private val context: Context) {
 
     init {
         // Load initial values from encrypted storage
-        _isBlockingEnabled.value = encryptedPrefs.getBoolean(KEY_IS_BLOCKING_ENABLED, true)
+        _isBlockingEnabled.value = encryptedPrefs.getBoolean(KEY_IS_BLOCKING_ENABLED, false)
         _blockingDurationMinutes.value = encryptedPrefs.getInt(KEY_BLOCKING_DURATION_MINUTES, 15)
         _requiredWordCount.value = encryptedPrefs.getInt(KEY_REQUIRED_WORD_COUNT, 200)
         _hasCompletedOnboarding.value = encryptedPrefs.getBoolean(KEY_HAS_COMPLETED_ONBOARDING, false)

@@ -15,9 +15,12 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.morningmindful.BuildConfig
 import com.morningmindful.R
 import com.morningmindful.databinding.ActivityMainBinding
+import com.morningmindful.MorningMindfulApp
 import com.morningmindful.ui.history.HistoryActivity
 import com.morningmindful.ui.journal.JournalActivity
+import com.morningmindful.ui.onboarding.OnboardingActivity
 import com.morningmindful.ui.settings.SettingsActivity
+import kotlinx.coroutines.flow.first
 import com.morningmindful.util.PermissionUtils
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -35,6 +38,19 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Check if onboarding is needed
+        lifecycleScope.launch {
+            val hasCompletedOnboarding = MorningMindfulApp.getInstance()
+                .settingsRepository.hasCompletedOnboarding.first()
+
+            if (!hasCompletedOnboarding) {
+                startActivity(Intent(this@MainActivity, OnboardingActivity::class.java))
+                finish()
+                return@launch
+            }
+        }
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 

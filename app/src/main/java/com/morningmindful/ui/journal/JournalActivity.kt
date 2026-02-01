@@ -54,6 +54,7 @@ class JournalActivity : AppCompatActivity() {
         handleBlockedAppMessage()
         setupBackPressHandler()
         updateHeaderForEditMode()
+        setupKeyboardScrolling()
     }
 
     private fun updateHeaderForEditMode() {
@@ -336,5 +337,30 @@ class JournalActivity : AppCompatActivity() {
             getString(R.string.draft_saved),
             com.google.android.material.snackbar.Snackbar.LENGTH_SHORT
         ).show()
+    }
+
+    private fun setupKeyboardScrolling() {
+        // Use WindowInsets to detect keyboard and add padding
+        androidx.core.view.ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, insets ->
+            val imeHeight = insets.getInsets(androidx.core.view.WindowInsetsCompat.Type.ime()).bottom
+            val navigationBarHeight = insets.getInsets(androidx.core.view.WindowInsetsCompat.Type.navigationBars()).bottom
+
+            // Add padding to bottom when keyboard is showing
+            view.setPadding(
+                view.paddingLeft,
+                view.paddingTop,
+                view.paddingRight,
+                if (imeHeight > 0) imeHeight else navigationBarHeight
+            )
+
+            // Scroll to bottom when keyboard appears
+            if (imeHeight > 0) {
+                (view as? android.widget.ScrollView)?.post {
+                    view.fullScroll(View.FOCUS_DOWN)
+                }
+            }
+
+            insets
+        }
     }
 }

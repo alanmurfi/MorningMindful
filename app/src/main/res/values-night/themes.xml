@@ -23,6 +23,5 @@
 
         <!-- Navigation bar (dark for dark mode) -->
         <item name="android:navigationBarColor">@color/background</item>
-        <item name="android:windowLightNavigationBar">false</item>
     </style>
 </resources>

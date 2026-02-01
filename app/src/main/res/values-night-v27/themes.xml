@@ -12,16 +12,17 @@
         <item name="colorSecondaryVariant">@color/primary_dark</item>
         <item name="colorOnSecondary">@android:color/white</item>
 
-        <!-- Background -->
+        <!-- Background (dark mode) -->
         <item name="android:colorBackground">@color/background</item>
         <item name="colorSurface">@color/surface</item>
         <item name="colorOnSurface">@color/text_primary</item>
 
-        <!-- Status bar -->
+        <!-- Status bar (dark for dark mode) -->
         <item name="android:statusBarColor">@color/background</item>
-        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightStatusBar">false</item>
 
-        <!-- Navigation bar -->
+        <!-- Navigation bar (dark for dark mode, API 27+) -->
         <item name="android:navigationBarColor">@color/background</item>
+        <item name="android:windowLightNavigationBar">false</item>
     </style>
 </resources>

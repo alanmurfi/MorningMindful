@@ -96,4 +96,31 @@
     <string name="notification_title">Morning Mindful Active</string>
     <string name="notification_text">Complete your journal to unlock apps</string>
 
+    <!-- Onboarding -->
+    <string name="onboarding_welcome_title">Welcome to Morning Mindful</string>
+    <string name="onboarding_welcome_desc">Start your mornings with intention.\n\nThis app helps you break the habit of doom-scrolling by gently blocking social media until you write a short journal entry.</string>
+
+    <string name="onboarding_duration_title">Blocking Duration</string>
+    <string name="onboarding_duration_desc">How long should apps be blocked after you unlock your phone?</string>
+
+    <string name="onboarding_wordcount_title">Word Count</string>
+    <string name="onboarding_wordcount_desc">How many words do you want to write to unlock your apps?</string>
+
+    <string name="onboarding_window_title">Morning Window</string>
+    <string name="onboarding_window_desc">When should blocking be active?\n\nOutside these hours, your apps won\'t be blocked.</string>
+
+    <string name="onboarding_perm_accessibility_title">Accessibility Permission</string>
+    <string name="onboarding_perm_accessibility_desc">We need this permission to detect when you open blocked apps.\n\nAndroid shows a warning, but we only use it to see which app you opened - nothing else.</string>
+
+    <string name="onboarding_perm_overlay_title">Display Permission</string>
+    <string name="onboarding_perm_overlay_desc">We need this permission to show the journal screen when you open a blocked app.</string>
+
+    <string name="onboarding_ready_title">You\'re Ready!</string>
+    <string name="onboarding_ready_desc">Blocking is now enabled.\n\nYou can change these settings anytime.\n\nEnjoy your mindful mornings!</string>
+
+    <string name="next">Next</string>
+    <string name="back">Back</string>
+    <string name="skip">Skip</string>
+    <string name="get_started">Get Started</string>
+
 </resources>

@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="32dp">
+
+        <!-- Icon -->
+        <ImageView
+            android:id="@+id/pageIcon"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginBottom="24dp"
+            app:tint="@color/primary"
+            android:contentDescription="@null" />
+
+        <!-- Title -->
+        <TextView
+            android:id="@+id/pageTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:fontFamily="sans-serif-medium"
+            android:textColor="@color/text_primary"
+            android:textSize="24sp"
+            android:textAlignment="center" />
+
+        <!-- Description -->
+        <TextView
+            android:id="@+id/pageDescription"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:textColor="@color/text_secondary"
+            android:textSize="15sp"
+            android:textAlignment="center"
+            android:lineSpacingExtra="4dp" />
+
+        <!-- Slider (for duration/word count) -->
+        <com.google.android.material.slider.Slider
+            android:id="@+id/pageSlider"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:visibility="gone"
+            app:trackColorActive="@color/primary"
+            app:trackColorInactive="@color/divider"
+            app:thumbColor="@color/primary" />
+
+        <!-- Slider value display -->
+        <TextView
+            android:id="@+id/sliderValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp"
+            android:textColor="@color/primary"
+            android:textSize="20sp"
+            android:fontFamily="sans-serif-medium"
+            android:visibility="gone" />
+
+        <!-- Morning window - Start time -->
+        <LinearLayout
+            android:id="@+id/startTimeContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="16dp"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:text="Start:"
+                android:textColor="@color/text_secondary"
+                android:textSize="16sp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/startTimeMinus"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:text="-"
+                android:textSize="20sp"
+                app:cornerRadius="24dp"
+                app:strokeColor="@color/primary" />
+
+            <TextView
+                android:id="@+id/startTimeValue"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:textColor="@color/primary"
+                android:textSize="18sp"
+                android:fontFamily="sans-serif-medium" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/startTimePlus"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:text="+"
+                android:textSize="20sp"
+                app:cornerRadius="24dp"
+                app:strokeColor="@color/primary" />
+
+        </LinearLayout>
+
+        <!-- Morning window - End time -->
+        <LinearLayout
+            android:id="@+id/endTimeContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="16dp"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:text="End:"
+                android:textColor="@color/text_secondary"
+                android:textSize="16sp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/endTimeMinus"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:text="-"
+                android:textSize="20sp"
+                app:cornerRadius="24dp"
+                app:strokeColor="@color/primary" />
+
+            <TextView
+                android:id="@+id/endTimeValue"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:textColor="@color/primary"
+                android:textSize="18sp"
+                android:fontFamily="sans-serif-medium" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/endTimePlus"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:text="+"
+                android:textSize="20sp"
+                app:cornerRadius="24dp"
+                app:strokeColor="@color/primary" />
+
+        </LinearLayout>
+
+        <!-- Status text (for permissions page) -->
+        <TextView
+            android:id="@+id/statusText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:textColor="@color/text_secondary"
+            android:textSize="14sp"
+            android:visibility="gone" />
+
+        <!-- Action button (for permissions page) -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/pageActionButton"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:paddingHorizontal="24dp"
+            android:visibility="gone"
+            app:strokeColor="@color/primary"
+            app:cornerRadius="24dp" />
+
+    </LinearLayout>
+
+</ScrollView>

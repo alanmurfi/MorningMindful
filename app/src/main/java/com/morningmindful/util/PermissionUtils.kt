@@ -61,4 +61,18 @@ object PermissionUtils {
             else -> null
         }
     }
+
+    /**
+     * Open accessibility settings directly.
+     */
+    fun openAccessibilitySettings(context: Context) {
+        context.startActivity(getAccessibilitySettingsIntent())
+    }
+
+    /**
+     * Open overlay settings directly.
+     */
+    fun openOverlaySettings(context: Context) {
+        context.startActivity(getOverlaySettingsIntent(context))
+    }
 }
