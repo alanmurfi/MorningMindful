@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import com.morningmindful.MorningMindfulApp
+import com.morningmindful.data.repository.SettingsRepository
 import com.morningmindful.util.BlockingState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -72,9 +73,20 @@ class ScreenUnlockReceiver : BroadcastReceiver() {
                     BlockingState.onFirstUnlock(blockingMinutes)
                     Log.d(TAG, "Started blocking period for $blockingMinutes minutes")
 
-                    // Start foreground service to maintain blocking state
-                    val serviceIntent = Intent(ctx, MorningBlockerService::class.java)
-                    ctx.startForegroundService(serviceIntent)
+                    // Check blocking mode and start appropriate service
+                    val blockingMode = app.settingsRepository.blockingMode.first()
+
+                    if (blockingMode == SettingsRepository.BLOCKING_MODE_GENTLE) {
+                        // Gentle mode: Use UsageStatsBlockerService for polling-based detection
+                        Log.d(TAG, "Starting Gentle Reminder service")
+                        UsageStatsBlockerService.start(ctx)
+                    } else {
+                        // Full mode: Start foreground service to maintain blocking state
+                        // Accessibility Service handles the actual blocking
+                        Log.d(TAG, "Starting Full Block service")
+                        val serviceIntent = Intent(ctx, MorningBlockerService::class.java)
+                        ctx.startForegroundService(serviceIntent)
+                    }
 
                 } catch (e: Exception) {
                     Log.e(TAG, "Error handling unlock", e)

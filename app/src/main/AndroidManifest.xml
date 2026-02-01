@@ -137,6 +137,24 @@
                 android:value="App blocking for morning mindfulness routine" />
         </service>
 
+        <!-- Usage Stats based blocker service (Gentle Reminder mode) -->
+        <service
+            android:name=".service.UsageStatsBlockerService"
+            android:exported="false"
+            android:foregroundServiceType="specialUse">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="Gentle reminder for morning mindfulness routine" />
+        </service>
+
+        <!-- Reminder overlay activity (shown in Gentle Reminder mode) -->
+        <activity
+            android:name=".service.ReminderOverlayActivity"
+            android:exported="false"
+            android:theme="@style/Theme.MorningMindful.Overlay"
+            android:excludeFromRecents="true"
+            android:launchMode="singleTop" />
+
         <!-- Boot receiver to start service on device boot -->
         <receiver
             android:name=".service.BootReceiver"

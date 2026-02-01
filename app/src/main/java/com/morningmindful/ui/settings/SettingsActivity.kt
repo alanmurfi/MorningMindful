@@ -4,6 +4,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
@@ -116,6 +117,21 @@ class SettingsActivity : AppCompatActivity() {
 
         binding.overlayPermissionButton.setOnClickListener {
             startActivity(PermissionUtils.getOverlaySettingsIntent(this))
+        }
+
+        // Usage Stats permission button
+        binding.usageStatsPermissionButton.setOnClickListener {
+            startActivity(PermissionUtils.getUsageStatsSettingsIntent())
+        }
+
+        // Blocking mode radio group
+        binding.blockingModeRadioGroup.setOnCheckedChangeListener { _, checkedId ->
+            val mode = when (checkedId) {
+                R.id.modeGentleRadio -> SettingsRepository.BLOCKING_MODE_GENTLE
+                else -> SettingsRepository.BLOCKING_MODE_FULL
+            }
+            viewModel.setBlockingMode(mode)
+            updatePermissionVisibility(mode)
         }
 
         // Reset today's progress
@@ -239,6 +255,18 @@ class SettingsActivity : AppCompatActivity() {
                         binding.themeRadioGroup.check(radioId)
                     }
                 }
+
+                // Blocking mode
+                launch {
+                    viewModel.blockingMode.collectLatest { mode ->
+                        val radioId = when (mode) {
+                            SettingsRepository.BLOCKING_MODE_GENTLE -> R.id.modeGentleRadio
+                            else -> R.id.modeFullRadio
+                        }
+                        binding.blockingModeRadioGroup.check(radioId)
+                        updatePermissionVisibility(mode)
+                    }
+                }
             }
         }
     }
@@ -256,6 +284,7 @@ class SettingsActivity : AppCompatActivity() {
     private fun updatePermissionStatus() {
         val hasAccessibility = PermissionUtils.hasAccessibilityPermission()
         val hasOverlay = PermissionUtils.hasOverlayPermission(this)
+        val hasUsageStats = PermissionUtils.hasUsageStatsPermission(this)
 
         binding.accessibilityStatus.text = if (hasAccessibility) getString(R.string.status_enabled) else getString(R.string.status_disabled)
         binding.accessibilityStatus.setTextColor(
@@ -266,6 +295,22 @@ class SettingsActivity : AppCompatActivity() {
         binding.overlayStatus.setTextColor(
             getColor(if (hasOverlay) android.R.color.holo_green_dark else android.R.color.holo_red_dark)
         )
+
+        binding.usageStatsStatus.text = if (hasUsageStats) getString(R.string.status_enabled) else getString(R.string.status_disabled)
+        binding.usageStatsStatus.setTextColor(
+            getColor(if (hasUsageStats) android.R.color.holo_green_dark else android.R.color.holo_red_dark)
+        )
+    }
+
+    private fun updatePermissionVisibility(mode: Int) {
+        val isGentleMode = mode == SettingsRepository.BLOCKING_MODE_GENTLE
+
+        // Show/hide appropriate permission rows based on mode
+        binding.accessibilityPermissionButton.visibility = if (isGentleMode) View.GONE else View.VISIBLE
+        binding.accessibilityDivider.visibility = if (isGentleMode) View.GONE else View.VISIBLE
+
+        binding.usageStatsPermissionButton.visibility = if (isGentleMode) View.VISIBLE else View.GONE
+        binding.usageStatsDivider.visibility = if (isGentleMode) View.VISIBLE else View.GONE
     }
 
     private fun getBlockedAppsList(blockedPackages: Set<String>): List<BlockedAppItem> {

@@ -28,6 +28,7 @@ class SettingsRepository(private val context: Context) {
         private const val KEY_MORNING_END_HOUR = "morning_end_hour"
         private const val KEY_BLOCKED_APPS_VERSION = "blocked_apps_version"
         private const val KEY_THEME_MODE = "theme_mode"
+        private const val KEY_BLOCKING_MODE = "blocking_mode"
 
         // Increment this when adding new default blocked apps
         private const val CURRENT_BLOCKED_APPS_VERSION = 2  // v2 adds browsers
@@ -36,6 +37,10 @@ class SettingsRepository(private val context: Context) {
         const val THEME_MODE_SYSTEM = 0
         const val THEME_MODE_LIGHT = 1
         const val THEME_MODE_DARK = 2
+
+        // Blocking mode constants
+        const val BLOCKING_MODE_FULL = 0      // Uses Accessibility Service - instant redirect
+        const val BLOCKING_MODE_GENTLE = 1    // Uses Usage Stats - reminder overlay
     }
 
     private val encryptedPrefs: SharedPreferences by lazy {
@@ -61,6 +66,7 @@ class SettingsRepository(private val context: Context) {
     private val _morningStartHour = MutableStateFlow(5)
     private val _morningEndHour = MutableStateFlow(10)
     private val _themeMode = MutableStateFlow(THEME_MODE_SYSTEM)
+    private val _blockingMode = MutableStateFlow(BLOCKING_MODE_FULL)
 
     init {
         // Load initial values from encrypted storage
@@ -71,6 +77,7 @@ class SettingsRepository(private val context: Context) {
         _morningStartHour.value = encryptedPrefs.getInt(KEY_MORNING_START_HOUR, 5)
         _morningEndHour.value = encryptedPrefs.getInt(KEY_MORNING_END_HOUR, 10)
         _themeMode.value = encryptedPrefs.getInt(KEY_THEME_MODE, THEME_MODE_SYSTEM)
+        _blockingMode.value = encryptedPrefs.getInt(KEY_BLOCKING_MODE, BLOCKING_MODE_FULL)
 
         // Load blocked apps with migration for new default apps
         _blockedApps.value = loadBlockedAppsWithMigration()
@@ -242,5 +249,23 @@ class SettingsRepository(private val context: Context) {
      */
     fun getThemeModeSync(): Int {
         return encryptedPrefs.getInt(KEY_THEME_MODE, THEME_MODE_SYSTEM)
+    }
+
+    // Blocking mode (full or gentle)
+    val blockingMode: Flow<Int> = _blockingMode.asStateFlow()
+
+    suspend fun setBlockingMode(mode: Int) {
+        withContext(Dispatchers.IO) {
+            val bounded = mode.coerceIn(BLOCKING_MODE_FULL, BLOCKING_MODE_GENTLE)
+            encryptedPrefs.edit().putInt(KEY_BLOCKING_MODE, bounded).apply()
+            _blockingMode.value = bounded
+        }
+    }
+
+    /**
+     * Get the current blocking mode value synchronously.
+     */
+    fun getBlockingModeSync(): Int {
+        return encryptedPrefs.getInt(KEY_BLOCKING_MODE, BLOCKING_MODE_FULL)
     }
 }

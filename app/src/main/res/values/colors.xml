@@ -4,6 +4,7 @@
     <color name="primary">#6B5CE7</color>
     <color name="primary_dark">#5648C7</color>
     <color name="primary_light">#8B7EED</color>
+    <color name="primary_very_light">#EDE9FD</color>
 
     <!-- Background colors -->
     <color name="background">#FAFBFC</color>

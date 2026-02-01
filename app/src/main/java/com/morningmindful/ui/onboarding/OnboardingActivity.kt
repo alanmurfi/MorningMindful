@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
 import com.morningmindful.MorningMindfulApp
+import com.morningmindful.data.repository.SettingsRepository
 import com.morningmindful.databinding.ActivityOnboardingBinding
 import com.morningmindful.ui.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
@@ -27,6 +28,7 @@ class OnboardingActivity : AppCompatActivity() {
     var requiredWordCount: Int = 200
     var morningStartHour: Int = 5
     var morningEndHour: Int = 10
+    var blockingMode: Int = SettingsRepository.BLOCKING_MODE_FULL
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -79,7 +81,7 @@ class OnboardingActivity : AppCompatActivity() {
     private fun updateDots(position: Int) {
         val dots = listOf(
             binding.dot1, binding.dot2, binding.dot3, binding.dot4,
-            binding.dot5, binding.dot6, binding.dot7
+            binding.dot5, binding.dot6, binding.dot7, binding.dot8
         )
         dots.forEachIndexed { index, dot ->
             dot.isSelected = index == position
@@ -104,6 +106,7 @@ class OnboardingActivity : AppCompatActivity() {
             settings.setRequiredWordCount(requiredWordCount)
             settings.setMorningStartHour(morningStartHour)
             settings.setMorningEndHour(morningEndHour)
+            settings.setBlockingMode(blockingMode)
             settings.setBlockingEnabled(true) // Enable blocking after setup
             settings.setOnboardingCompleted(true)
 

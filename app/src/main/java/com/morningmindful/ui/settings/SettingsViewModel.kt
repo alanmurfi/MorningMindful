@@ -41,6 +41,9 @@ class SettingsViewModel @Inject constructor(
     val themeMode: StateFlow<Int> = settingsRepository.themeMode
         .stateIn(viewModelScope, SharingStarted.Eagerly, SettingsRepository.THEME_MODE_SYSTEM)
 
+    val blockingMode: StateFlow<Int> = settingsRepository.blockingMode
+        .stateIn(viewModelScope, SharingStarted.Eagerly, SettingsRepository.BLOCKING_MODE_FULL)
+
     fun setBlockingEnabled(enabled: Boolean) {
         viewModelScope.launch {
             settingsRepository.setBlockingEnabled(enabled)
@@ -84,6 +87,12 @@ class SettingsViewModel @Inject constructor(
     fun setThemeMode(mode: Int) {
         viewModelScope.launch {
             settingsRepository.setThemeMode(mode)
+        }
+    }
+
+    fun setBlockingMode(mode: Int) {
+        viewModelScope.launch {
+            settingsRepository.setBlockingMode(mode)
         }
     }
 

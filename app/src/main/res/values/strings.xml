@@ -115,6 +115,9 @@
     <string name="onboarding_perm_overlay_title">Display Permission</string>
     <string name="onboarding_perm_overlay_desc">We need this permission to show the journal screen when you open a blocked app.</string>
 
+    <string name="onboarding_perm_usage_stats_title">Usage Access Permission</string>
+    <string name="onboarding_perm_usage_stats_desc">We need this permission to see which app you\'re using so we can show gentle reminders.</string>
+
     <string name="onboarding_ready_title">You\'re Ready!</string>
     <string name="onboarding_ready_desc">Blocking is now enabled.\n\nYou can change these settings anytime.\n\nEnjoy your mindful mornings!</string>
 
@@ -122,5 +125,18 @@
     <string name="back">Back</string>
     <string name="skip">Skip</string>
     <string name="get_started">Get Started</string>
+
+    <!-- Gentle Reminder Mode -->
+    <string name="gentle_reminder_title">Mindful Moment</string>
+    <string name="open_journal">Open Journal</string>
+    <string name="continue_anyway">Continue anyway</string>
+
+    <!-- Blocking Mode Selection -->
+    <string name="onboarding_mode_title">Choose Blocking Style</string>
+    <string name="onboarding_mode_desc">How would you like the app to work?</string>
+    <string name="blocking_mode_full_title">Full Block</string>
+    <string name="blocking_mode_full_desc">Apps are blocked instantly.\nRequires Accessibility permission.</string>
+    <string name="blocking_mode_gentle_title">Gentle Reminder</string>
+    <string name="blocking_mode_gentle_desc">Shows a reminder you can dismiss.\nNo special permission needed.</string>
 
 </resources>

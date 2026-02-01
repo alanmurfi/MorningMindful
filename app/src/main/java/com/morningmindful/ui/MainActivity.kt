@@ -22,6 +22,7 @@ import com.morningmindful.ui.onboarding.OnboardingActivity
 import com.morningmindful.ui.settings.SettingsActivity
 import kotlinx.coroutines.flow.first
 import com.morningmindful.util.PermissionUtils
+import com.morningmindful.data.repository.SettingsRepository
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -174,39 +175,76 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun checkPermissions() {
-        if (!PermissionUtils.hasAllPermissions(this)) {
-            binding.permissionWarning.visibility = View.VISIBLE
-            binding.setupPermissionsButton.visibility = View.VISIBLE
-        } else {
-            binding.permissionWarning.visibility = View.GONE
-            binding.setupPermissionsButton.visibility = View.GONE
+        lifecycleScope.launch {
+            val blockingMode = MorningMindfulApp.getInstance()
+                .settingsRepository.blockingMode.first()
+
+            val hasRequiredPermissions = if (blockingMode == SettingsRepository.BLOCKING_MODE_GENTLE) {
+                // Gentle mode: needs Usage Stats and Overlay
+                PermissionUtils.hasUsageStatsPermission(this@MainActivity) &&
+                    PermissionUtils.hasOverlayPermission(this@MainActivity)
+            } else {
+                // Full mode: needs Accessibility and Overlay
+                PermissionUtils.hasAccessibilityPermission() &&
+                    PermissionUtils.hasOverlayPermission(this@MainActivity)
+            }
+
+            if (!hasRequiredPermissions) {
+                binding.permissionWarning.visibility = View.VISIBLE
+                binding.setupPermissionsButton.visibility = View.VISIBLE
+            } else {
+                binding.permissionWarning.visibility = View.GONE
+                binding.setupPermissionsButton.visibility = View.GONE
+            }
         }
     }
 
     private fun showPermissionsDialog() {
-        val hasAccessibility = PermissionUtils.hasAccessibilityPermission()
-        val hasOverlay = PermissionUtils.hasOverlayPermission(this)
+        lifecycleScope.launch {
+            val blockingMode = MorningMindfulApp.getInstance()
+                .settingsRepository.blockingMode.first()
 
-        val message = buildString {
-            append(getString(R.string.permissions_needed_intro))
-            if (!hasAccessibility) {
-                append(getString(R.string.accessibility_permission_needed))
-            }
-            if (!hasOverlay) {
-                append(getString(R.string.overlay_permission_needed))
-            }
-        }
+            val isGentleMode = blockingMode == SettingsRepository.BLOCKING_MODE_GENTLE
+            val hasOverlay = PermissionUtils.hasOverlayPermission(this@MainActivity)
 
-        MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.setup_permissions)
-            .setMessage(message)
-            .setPositiveButton(R.string.open_settings) { _, _ ->
-                PermissionUtils.getNextMissingPermissionIntent(this)?.let { intent ->
-                    startActivity(intent)
+            val message = buildString {
+                append(getString(R.string.permissions_needed_intro))
+                if (isGentleMode) {
+                    val hasUsageStats = PermissionUtils.hasUsageStatsPermission(this@MainActivity)
+                    if (!hasUsageStats) {
+                        append("\n\n• Usage Access - to see which app you're using")
+                    }
+                } else {
+                    val hasAccessibility = PermissionUtils.hasAccessibilityPermission()
+                    if (!hasAccessibility) {
+                        append(getString(R.string.accessibility_permission_needed))
+                    }
+                }
+                if (!hasOverlay) {
+                    append(getString(R.string.overlay_permission_needed))
                 }
             }
-            .setNegativeButton(R.string.later, null)
-            .show()
+
+            MaterialAlertDialogBuilder(this@MainActivity)
+                .setTitle(R.string.setup_permissions)
+                .setMessage(message)
+                .setPositiveButton(R.string.open_settings) { _, _ ->
+                    // Open appropriate settings based on mode
+                    if (isGentleMode) {
+                        val hasUsageStats = PermissionUtils.hasUsageStatsPermission(this@MainActivity)
+                        when {
+                            !hasUsageStats -> PermissionUtils.openUsageStatsSettings(this@MainActivity)
+                            !hasOverlay -> PermissionUtils.openOverlaySettings(this@MainActivity)
+                        }
+                    } else {
+                        PermissionUtils.getNextMissingPermissionIntent(this@MainActivity)?.let { intent ->
+                            startActivity(intent)
+                        }
+                    }
+                }
+                .setNegativeButton(R.string.later, null)
+                .show()
+        }
     }
 
     private fun formatNumber(number: Int): String {

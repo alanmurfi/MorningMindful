@@ -1,8 +1,11 @@
 package com.morningmindful.util
 
+import android.app.AppOpsManager
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
+import android.os.Process
 import android.provider.Settings
 import com.morningmindful.service.AppBlockerAccessibilityService
 
@@ -74,5 +77,42 @@ object PermissionUtils {
      */
     fun openOverlaySettings(context: Context) {
         context.startActivity(getOverlaySettingsIntent(context))
+    }
+
+    /**
+     * Check if Usage Stats permission is granted.
+     * Required for Gentle Reminder mode.
+     */
+    fun hasUsageStatsPermission(context: Context): Boolean {
+        val appOps = context.getSystemService(Context.APP_OPS_SERVICE) as AppOpsManager
+        val mode = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            appOps.unsafeCheckOpNoThrow(
+                AppOpsManager.OPSTR_GET_USAGE_STATS,
+                Process.myUid(),
+                context.packageName
+            )
+        } else {
+            @Suppress("DEPRECATION")
+            appOps.checkOpNoThrow(
+                AppOpsManager.OPSTR_GET_USAGE_STATS,
+                Process.myUid(),
+                context.packageName
+            )
+        }
+        return mode == AppOpsManager.MODE_ALLOWED
+    }
+
+    /**
+     * Get intent to open Usage Stats permission settings.
+     */
+    fun getUsageStatsSettingsIntent(): Intent {
+        return Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS)
+    }
+
+    /**
+     * Open Usage Stats settings directly.
+     */
+    fun openUsageStatsSettings(context: Context) {
+        context.startActivity(getUsageStatsSettingsIntent())
     }
 }

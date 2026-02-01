@@ -5,10 +5,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.slider.Slider
 import com.morningmindful.R
+import com.morningmindful.data.repository.SettingsRepository
 import com.morningmindful.util.PermissionUtils
 
 /**
@@ -19,15 +21,34 @@ class OnboardingPagerAdapter(
     private val activity: OnboardingActivity
 ) : RecyclerView.Adapter<OnboardingPagerAdapter.OnboardingViewHolder>() {
 
-    val pages = listOf(
-        OnboardingPage.WELCOME,
-        OnboardingPage.BLOCKING_DURATION,
-        OnboardingPage.WORD_COUNT,
-        OnboardingPage.MORNING_WINDOW,
-        OnboardingPage.PERMISSION_ACCESSIBILITY,
-        OnboardingPage.PERMISSION_OVERLAY,
-        OnboardingPage.READY
-    )
+    // Pages change based on blocking mode selection
+    val pages: List<OnboardingPage>
+        get() {
+            val isGentleMode = activity.blockingMode == SettingsRepository.BLOCKING_MODE_GENTLE
+            return if (isGentleMode) {
+                listOf(
+                    OnboardingPage.WELCOME,
+                    OnboardingPage.BLOCKING_MODE,
+                    OnboardingPage.BLOCKING_DURATION,
+                    OnboardingPage.WORD_COUNT,
+                    OnboardingPage.MORNING_WINDOW,
+                    OnboardingPage.PERMISSION_USAGE_STATS,
+                    OnboardingPage.PERMISSION_OVERLAY,
+                    OnboardingPage.READY
+                )
+            } else {
+                listOf(
+                    OnboardingPage.WELCOME,
+                    OnboardingPage.BLOCKING_MODE,
+                    OnboardingPage.BLOCKING_DURATION,
+                    OnboardingPage.WORD_COUNT,
+                    OnboardingPage.MORNING_WINDOW,
+                    OnboardingPage.PERMISSION_ACCESSIBILITY,
+                    OnboardingPage.PERMISSION_OVERLAY,
+                    OnboardingPage.READY
+                )
+            }
+        }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OnboardingViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -57,6 +78,10 @@ class OnboardingPagerAdapter(
         private val startTimePlus: View = itemView.findViewById(R.id.startTimePlus)
         private val endTimeMinus: View = itemView.findViewById(R.id.endTimeMinus)
         private val endTimePlus: View = itemView.findViewById(R.id.endTimePlus)
+        private val fullBlockCard: CardView = itemView.findViewById(R.id.fullBlockCard)
+        private val gentleReminderCard: CardView = itemView.findViewById(R.id.gentleReminderCard)
+        private val fullBlockIcon: ImageView = itemView.findViewById(R.id.fullBlockIcon)
+        private val gentleReminderIcon: ImageView = itemView.findViewById(R.id.gentleReminderIcon)
 
         fun bind(page: OnboardingPage) {
             icon.setImageResource(page.iconRes)
@@ -70,8 +95,24 @@ class OnboardingPagerAdapter(
             sliderValue.visibility = View.GONE
             startTimeContainer.visibility = View.GONE
             endTimeContainer.visibility = View.GONE
+            fullBlockCard.visibility = View.GONE
+            gentleReminderCard.visibility = View.GONE
 
             when (page) {
+                OnboardingPage.BLOCKING_MODE -> {
+                    fullBlockCard.visibility = View.VISIBLE
+                    gentleReminderCard.visibility = View.VISIBLE
+                    updateBlockingModeSelection()
+
+                    fullBlockCard.setOnClickListener {
+                        activity.blockingMode = SettingsRepository.BLOCKING_MODE_FULL
+                        updateBlockingModeSelection()
+                    }
+                    gentleReminderCard.setOnClickListener {
+                        activity.blockingMode = SettingsRepository.BLOCKING_MODE_GENTLE
+                        updateBlockingModeSelection()
+                    }
+                }
                 OnboardingPage.BLOCKING_DURATION -> {
                     slider.visibility = View.VISIBLE
                     sliderValue.visibility = View.VISIBLE
@@ -148,6 +189,26 @@ class OnboardingPagerAdapter(
                         }
                     }
                 }
+                OnboardingPage.PERMISSION_USAGE_STATS -> {
+                    actionButton.visibility = View.VISIBLE
+                    statusText.visibility = View.VISIBLE
+
+                    val hasPermission = PermissionUtils.hasUsageStatsPermission(activity)
+                    if (hasPermission) {
+                        statusText.text = "✓ Permission granted"
+                        statusText.setTextColor(itemView.context.getColor(R.color.success))
+                        actionButton.text = "Enabled"
+                        actionButton.isEnabled = false
+                    } else {
+                        statusText.text = "Tap to open settings"
+                        statusText.setTextColor(itemView.context.getColor(R.color.text_secondary))
+                        actionButton.text = "Open Settings"
+                        actionButton.isEnabled = true
+                        actionButton.setOnClickListener {
+                            PermissionUtils.openUsageStatsSettings(activity)
+                        }
+                    }
+                }
                 OnboardingPage.PERMISSION_OVERLAY -> {
                     actionButton.visibility = View.VISIBLE
                     statusText.visibility = View.VISIBLE
@@ -188,6 +249,22 @@ class OnboardingPagerAdapter(
                 else -> "${hour - 12}:00 PM"
             }
         }
+
+        private fun updateBlockingModeSelection() {
+            val isFullMode = activity.blockingMode == SettingsRepository.BLOCKING_MODE_FULL
+
+            // Update card backgrounds
+            fullBlockCard.setCardBackgroundColor(
+                itemView.context.getColor(if (isFullMode) R.color.primary_very_light else R.color.surface)
+            )
+            gentleReminderCard.setCardBackgroundColor(
+                itemView.context.getColor(if (!isFullMode) R.color.primary_very_light else R.color.surface)
+            )
+
+            // Show/hide check icons
+            fullBlockIcon.visibility = if (isFullMode) View.VISIBLE else View.GONE
+            gentleReminderIcon.visibility = if (!isFullMode) View.VISIBLE else View.GONE
+        }
     }
 }
 
@@ -200,6 +277,11 @@ enum class OnboardingPage(
         R.drawable.ic_sun,
         R.string.onboarding_welcome_title,
         R.string.onboarding_welcome_desc
+    ),
+    BLOCKING_MODE(
+        R.drawable.ic_settings,
+        R.string.onboarding_mode_title,
+        R.string.onboarding_mode_desc
     ),
     BLOCKING_DURATION(
         R.drawable.ic_notification,
@@ -220,6 +302,11 @@ enum class OnboardingPage(
         R.drawable.ic_settings,
         R.string.onboarding_perm_accessibility_title,
         R.string.onboarding_perm_accessibility_desc
+    ),
+    PERMISSION_USAGE_STATS(
+        R.drawable.ic_settings,
+        R.string.onboarding_perm_usage_stats_title,
+        R.string.onboarding_perm_usage_stats_desc
     ),
     PERMISSION_OVERLAY(
         R.drawable.ic_open_external,
