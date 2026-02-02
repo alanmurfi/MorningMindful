@@ -58,4 +58,10 @@ interface JournalEntryDao {
      */
     @Query("SELECT DISTINCT date FROM journal_entries ORDER BY date DESC")
     suspend fun getAllEntryDates(): List<LocalDate>
+
+    /**
+     * Get all entries once (non-Flow) for export.
+     */
+    @Query("SELECT * FROM journal_entries ORDER BY date DESC")
+    suspend fun getAllEntriesOnce(): List<JournalEntry>
 }

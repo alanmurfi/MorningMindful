@@ -128,6 +128,29 @@ class JournalRepository(private val journalEntryDao: JournalEntryDao) {
 
         return longestStreak
     }
+
+    /**
+     * Get all entry dates for duplicate checking during import.
+     */
+    suspend fun getAllEntryDates(): Set<LocalDate> {
+        return journalEntryDao.getAllEntriesOnce().map { it.date }.toSet()
+    }
+
+    /**
+     * Get all entries for export (non-Flow, one-time).
+     */
+    suspend fun getAllEntriesForExport(): List<JournalEntry> {
+        return journalEntryDao.getAllEntriesOnce()
+    }
+
+    /**
+     * Insert multiple entries (for import).
+     */
+    suspend fun insertAll(entries: List<JournalEntry>) {
+        entries.forEach { entry ->
+            journalEntryDao.insert(entry)
+        }
+    }
 }
 
 /**
