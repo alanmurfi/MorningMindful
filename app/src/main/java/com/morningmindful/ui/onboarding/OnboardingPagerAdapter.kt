@@ -1,13 +1,12 @@
 package com.morningmindful.ui.onboarding
 
-import android.Manifest
+import android.net.Uri
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
@@ -38,6 +37,7 @@ class OnboardingPagerAdapter(
                     OnboardingPage.MORNING_WINDOW,
                     OnboardingPage.PERMISSION_USAGE_STATS,
                     OnboardingPage.PERMISSION_OVERLAY,
+                    OnboardingPage.BACKUP_SETUP,
                     OnboardingPage.READY
                 )
             } else {
@@ -50,6 +50,7 @@ class OnboardingPagerAdapter(
                     OnboardingPage.MORNING_WINDOW,
                     OnboardingPage.PERMISSION_ACCESSIBILITY,
                     OnboardingPage.PERMISSION_OVERLAY,
+                    OnboardingPage.BACKUP_SETUP,
                     OnboardingPage.READY
                 )
             }
@@ -87,6 +88,7 @@ class OnboardingPagerAdapter(
         private val gentleReminderCard: CardView = itemView.findViewById(R.id.gentleReminderCard)
         private val fullBlockIcon: ImageView = itemView.findViewById(R.id.fullBlockIcon)
         private val gentleReminderIcon: ImageView = itemView.findViewById(R.id.gentleReminderIcon)
+        private val secondaryButton: MaterialButton = itemView.findViewById(R.id.pageSecondaryButton)
 
         fun bind(page: OnboardingPage) {
             icon.setImageResource(page.iconRes)
@@ -95,6 +97,7 @@ class OnboardingPagerAdapter(
 
             // Hide all optional elements by default
             actionButton.visibility = View.GONE
+            secondaryButton.visibility = View.GONE
             statusText.visibility = View.GONE
             slider.visibility = View.GONE
             sliderValue.visibility = View.GONE
@@ -258,6 +261,34 @@ class OnboardingPagerAdapter(
                         }
                     }
                 }
+                OnboardingPage.BACKUP_SETUP -> {
+                    actionButton.visibility = View.VISIBLE
+                    secondaryButton.visibility = View.VISIBLE
+                    statusText.visibility = View.VISIBLE
+
+                    // Check if backup folder is already selected
+                    val hasBackupFolder = activity.autoBackupUri != null
+                    if (hasBackupFolder) {
+                        statusText.text = itemView.context.getString(R.string.backup_folder_selected)
+                        statusText.setTextColor(itemView.context.getColor(R.color.success))
+                        actionButton.text = itemView.context.getString(R.string.change_backup_folder)
+                    } else {
+                        statusText.text = ""
+                        actionButton.text = itemView.context.getString(R.string.choose_backup_folder)
+                    }
+
+                    actionButton.isEnabled = true
+                    actionButton.setOnClickListener {
+                        activity.requestBackupFolderSelection()
+                    }
+
+                    secondaryButton.text = itemView.context.getString(R.string.skip_backup_setup)
+                    secondaryButton.setOnClickListener {
+                        // Just disable auto-backup and move to next page
+                        activity.autoBackupEnabled = false
+                        activity.autoBackupUri = null
+                    }
+                }
                 else -> {
                     // Welcome and Ready pages - no extra controls
                 }
@@ -347,6 +378,11 @@ enum class OnboardingPage(
         R.drawable.ic_open_external,
         R.string.onboarding_perm_overlay_title,
         R.string.onboarding_perm_overlay_desc
+    ),
+    BACKUP_SETUP(
+        R.drawable.ic_backup,
+        R.string.onboarding_backup_title,
+        R.string.onboarding_backup_desc
     ),
     READY(
         R.drawable.ic_check_circle,

@@ -115,6 +115,20 @@
     <string name="export_success">Successfully exported %1$d journal entries</string>
     <string name="import_success">Successfully imported %1$d journal entries</string>
     <string name="import_success_with_skipped">Imported %1$d entries, skipped %2$d duplicates</string>
+    <string name="auto_backup">Auto-Backup</string>
+    <string name="auto_backup_desc">Automatically save backups when you write</string>
+    <string name="auto_backup_enabled">Auto-backup enabled</string>
+    <string name="auto_backup_disabled">Auto-backup disabled</string>
+    <string name="last_backup">Last backup: %1$s</string>
+    <string name="no_backup_yet">No backup yet</string>
+    <string name="change_backup_folder">Change Folder</string>
+    <string name="backup_now">Backup Now</string>
+    <string name="backup_success">Backup saved successfully</string>
+    <string name="backup_failed">Backup failed: %1$s</string>
+    <string name="restore_found_title">Backup Found</string>
+    <string name="restore_found_message">We found a backup file with %1$d journal entries. Would you like to restore it?</string>
+    <string name="restore">Restore</string>
+    <string name="restore_later">Later</string>
 
     <!-- Accessibility Service -->
     <string name="accessibility_service_description">Morning Mindful uses accessibility to detect when you open blocked apps during your morning mindfulness period. This allows the app to redirect you to your journal instead. No personal data is collected or shared.</string>
@@ -147,6 +161,15 @@
 
     <string name="onboarding_perm_notifications_title">Allow Notifications</string>
     <string name="onboarding_perm_notifications_desc">We need this permission to show you reminders and let you know when your morning routine is active.</string>
+
+    <string name="onboarding_backup_title">Protect Your Journals</string>
+    <string name="onboarding_backup_desc">Your journal entries are precious. Enable auto-backup to save them to a folder you choose.\n\nThis protects your data even if you uninstall the app.</string>
+    <string name="enable_auto_backup">Enable Auto-Backup</string>
+    <string name="choose_backup_folder">Choose Folder</string>
+    <string name="backup_folder_selected">Backup folder selected</string>
+    <string name="skip_backup_setup">Skip for now</string>
+    <string name="auto_backup_password_title">Set Backup Password</string>
+    <string name="auto_backup_password_message">Choose a password to encrypt your backups. You\'ll need this password if you ever restore from backup.</string>
 
     <string name="onboarding_ready_title">You\'re Ready!</string>
     <string name="onboarding_ready_desc">Blocking is now enabled.\n\nYou can change these settings anytime.\n\nEnjoy your mindful mornings!</string>

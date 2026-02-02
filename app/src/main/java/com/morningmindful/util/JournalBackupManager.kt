@@ -240,4 +240,122 @@ object JournalBackupManager {
             .format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd_HHmm"))
         return "morning_mindful_backup_$timestamp.mmbackup"
     }
+
+    /**
+     * Export journal entries to an encrypted file in a folder (for auto-backup).
+     * Uses a fixed filename "morning_mindful_auto.mmbackup" and overwrites previous backup.
+     *
+     * @param context Android context
+     * @param entries List of journal entries to export
+     * @param folderUri URI of the folder to save backup to
+     * @param password User-provided password for encryption
+     */
+    fun exportToFolder(
+        context: Context,
+        entries: List<JournalEntry>,
+        folderUri: Uri,
+        password: String
+    ): ExportResult {
+        return try {
+            if (password.length < 8) {
+                return ExportResult.Error("Password must be at least 8 characters")
+            }
+
+            if (entries.isEmpty()) {
+                return ExportResult.Error("No entries to export")
+            }
+
+            // Convert entries to JSON
+            val jsonArray = JSONArray()
+            entries.forEach { entry ->
+                val jsonEntry = JSONObject().apply {
+                    put("date", entry.date.toString())
+                    put("content", entry.content)
+                    put("wordCount", entry.wordCount)
+                    put("mood", entry.mood ?: JSONObject.NULL)
+                    put("createdAt", entry.createdAt)
+                    put("updatedAt", entry.updatedAt)
+                }
+                jsonArray.put(jsonEntry)
+            }
+
+            val backupJson = JSONObject().apply {
+                put("version", BACKUP_VERSION)
+                put("exportedAt", System.currentTimeMillis())
+                put("entryCount", entries.size)
+                put("entries", jsonArray)
+            }
+
+            // Encrypt the JSON data
+            val encryptedData = encrypt(backupJson.toString(), password)
+
+            // Create file in folder using DocumentFile
+            val folder = androidx.documentfile.provider.DocumentFile.fromTreeUri(context, folderUri)
+                ?: return ExportResult.Error("Could not access backup folder")
+
+            // Delete existing backup file if it exists
+            val existingFile = folder.findFile(AUTO_BACKUP_FILENAME)
+            existingFile?.delete()
+
+            // Create new file
+            val newFile = folder.createFile("application/octet-stream", AUTO_BACKUP_FILENAME)
+                ?: return ExportResult.Error("Could not create backup file")
+
+            // Write to file
+            context.contentResolver.openOutputStream(newFile.uri)?.use { outputStream ->
+                outputStream.write(encryptedData.toByteArray(Charsets.UTF_8))
+            } ?: return ExportResult.Error("Could not write to backup file")
+
+            ExportResult.Success(entries.size)
+        } catch (e: SecurityException) {
+            ExportResult.Error("Permission denied: ${e.message}")
+        } catch (e: Exception) {
+            ExportResult.Error("Export failed: ${e.message}")
+        }
+    }
+
+    /**
+     * Find and count entries in an auto-backup file in a folder.
+     * Used to detect if backup exists after reinstall.
+     *
+     * @return Number of entries in backup, or null if no backup found or error
+     */
+    fun findAutoBackupInFolder(context: Context, folderUri: Uri): Int? {
+        return try {
+            val folder = androidx.documentfile.provider.DocumentFile.fromTreeUri(context, folderUri)
+                ?: return null
+
+            val backupFile = folder.findFile(AUTO_BACKUP_FILENAME) ?: return null
+
+            // We can't decrypt without password, but we can check file exists
+            // Return -1 to indicate backup exists but count unknown
+            -1
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+    /**
+     * Import from the auto-backup file in a folder.
+     */
+    fun importFromFolder(
+        context: Context,
+        folderUri: Uri,
+        password: String,
+        existingDates: Set<LocalDate>
+    ): Pair<List<JournalEntry>, ImportResult> {
+        return try {
+            val folder = androidx.documentfile.provider.DocumentFile.fromTreeUri(context, folderUri)
+                ?: return Pair(emptyList(), ImportResult.Error("Could not access backup folder"))
+
+            val backupFile = folder.findFile(AUTO_BACKUP_FILENAME)
+                ?: return Pair(emptyList(), ImportResult.Error("No backup file found"))
+
+            importEntries(context, backupFile.uri, password, existingDates)
+        } catch (e: Exception) {
+            Pair(emptyList(), ImportResult.Error("Import failed: ${e.message}"))
+        }
+    }
+
+    private const val AUTO_BACKUP_FILENAME = "morning_mindful_auto.mmbackup"
 }

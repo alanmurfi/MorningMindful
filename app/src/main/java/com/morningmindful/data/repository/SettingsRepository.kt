@@ -29,6 +29,10 @@ class SettingsRepository(private val context: Context) {
         private const val KEY_BLOCKED_APPS_VERSION = "blocked_apps_version"
         private const val KEY_THEME_MODE = "theme_mode"
         private const val KEY_BLOCKING_MODE = "blocking_mode"
+        private const val KEY_AUTO_BACKUP_ENABLED = "auto_backup_enabled"
+        private const val KEY_AUTO_BACKUP_URI = "auto_backup_uri"
+        private const val KEY_AUTO_BACKUP_PASSWORD = "auto_backup_password"
+        private const val KEY_LAST_BACKUP_TIME = "last_backup_time"
 
         // Increment this when adding new default blocked apps
         private const val CURRENT_BLOCKED_APPS_VERSION = 2  // v2 adds browsers
@@ -67,6 +71,9 @@ class SettingsRepository(private val context: Context) {
     private val _morningEndHour = MutableStateFlow(10)
     private val _themeMode = MutableStateFlow(THEME_MODE_SYSTEM)
     private val _blockingMode = MutableStateFlow(BLOCKING_MODE_FULL)
+    private val _autoBackupEnabled = MutableStateFlow(false)
+    private val _autoBackupUri = MutableStateFlow<String?>(null)
+    private val _lastBackupTime = MutableStateFlow(0L)
 
     init {
         // Load initial values from encrypted storage
@@ -78,6 +85,9 @@ class SettingsRepository(private val context: Context) {
         _morningEndHour.value = encryptedPrefs.getInt(KEY_MORNING_END_HOUR, 10)
         _themeMode.value = encryptedPrefs.getInt(KEY_THEME_MODE, THEME_MODE_SYSTEM)
         _blockingMode.value = encryptedPrefs.getInt(KEY_BLOCKING_MODE, BLOCKING_MODE_FULL)
+        _autoBackupEnabled.value = encryptedPrefs.getBoolean(KEY_AUTO_BACKUP_ENABLED, false)
+        _autoBackupUri.value = encryptedPrefs.getString(KEY_AUTO_BACKUP_URI, null)
+        _lastBackupTime.value = encryptedPrefs.getLong(KEY_LAST_BACKUP_TIME, 0L)
 
         // Load blocked apps with migration for new default apps
         _blockedApps.value = loadBlockedAppsWithMigration()
@@ -267,5 +277,78 @@ class SettingsRepository(private val context: Context) {
      */
     fun getBlockingModeSync(): Int {
         return encryptedPrefs.getInt(KEY_BLOCKING_MODE, BLOCKING_MODE_FULL)
+    }
+
+    // Auto-backup settings
+    val autoBackupEnabled: Flow<Boolean> = _autoBackupEnabled.asStateFlow()
+
+    suspend fun setAutoBackupEnabled(enabled: Boolean) {
+        withContext(Dispatchers.IO) {
+            encryptedPrefs.edit().putBoolean(KEY_AUTO_BACKUP_ENABLED, enabled).apply()
+            _autoBackupEnabled.value = enabled
+        }
+    }
+
+    /**
+     * Get auto-backup enabled state synchronously.
+     */
+    fun isAutoBackupEnabledSync(): Boolean {
+        return encryptedPrefs.getBoolean(KEY_AUTO_BACKUP_ENABLED, false)
+    }
+
+    // Auto-backup folder URI (persisted from SAF)
+    val autoBackupUri: Flow<String?> = _autoBackupUri.asStateFlow()
+
+    suspend fun setAutoBackupUri(uri: String?) {
+        withContext(Dispatchers.IO) {
+            if (uri != null) {
+                encryptedPrefs.edit().putString(KEY_AUTO_BACKUP_URI, uri).apply()
+            } else {
+                encryptedPrefs.edit().remove(KEY_AUTO_BACKUP_URI).apply()
+            }
+            _autoBackupUri.value = uri
+        }
+    }
+
+    /**
+     * Get auto-backup URI synchronously.
+     */
+    fun getAutoBackupUriSync(): String? {
+        return encryptedPrefs.getString(KEY_AUTO_BACKUP_URI, null)
+    }
+
+    // Last backup timestamp
+    val lastBackupTime: Flow<Long> = _lastBackupTime.asStateFlow()
+
+    suspend fun setLastBackupTime(timestamp: Long) {
+        withContext(Dispatchers.IO) {
+            encryptedPrefs.edit().putLong(KEY_LAST_BACKUP_TIME, timestamp).apply()
+            _lastBackupTime.value = timestamp
+        }
+    }
+
+    /**
+     * Get last backup time synchronously.
+     */
+    fun getLastBackupTimeSync(): Long {
+        return encryptedPrefs.getLong(KEY_LAST_BACKUP_TIME, 0L)
+    }
+
+    // Auto-backup password (stored encrypted)
+    suspend fun setAutoBackupPassword(password: String?) {
+        withContext(Dispatchers.IO) {
+            if (password != null) {
+                encryptedPrefs.edit().putString(KEY_AUTO_BACKUP_PASSWORD, password).apply()
+            } else {
+                encryptedPrefs.edit().remove(KEY_AUTO_BACKUP_PASSWORD).apply()
+            }
+        }
+    }
+
+    /**
+     * Get auto-backup password synchronously.
+     */
+    fun getAutoBackupPasswordSync(): String? {
+        return encryptedPrefs.getString(KEY_AUTO_BACKUP_PASSWORD, null)
     }
 }

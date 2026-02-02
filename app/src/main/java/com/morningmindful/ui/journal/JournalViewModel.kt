@@ -10,6 +10,7 @@ import com.morningmindful.data.entity.JournalEntry
 import com.morningmindful.data.repository.JournalRepository
 import com.morningmindful.data.repository.SettingsRepository
 import com.morningmindful.util.BlockingState
+import com.morningmindful.util.JournalBackupManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -298,6 +299,48 @@ class JournalViewModel @Inject constructor(
             journalRepository.update(entry)
         } else {
             journalRepository.insert(entry)
+        }
+
+        // Trigger auto-backup if enabled
+        triggerAutoBackup()
+    }
+
+    /**
+     * Trigger auto-backup if enabled and configured.
+     * Runs in background to avoid blocking UI.
+     */
+    private fun triggerAutoBackup() {
+        viewModelScope.launch {
+            try {
+                val isAutoBackupEnabled = settingsRepository.isAutoBackupEnabledSync()
+                if (!isAutoBackupEnabled) return@launch
+
+                val uriString = settingsRepository.getAutoBackupUriSync() ?: return@launch
+                val password = settingsRepository.getAutoBackupPasswordSync() ?: return@launch
+
+                val uri = android.net.Uri.parse(uriString)
+                val allEntries = journalRepository.getAllEntries().first()
+
+                if (allEntries.isNotEmpty()) {
+                    val result = JournalBackupManager.exportToFolder(
+                        context = getApplication(),
+                        entries = allEntries,
+                        folderUri = uri,
+                        password = password
+                    )
+                    when (result) {
+                        is JournalBackupManager.ExportResult.Success -> {
+                            settingsRepository.setLastBackupTime(System.currentTimeMillis())
+                            Log.d(TAG, "Auto-backup successful: ${result.entryCount} entries")
+                        }
+                        is JournalBackupManager.ExportResult.Error -> {
+                            Log.e(TAG, "Auto-backup failed: ${result.message}")
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Auto-backup error", e)
+            }
         }
     }
 

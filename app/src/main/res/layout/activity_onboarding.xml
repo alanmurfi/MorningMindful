@@ -17,7 +17,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Page indicator dots (9 pages) -->
+    <!-- Page indicator dots (10 pages) -->
     <LinearLayout
         android:id="@+id/dotsContainer"
         android:layout_width="wrap_content"
@@ -87,6 +87,13 @@
 
         <View
             android:id="@+id/dot9"
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            android:layout_margin="4dp"
+            android:background="@drawable/dot_indicator" />
+
+        <View
+            android:id="@+id/dot10"
             android:layout_width="8dp"
             android:layout_height="8dp"
             android:layout_margin="4dp"

@@ -115,6 +115,20 @@
     <string name="export_success">成功导出 %1$d 条日记</string>
     <string name="import_success">成功导入 %1$d 条日记</string>
     <string name="import_success_with_skipped">导入 %1$d 条日记，跳过 %2$d 条重复</string>
+    <string name="auto_backup">自动备份</string>
+    <string name="auto_backup_desc">写作时自动保存备份</string>
+    <string name="auto_backup_enabled">自动备份已启用</string>
+    <string name="auto_backup_disabled">自动备份已禁用</string>
+    <string name="last_backup">上次备份：%1$s</string>
+    <string name="no_backup_yet">尚未备份</string>
+    <string name="change_backup_folder">更改文件夹</string>
+    <string name="backup_now">立即备份</string>
+    <string name="backup_success">备份保存成功</string>
+    <string name="backup_failed">备份失败：%1$s</string>
+    <string name="restore_found_title">发现备份</string>
+    <string name="restore_found_message">我们找到了一个包含 %1$d 条日记的备份文件。你想恢复它吗？</string>
+    <string name="restore">恢复</string>
+    <string name="restore_later">稍后</string>
 
     <!-- Accessibility Service -->
     <string name="accessibility_service_description">晨间正念使用无障碍服务来检测你在晨间正念时段打开受限应用。这允许应用将你重定向到日记页面。不会收集或分享任何个人数据。</string>
@@ -147,6 +161,15 @@
 
     <string name="onboarding_perm_notifications_title">允许通知</string>
     <string name="onboarding_perm_notifications_desc">我们需要此权限来显示提醒并让你知道晨间例程何时激活。</string>
+
+    <string name="onboarding_backup_title">保护你的日记</string>
+    <string name="onboarding_backup_desc">你的日记非常珍贵。启用自动备份，将它们保存到你选择的文件夹。\n\n即使卸载应用，这也能保护你的数据。</string>
+    <string name="enable_auto_backup">启用自动备份</string>
+    <string name="choose_backup_folder">选择文件夹</string>
+    <string name="backup_folder_selected">备份文件夹已选择</string>
+    <string name="skip_backup_setup">暂时跳过</string>
+    <string name="auto_backup_password_title">设置备份密码</string>
+    <string name="auto_backup_password_message">选择一个密码来加密你的备份。如果需要恢复备份，你将需要此密码。</string>
 
     <string name="onboarding_ready_title">准备就绪！</string>
     <string name="onboarding_ready_desc">限制功能已启用。\n\n你可以随时更改这些设置。\n\n享受你的正念早晨！</string>

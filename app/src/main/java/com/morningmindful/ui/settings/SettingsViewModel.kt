@@ -46,6 +46,12 @@ class SettingsViewModel @Inject constructor(
     val blockingMode: StateFlow<Int> = settingsRepository.blockingMode
         .stateIn(viewModelScope, SharingStarted.Eagerly, SettingsRepository.BLOCKING_MODE_FULL)
 
+    val autoBackupEnabled: StateFlow<Boolean> = settingsRepository.autoBackupEnabled
+        .stateIn(viewModelScope, SharingStarted.Eagerly, false)
+
+    val lastBackupTime: StateFlow<Long> = settingsRepository.lastBackupTime
+        .stateIn(viewModelScope, SharingStarted.Eagerly, 0L)
+
     fun setBlockingEnabled(enabled: Boolean) {
         viewModelScope.launch {
             settingsRepository.setBlockingEnabled(enabled)
@@ -146,5 +152,36 @@ class SettingsViewModel @Inject constructor(
         viewModelScope.launch {
             journalRepository.insertAll(entries)
         }
+    }
+
+    // Auto-backup methods
+    fun setAutoBackupEnabled(enabled: Boolean) {
+        viewModelScope.launch {
+            settingsRepository.setAutoBackupEnabled(enabled)
+        }
+    }
+
+    fun setAutoBackupUri(uri: String?) {
+        viewModelScope.launch {
+            settingsRepository.setAutoBackupUri(uri)
+        }
+    }
+
+    fun setAutoBackupPassword(password: String?) {
+        viewModelScope.launch {
+            settingsRepository.setAutoBackupPassword(password)
+        }
+    }
+
+    fun getAutoBackupUri(): String? {
+        return settingsRepository.getAutoBackupUriSync()
+    }
+
+    fun getLastBackupTime(): Long {
+        return settingsRepository.getLastBackupTimeSync()
+    }
+
+    fun isAutoBackupEnabled(): Boolean {
+        return settingsRepository.isAutoBackupEnabledSync()
     }
 }

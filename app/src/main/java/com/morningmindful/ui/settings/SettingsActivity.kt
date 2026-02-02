@@ -6,6 +6,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -27,6 +28,9 @@ import com.morningmindful.util.PermissionUtils
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 @AndroidEntryPoint
 class SettingsActivity : AppCompatActivity() {
@@ -51,7 +55,25 @@ class SettingsActivity : AppCompatActivity() {
     // Temporary storage for export password
     private var pendingExportPassword: String? = null
     private var pendingImportUri: Uri? = null
+    private var pendingBackupUri: Uri? = null
     private lateinit var blockedAppsAdapter: BlockedAppsAdapter
+
+    // Backup folder selection for auto-backup
+    private val backupFolderLauncher = registerForActivityResult(
+        ActivityResultContracts.OpenDocumentTree()
+    ) { uri: Uri? ->
+        if (uri != null) {
+            contentResolver.takePersistableUriPermission(
+                uri,
+                Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+            )
+            pendingBackupUri = uri
+            showAutoBackupPasswordDialog()
+        } else {
+            // User cancelled, turn switch back off
+            binding.autoBackupSwitch.isChecked = false
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -227,6 +249,29 @@ class SettingsActivity : AppCompatActivity() {
             importFileLauncher.launch(arrayOf("*/*"))
         }
 
+        // Auto-backup switch
+        binding.autoBackupSwitch.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                // Check if we already have a backup folder configured
+                val existingUri = viewModel.getAutoBackupUri()
+                if (existingUri != null) {
+                    // Already configured, just enable
+                    viewModel.setAutoBackupEnabled(true)
+                } else {
+                    // Need to set up - launch folder picker
+                    backupFolderLauncher.launch(null)
+                }
+            } else {
+                // Disable auto-backup
+                viewModel.setAutoBackupEnabled(false)
+            }
+        }
+
+        // Change backup folder button
+        binding.changeBackupFolderButton.setOnClickListener {
+            backupFolderLauncher.launch(null)
+        }
+
         // App version
         try {
             val packageInfo = packageManager.getPackageInfo(packageName, 0)
@@ -358,6 +403,75 @@ class SettingsActivity : AppCompatActivity() {
         private const val PRIVACY_POLICY_URL = "https://alanmurfi.github.io/MorningMindful/"
     }
 
+    /**
+     * Show dialog to set password for auto-backup encryption.
+     */
+    private fun showAutoBackupPasswordDialog() {
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_backup_password, null)
+        val passwordInput = dialogView.findViewById<EditText>(R.id.passwordInput)
+        val confirmPasswordInput = dialogView.findViewById<EditText>(R.id.confirmPasswordInput)
+
+        MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.auto_backup_password_title)
+            .setMessage(R.string.auto_backup_password_message)
+            .setView(dialogView)
+            .setPositiveButton(R.string.ok) { _, _ ->
+                val password = passwordInput.text.toString()
+                val confirmPassword = confirmPasswordInput.text.toString()
+
+                when {
+                    password.length < 8 -> {
+                        Toast.makeText(this, R.string.password_too_short, Toast.LENGTH_SHORT).show()
+                        binding.autoBackupSwitch.isChecked = false
+                        pendingBackupUri = null
+                    }
+                    password != confirmPassword -> {
+                        Toast.makeText(this, R.string.passwords_dont_match, Toast.LENGTH_SHORT).show()
+                        binding.autoBackupSwitch.isChecked = false
+                        pendingBackupUri = null
+                    }
+                    else -> {
+                        // Save auto-backup settings
+                        val uri = pendingBackupUri
+                        if (uri != null) {
+                            viewModel.setAutoBackupUri(uri.toString())
+                            viewModel.setAutoBackupPassword(password)
+                            viewModel.setAutoBackupEnabled(true)
+                            Toast.makeText(this, R.string.auto_backup_enabled, Toast.LENGTH_SHORT).show()
+                        }
+                        pendingBackupUri = null
+                    }
+                }
+            }
+            .setNegativeButton(R.string.cancel) { _, _ ->
+                binding.autoBackupSwitch.isChecked = false
+                pendingBackupUri = null
+            }
+            .setOnCancelListener {
+                binding.autoBackupSwitch.isChecked = false
+                pendingBackupUri = null
+            }
+            .show()
+    }
+
+    /**
+     * Update the auto-backup status text and visibility.
+     */
+    private fun updateAutoBackupUI(enabled: Boolean, lastBackupTime: Long) {
+        binding.autoBackupSwitch.isChecked = enabled
+        binding.changeBackupFolderButton.visibility = if (enabled) View.VISIBLE else View.GONE
+
+        if (enabled && lastBackupTime > 0) {
+            val dateFormat = SimpleDateFormat("MMM d, h:mm a", Locale.getDefault())
+            val formattedDate = dateFormat.format(Date(lastBackupTime))
+            binding.autoBackupStatus.text = getString(R.string.last_backup, formattedDate)
+        } else if (enabled) {
+            binding.autoBackupStatus.text = getString(R.string.auto_backup_enabled)
+        } else {
+            binding.autoBackupStatus.text = getString(R.string.auto_backup_disabled)
+        }
+    }
+
     private fun observeViewModel() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -431,6 +545,22 @@ class SettingsActivity : AppCompatActivity() {
                         }
                         binding.blockingModeRadioGroup.check(radioId)
                         updatePermissionVisibility(mode)
+                    }
+                }
+
+                // Auto-backup enabled
+                launch {
+                    viewModel.autoBackupEnabled.collectLatest { enabled ->
+                        val lastBackup = viewModel.getLastBackupTime()
+                        updateAutoBackupUI(enabled, lastBackup)
+                    }
+                }
+
+                // Last backup time
+                launch {
+                    viewModel.lastBackupTime.collectLatest { time ->
+                        val enabled = viewModel.isAutoBackupEnabled()
+                        updateAutoBackupUI(enabled, time)
                     }
                 }
             }
