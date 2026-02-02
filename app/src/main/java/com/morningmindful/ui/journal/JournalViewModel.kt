@@ -21,7 +21,9 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 /**
@@ -371,12 +373,25 @@ class JournalViewModel @Inject constructor(
         viewModelScope.launch {
             val entry = journalRepository.getEntryByDate(targetDate).first()
             if (entry != null) {
-                _journalText.value = entry.content
-                _wordCount.value = entry.wordCount
+                // Check if this is a reopening (entry was previously saved and closed)
+                // We add a timestamp separator if there's existing content
+                val contentWithTimestamp = if (entry.content.isNotBlank() && !isEditingPastEntry) {
+                    // Add timestamp separator for continuing today's entry
+                    val timestamp = LocalDateTime.now().format(
+                        DateTimeFormatter.ofPattern("h:mm a")
+                    )
+                    "${entry.content}\n\n--- $timestamp ---\n\n"
+                } else {
+                    entry.content
+                }
+
+                _journalText.value = contentWithTimestamp
+                _wordCount.value = countWords(contentWithTimestamp)
                 _selectedMood.value = entry.mood
 
                 // Initialize last saved state to track changes
-                lastSavedContent = entry.content
+                // Use the NEW content with timestamp so it's not marked as "unsaved" immediately
+                lastSavedContent = contentWithTimestamp
                 lastSavedMood = entry.mood
             }
         }

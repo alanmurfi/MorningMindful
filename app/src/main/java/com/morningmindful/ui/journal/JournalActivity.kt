@@ -265,11 +265,14 @@ class JournalActivity : AppCompatActivity() {
                     }
                 }
 
-                // Load existing entry if any
+                // Load existing entry content from ViewModel (may include timestamp separator)
                 launch {
-                    viewModel.existingEntry.collectLatest { entry ->
-                        if (entry != null && binding.journalEditText.text.isNullOrEmpty()) {
-                            binding.journalEditText.setText(entry.content)
+                    viewModel.journalText.collectLatest { text ->
+                        // Only set text if EditText is empty and there's content to load
+                        if (binding.journalEditText.text.isNullOrEmpty() && text.isNotEmpty()) {
+                            binding.journalEditText.setText(text)
+                            // Move cursor to end so user can continue writing
+                            binding.journalEditText.setSelection(text.length)
                         }
                     }
                 }
