@@ -10,6 +10,7 @@ import com.morningmindful.data.repository.JournalRepository
 import com.morningmindful.data.repository.SettingsRepository
 import com.morningmindful.util.BlockingState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -82,6 +83,22 @@ class JournalViewModel @Inject constructor(
     private val _journalPrompt = MutableStateFlow(getRandomPrompt())
     val journalPrompt: StateFlow<String> = _journalPrompt.asStateFlow()
 
+    // Track if content has been modified since last save
+    private val _hasUnsavedChanges = MutableStateFlow(false)
+    val hasUnsavedChanges: StateFlow<Boolean> = _hasUnsavedChanges.asStateFlow()
+
+    // Track the last saved content to detect changes
+    private var lastSavedContent: String = ""
+    private var lastSavedMood: String? = null
+
+    // Auto-save job
+    private var autoSaveJob: Job? = null
+    private val autoSaveDelayMs = 3000L // 3 seconds after typing stops
+
+    // Auto-save status for UI feedback
+    private val _autoSaveStatus = MutableStateFlow<AutoSaveStatus>(AutoSaveStatus.Idle)
+    val autoSaveStatus: StateFlow<AutoSaveStatus> = _autoSaveStatus.asStateFlow()
+
     init {
         startTimer()
         loadExistingEntry()
@@ -119,10 +136,64 @@ class JournalViewModel @Inject constructor(
     fun updateJournalText(text: String) {
         _journalText.value = text
         _wordCount.value = countWords(text)
+
+        // Check if content has changed from last saved state
+        _hasUnsavedChanges.value = text != lastSavedContent || _selectedMood.value != lastSavedMood
+
+        // Trigger auto-save with debounce
+        scheduleAutoSave()
     }
 
     fun setMood(mood: String?) {
         _selectedMood.value = mood
+
+        // Check if mood has changed from last saved state
+        _hasUnsavedChanges.value = _journalText.value != lastSavedContent || mood != lastSavedMood
+
+        // Trigger auto-save with debounce
+        scheduleAutoSave()
+    }
+
+    /**
+     * Schedule auto-save after a delay (debounced).
+     * Cancels any pending auto-save and starts a new timer.
+     */
+    private fun scheduleAutoSave() {
+        autoSaveJob?.cancel()
+
+        // Only auto-save if there's content to save
+        if (_journalText.value.isBlank()) return
+
+        autoSaveJob = viewModelScope.launch {
+            delay(autoSaveDelayMs)
+            performAutoSave()
+        }
+    }
+
+    /**
+     * Perform the actual auto-save operation.
+     */
+    private suspend fun performAutoSave() {
+        val text = _journalText.value
+        if (text.isBlank() || !_hasUnsavedChanges.value) return
+
+        try {
+            _autoSaveStatus.value = AutoSaveStatus.Saving
+            saveEntry(text, _wordCount.value)
+
+            // Update last saved state
+            lastSavedContent = text
+            lastSavedMood = _selectedMood.value
+            _hasUnsavedChanges.value = false
+
+            _autoSaveStatus.value = AutoSaveStatus.Saved
+
+            // Reset status after a brief delay
+            delay(2000)
+            _autoSaveStatus.value = AutoSaveStatus.Idle
+        } catch (e: Exception) {
+            _autoSaveStatus.value = AutoSaveStatus.Error
+        }
     }
 
     /**
@@ -138,11 +209,19 @@ class JournalViewModel @Inject constructor(
             return
         }
 
+        // Cancel any pending auto-save
+        autoSaveJob?.cancel()
+
         viewModelScope.launch {
             _saveState.value = SaveState.Saving
 
             try {
                 saveEntry(text, words)
+
+                // Update saved state
+                lastSavedContent = text
+                lastSavedMood = _selectedMood.value
+                _hasUnsavedChanges.value = false
 
                 // Mark journal as completed - this unlocks blocking (only for today's entry)
                 if (!isEditingPastEntry) {
@@ -169,11 +248,20 @@ class JournalViewModel @Inject constructor(
             return
         }
 
+        // Cancel any pending auto-save
+        autoSaveJob?.cancel()
+
         viewModelScope.launch {
             _saveState.value = SaveState.Saving
 
             try {
                 saveEntry(text, words)
+
+                // Update saved state
+                lastSavedContent = text
+                lastSavedMood = _selectedMood.value
+                _hasUnsavedChanges.value = false
+
                 _saveState.value = SaveState.DraftSaved
 
             } catch (e: Exception) {
@@ -280,6 +368,10 @@ class JournalViewModel @Inject constructor(
                 _journalText.value = entry.content
                 _wordCount.value = entry.wordCount
                 _selectedMood.value = entry.mood
+
+                // Initialize last saved state to track changes
+                lastSavedContent = entry.content
+                lastSavedMood = entry.mood
             }
         }
     }
@@ -307,6 +399,13 @@ class JournalViewModel @Inject constructor(
         object Success : SaveState()
         object DraftSaved : SaveState()
         data class Error(val message: String) : SaveState()
+    }
+
+    sealed class AutoSaveStatus {
+        object Idle : AutoSaveStatus()
+        object Saving : AutoSaveStatus()
+        object Saved : AutoSaveStatus()
+        object Error : AutoSaveStatus()
     }
 
     companion object {

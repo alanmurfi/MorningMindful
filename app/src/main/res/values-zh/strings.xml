@@ -8,6 +8,13 @@
     <string name="save_entry">保存并解锁</string>
     <string name="save_draft">保存草稿</string>
     <string name="draft_saved">草稿已保存！</string>
+    <string name="auto_saving">保存中…</string>
+    <string name="auto_saved">已保存</string>
+    <string name="auto_save_failed">保存失败</string>
+    <string name="unsaved_changes_title">未保存的更改</string>
+    <string name="unsaved_changes_message">你有未保存的更改。你想怎么做？</string>
+    <string name="save_and_exit">保存并退出</string>
+    <string name="discard">丢弃</string>
     <string name="skip_today">跳过今天</string>
     <string name="journal_saved">日记已保存！</string>
     <string name="have_a_mindful_day">祝你拥有正念的一天。</string>

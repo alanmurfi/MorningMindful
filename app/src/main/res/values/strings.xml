@@ -8,6 +8,13 @@
     <string name="save_entry">Save &amp; Unlock</string>
     <string name="save_draft">Save Draft</string>
     <string name="draft_saved">Draft saved!</string>
+    <string name="auto_saving">Saving…</string>
+    <string name="auto_saved">Saved</string>
+    <string name="auto_save_failed">Save failed</string>
+    <string name="unsaved_changes_title">Unsaved Changes</string>
+    <string name="unsaved_changes_message">You have unsaved changes. What would you like to do?</string>
+    <string name="save_and_exit">Save &amp; Exit</string>
+    <string name="discard">Discard</string>
     <string name="skip_today">Skip Today</string>
     <string name="journal_saved">Journal Saved!</string>
     <string name="have_a_mindful_day">Have a mindful day.</string>

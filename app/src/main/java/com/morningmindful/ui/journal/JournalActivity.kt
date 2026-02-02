@@ -97,6 +97,12 @@ class JournalActivity : AppCompatActivity() {
     }
 
     private fun handleBackPress() {
+        // Check for unsaved changes first
+        if (viewModel.hasUnsavedChanges.value) {
+            showUnsavedChangesDialog()
+            return
+        }
+
         // If editing a past entry, always allow closing
         if (viewModel.isEditingPastEntry) {
             finish()
@@ -108,6 +114,25 @@ class JournalActivity : AppCompatActivity() {
         } else {
             finish()
         }
+    }
+
+    private fun showUnsavedChangesDialog() {
+        MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.unsaved_changes_title)
+            .setMessage(R.string.unsaved_changes_message)
+            .setPositiveButton(R.string.save_and_exit) { _, _ ->
+                // Save draft and exit
+                viewModel.saveDraft()
+                // Wait a moment for save to complete, then exit
+                binding.root.postDelayed({ finish() }, 500)
+            }
+            .setNegativeButton(R.string.discard) { _, _ ->
+                finish()
+            }
+            .setNeutralButton(R.string.keep_writing) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
     }
 
     private fun setupMoodSelector() {
@@ -260,6 +285,29 @@ class JournalActivity : AppCompatActivity() {
                 launch {
                     viewModel.selectedMood.collectLatest { mood ->
                         updateMoodSelection(mood)
+                    }
+                }
+
+                // Auto-save status
+                launch {
+                    viewModel.autoSaveStatus.collectLatest { status ->
+                        when (status) {
+                            is JournalViewModel.AutoSaveStatus.Saving -> {
+                                binding.autoSaveStatus.visibility = View.VISIBLE
+                                binding.autoSaveStatus.text = getString(R.string.auto_saving)
+                            }
+                            is JournalViewModel.AutoSaveStatus.Saved -> {
+                                binding.autoSaveStatus.visibility = View.VISIBLE
+                                binding.autoSaveStatus.text = getString(R.string.auto_saved)
+                            }
+                            is JournalViewModel.AutoSaveStatus.Error -> {
+                                binding.autoSaveStatus.visibility = View.VISIBLE
+                                binding.autoSaveStatus.text = getString(R.string.auto_save_failed)
+                            }
+                            else -> {
+                                binding.autoSaveStatus.visibility = View.GONE
+                            }
+                        }
                     }
                 }
             }

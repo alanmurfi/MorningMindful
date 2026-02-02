@@ -44,6 +44,19 @@
             android:textColor="@color/text_primary"
             android:textSize="28sp" />
 
+        <!-- Auto-save status -->
+        <TextView
+            android:id="@+id/autoSaveStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="12dp"
+            android:fontFamily="sans-serif"
+            android:textColor="@color/text_secondary"
+            android:textSize="12sp"
+            android:visibility="gone"
+            tools:text="Saved"
+            tools:visibility="visible" />
+
         <!-- Timer -->
         <TextView
             android:id="@+id/timerText"
