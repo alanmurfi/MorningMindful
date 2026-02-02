@@ -96,6 +96,26 @@
     <string name="error_failed_to_save">保存失败：%1$s</string>
     <string name="error_nothing_to_save">没有内容可保存</string>
 
+    <!-- Export/Import -->
+    <string name="data_section">数据</string>
+    <string name="export_journals">导出日记</string>
+    <string name="export_description">保存加密备份到文件</string>
+    <string name="import_journals">导入日记</string>
+    <string name="import_description">从加密备份恢复</string>
+    <string name="export_set_password">设置备份密码</string>
+    <string name="export_password_message">选择一个强密码来加密你的日记备份。恢复数据时需要此密码。</string>
+    <string name="import_enter_password">输入密码</string>
+    <string name="import_password_message">输入创建此备份时使用的密码。</string>
+    <string name="password_hint">密码</string>
+    <string name="confirm_password_hint">确认密码</string>
+    <string name="password_too_short">密码至少需要8个字符</string>
+    <string name="passwords_dont_match">两次密码不一致</string>
+    <string name="export_button">导出</string>
+    <string name="import_button">导入</string>
+    <string name="export_success">成功导出 %1$d 条日记</string>
+    <string name="import_success">成功导入 %1$d 条日记</string>
+    <string name="import_success_with_skipped">导入 %1$d 条日记，跳过 %2$d 条重复</string>
+
     <!-- Accessibility Service -->
     <string name="accessibility_service_description">晨间正念使用无障碍服务来检测你在晨间正念时段打开受限应用。这允许应用将你重定向到日记页面。不会收集或分享任何个人数据。</string>
 

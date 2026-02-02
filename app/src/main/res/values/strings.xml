@@ -96,6 +96,26 @@
     <string name="error_failed_to_save">Failed to save: %1$s</string>
     <string name="error_nothing_to_save">Nothing to save</string>
 
+    <!-- Export/Import -->
+    <string name="data_section">Data</string>
+    <string name="export_journals">Export Journals</string>
+    <string name="export_description">Save encrypted backup to a file</string>
+    <string name="import_journals">Import Journals</string>
+    <string name="import_description">Restore from encrypted backup</string>
+    <string name="export_set_password">Set Backup Password</string>
+    <string name="export_password_message">Choose a strong password to encrypt your journal backup. You\'ll need this password to restore your data.</string>
+    <string name="import_enter_password">Enter Password</string>
+    <string name="import_password_message">Enter the password you used when creating this backup.</string>
+    <string name="password_hint">Password</string>
+    <string name="confirm_password_hint">Confirm Password</string>
+    <string name="password_too_short">Password must be at least 8 characters</string>
+    <string name="passwords_dont_match">Passwords don\'t match</string>
+    <string name="export_button">Export</string>
+    <string name="import_button">Import</string>
+    <string name="export_success">Successfully exported %1$d journal entries</string>
+    <string name="import_success">Successfully imported %1$d journal entries</string>
+    <string name="import_success_with_skipped">Imported %1$d entries, skipped %2$d duplicates</string>
+
     <!-- Accessibility Service -->
     <string name="accessibility_service_description">Morning Mindful uses accessibility to detect when you open blocked apps during your morning mindfulness period. This allows the app to redirect you to your journal instead. No personal data is collected or shared.</string>
 

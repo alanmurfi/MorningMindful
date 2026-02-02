@@ -2,6 +2,7 @@ package com.morningmindful.ui.settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.morningmindful.data.entity.JournalEntry
 import com.morningmindful.data.repository.JournalRepository
 import com.morningmindful.data.repository.SettingsRepository
 import com.morningmindful.util.BlockedApps
@@ -12,6 +13,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
@@ -120,6 +122,29 @@ class SettingsViewModel @Inject constructor(
             }
             // Reset the blocking state
             BlockingState.forceReset()
+        }
+    }
+
+    /**
+     * Get all journal entries for export.
+     */
+    suspend fun getAllEntriesForExport(): List<JournalEntry> {
+        return journalRepository.getAllEntriesForExport()
+    }
+
+    /**
+     * Get all entry dates for import duplicate checking.
+     */
+    suspend fun getAllEntryDates(): Set<LocalDate> {
+        return journalRepository.getAllEntryDates()
+    }
+
+    /**
+     * Import entries into the database.
+     */
+    fun importEntries(entries: List<JournalEntry>) {
+        viewModelScope.launch {
+            journalRepository.insertAll(entries)
         }
     }
 }

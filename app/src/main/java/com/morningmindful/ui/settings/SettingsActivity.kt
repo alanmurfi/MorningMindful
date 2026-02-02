@@ -4,7 +4,10 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
@@ -13,11 +16,13 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.textfield.TextInputEditText
 import com.morningmindful.R
 import com.morningmindful.databinding.ActivitySettingsBinding
 import com.morningmindful.data.repository.SettingsRepository
 import com.morningmindful.ui.onboarding.OnboardingActivity
 import com.morningmindful.util.BlockedApps
+import com.morningmindful.util.JournalBackupManager
 import com.morningmindful.util.PermissionUtils
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -28,6 +33,24 @@ class SettingsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySettingsBinding
     private val viewModel: SettingsViewModel by viewModels()
+
+    // File picker for export
+    private val exportFileLauncher = registerForActivityResult(
+        ActivityResultContracts.CreateDocument("application/octet-stream")
+    ) { uri ->
+        uri?.let { handleExportToUri(it) }
+    }
+
+    // File picker for import
+    private val importFileLauncher = registerForActivityResult(
+        ActivityResultContracts.OpenDocument()
+    ) { uri ->
+        uri?.let { handleImportFromUri(it) }
+    }
+
+    // Temporary storage for export password
+    private var pendingExportPassword: String? = null
+    private var pendingImportUri: Uri? = null
     private lateinit var blockedAppsAdapter: BlockedAppsAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -194,12 +217,140 @@ class SettingsActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        // Export journals
+        binding.exportButton.setOnClickListener {
+            showExportPasswordDialog()
+        }
+
+        // Import journals
+        binding.importButton.setOnClickListener {
+            importFileLauncher.launch(arrayOf("*/*"))
+        }
+
         // App version
         try {
             val packageInfo = packageManager.getPackageInfo(packageName, 0)
             binding.appVersion.text = packageInfo.versionName
         } catch (e: PackageManager.NameNotFoundException) {
             binding.appVersion.text = getString(R.string.default_version)
+        }
+    }
+
+    private fun showExportPasswordDialog() {
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_password, null)
+        val passwordInput = dialogView.findViewById<TextInputEditText>(R.id.passwordInput)
+        val confirmPasswordInput = dialogView.findViewById<TextInputEditText>(R.id.confirmPasswordInput)
+
+        MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.export_set_password)
+            .setMessage(R.string.export_password_message)
+            .setView(dialogView)
+            .setPositiveButton(R.string.export_button) { _, _ ->
+                val password = passwordInput.text.toString()
+                val confirmPassword = confirmPasswordInput.text.toString()
+
+                when {
+                    password.length < 8 -> {
+                        Toast.makeText(this, R.string.password_too_short, Toast.LENGTH_SHORT).show()
+                    }
+                    password != confirmPassword -> {
+                        Toast.makeText(this, R.string.passwords_dont_match, Toast.LENGTH_SHORT).show()
+                    }
+                    else -> {
+                        pendingExportPassword = password
+                        exportFileLauncher.launch(JournalBackupManager.generateBackupFilename())
+                    }
+                }
+            }
+            .setNegativeButton(R.string.cancel, null)
+            .show()
+    }
+
+    private fun handleExportToUri(uri: Uri) {
+        val password = pendingExportPassword ?: return
+        pendingExportPassword = null
+
+        lifecycleScope.launch {
+            val entries = viewModel.getAllEntriesForExport()
+
+            val result = JournalBackupManager.exportEntries(
+                context = this@SettingsActivity,
+                entries = entries,
+                outputUri = uri,
+                password = password
+            )
+
+            when (result) {
+                is JournalBackupManager.ExportResult.Success -> {
+                    Toast.makeText(
+                        this@SettingsActivity,
+                        getString(R.string.export_success, result.entryCount),
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+                is JournalBackupManager.ExportResult.Error -> {
+                    Toast.makeText(
+                        this@SettingsActivity,
+                        result.message,
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+        }
+    }
+
+    private fun handleImportFromUri(uri: Uri) {
+        pendingImportUri = uri
+        showImportPasswordDialog()
+    }
+
+    private fun showImportPasswordDialog() {
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_password_single, null)
+        val passwordInput = dialogView.findViewById<TextInputEditText>(R.id.passwordInput)
+
+        MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.import_enter_password)
+            .setMessage(R.string.import_password_message)
+            .setView(dialogView)
+            .setPositiveButton(R.string.import_button) { _, _ ->
+                val password = passwordInput.text.toString()
+                val uri = pendingImportUri ?: return@setPositiveButton
+                pendingImportUri = null
+
+                performImport(uri, password)
+            }
+            .setNegativeButton(R.string.cancel, null)
+            .show()
+    }
+
+    private fun performImport(uri: Uri, password: String) {
+        lifecycleScope.launch {
+            val existingDates = viewModel.getAllEntryDates()
+
+            val (entries, result) = JournalBackupManager.importEntries(
+                context = this@SettingsActivity,
+                inputUri = uri,
+                password = password,
+                existingDates = existingDates
+            )
+
+            when (result) {
+                is JournalBackupManager.ImportResult.Success -> {
+                    if (entries.isNotEmpty()) {
+                        viewModel.importEntries(entries)
+                    }
+
+                    val message = if (result.skippedCount > 0) {
+                        getString(R.string.import_success_with_skipped, result.importedCount, result.skippedCount)
+                    } else {
+                        getString(R.string.import_success, result.importedCount)
+                    }
+                    Toast.makeText(this@SettingsActivity, message, Toast.LENGTH_LONG).show()
+                }
+                is JournalBackupManager.ImportResult.Error -> {
+                    Toast.makeText(this@SettingsActivity, result.message, Toast.LENGTH_LONG).show()
+                }
+            }
         }
     }
 
