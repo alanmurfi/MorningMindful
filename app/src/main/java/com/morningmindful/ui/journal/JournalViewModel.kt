@@ -1,6 +1,7 @@
 package com.morningmindful.ui.journal
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
@@ -192,7 +193,12 @@ class JournalViewModel @Inject constructor(
             delay(2000)
             _autoSaveStatus.value = AutoSaveStatus.Idle
         } catch (e: Exception) {
+            Log.e(TAG, "Auto-save failed", e)
+            // Show error briefly, then reset to idle
+            // Don't leave error state permanently as it's just auto-save
             _autoSaveStatus.value = AutoSaveStatus.Error
+            delay(3000)
+            _autoSaveStatus.value = AutoSaveStatus.Idle
         }
     }
 
@@ -409,6 +415,7 @@ class JournalViewModel @Inject constructor(
     }
 
     companion object {
+        private const val TAG = "JournalViewModel"
         // Must match JournalActivity.EXTRA_EDIT_DATE for SavedStateHandle to work
         const val EXTRA_EDIT_DATE = "edit_date"
     }
