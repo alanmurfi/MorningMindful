@@ -330,8 +330,8 @@
             </div>
             <div class="feature-card">
                 <div class="feature-icon">💾</div>
-                <h3>Encrypted Backups</h3>
-                <p>Export your journals to a password-protected backup file. Restore anytime, even on a new device.</p>
+                <h3>Auto-Backup</h3>
+                <p>Enable automatic backups to a local folder. Your journals are saved with AES-256 encryption whenever you write.</p>
             </div>
         </div>
     </section>
@@ -381,9 +381,20 @@
     <!-- Backup Info -->
     <section class="backup-info">
         <h2>💾 Protect Your Journals</h2>
-        <p>Your journal entries are precious. Use the encrypted backup feature to keep them safe across updates and device changes.</p>
+        <p>Your journal entries are precious. Enable auto-backup during setup or use manual export to keep them safe.</p>
+
         <div class="backup-steps">
-            <strong>To create a backup:</strong>
+            <strong>Option 1: Auto-Backup (Recommended)</strong>
+            <ol>
+                <li>During onboarding, choose <strong>Protect Your Journals</strong></li>
+                <li>Select a folder on your device (e.g., Documents)</li>
+                <li>Set a memorable password (8+ characters)</li>
+                <li>Your journals are automatically backed up every time you write!</li>
+            </ol>
+        </div>
+
+        <div class="backup-steps">
+            <strong>Option 2: Manual Export</strong>
             <ol>
                 <li>Go to <strong>Settings</strong> → <strong>Data</strong></li>
                 <li>Tap <strong>Export Journals</strong></li>
@@ -391,7 +402,7 @@
                 <li>Save the .mmbackup file to Google Drive, email, or your computer</li>
             </ol>
         </div>
-        <p><em>Your backup is encrypted with AES-256 - the same encryption used by banks.</em></p>
+        <p><em>All backups are encrypted with AES-256 - the same encryption used by banks.</em></p>
     </section>
 
     <!-- FAQ Section -->
@@ -416,7 +427,7 @@
 
         <div class="faq-item">
             <h3>What happens if I uninstall the app?</h3>
-            <p>Your journal entries will be deleted. We strongly recommend creating an encrypted backup first (Settings → Data → Export Journals).</p>
+            <p>By default, your journal entries will be deleted. However, if you have auto-backup enabled, your journals are safely stored in the folder you chose. After reinstalling, you can restore from the backup using your password. Android may also prompt you to "Keep app data" during uninstall if you want to preserve your data.</p>
         </div>
 
         <div class="faq-item">

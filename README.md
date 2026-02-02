@@ -15,6 +15,8 @@ A digital wellbeing Android app that helps you build a mindful morning routine b
 - **Dark Mode** - Full dark theme support with system, light, and dark options
 - **Streak Tracking** - Track your journaling streak and total word count
 - **Encrypted Storage** - Journal entries are encrypted with SQLCipher
+- **Auto-Backup** - Automatic encrypted backups to a local folder of your choice
+- **Export/Import** - Password-protected backup files with AES-256 encryption
 - **Offline First** - All data stored locally, no account required
 - **Customizable** - Configure blocked apps, word count, duration, and morning window
 
@@ -145,8 +147,10 @@ Customize the blocked apps list in Settings.
 ## Privacy & Security
 
 - **Local Storage Only** - All data stays on your device
-- **Encrypted Database** - Journal entries encrypted with SQLCipher
+- **Encrypted Database** - Journal entries encrypted with SQLCipher (AES-256)
 - **Encrypted Preferences** - Settings stored in EncryptedSharedPreferences
+- **Encrypted Backups** - Export/import with AES-256-GCM encryption
+- **Auto-Backup Protection** - Automatic backups use your password for encryption
 - **No Analytics** - No tracking or data collection (except crash reports)
 - **Minimal Permissions** - Only requests what's necessary
 
