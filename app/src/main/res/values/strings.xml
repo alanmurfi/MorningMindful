@@ -57,6 +57,7 @@
     <string name="reset_today_message">This will delete today\'s journal entry so app blocking will activate again. Use this for testing or if you want to redo your journal.</string>
     <string name="reset">Reset</string>
     <string name="cancel">Cancel</string>
+    <string name="delete">Delete</string>
     <string name="reset_settings_title">Reset All Settings?</string>
     <string name="reset_settings_message">This will reset all settings and blocked apps to their default values.</string>
     <string name="default_version">1.0</string>
@@ -122,6 +123,8 @@
     <string name="last_backup">Last backup: %1$s</string>
     <string name="no_backup_yet">No backup yet</string>
     <string name="change_backup_folder">Change Folder</string>
+    <string name="include_images_in_backup">Include photos in backup</string>
+    <string name="include_images_in_backup_desc">Increases backup size but preserves your photos</string>
     <string name="backup_now">Backup Now</string>
     <string name="backup_success">Backup saved successfully</string>
     <string name="backup_failed">Backup failed: %1$s</string>
@@ -242,6 +245,18 @@
     <!-- Journal -->
     <string name="how_feeling">How are you feeling?</string>
 
+    <!-- Photos -->
+    <string name="add_photo">Add Photo</string>
+    <string name="delete_photo">Delete photo</string>
+    <string name="delete_photo_confirm">Are you sure you want to delete this photo?</string>
+    <string name="photo_added">Photo added</string>
+    <string name="photo_deleted">Photo deleted</string>
+    <string name="max_photos_reached">Maximum %1$d photos per entry</string>
+    <string name="photo_too_large">Photo is too large</string>
+    <string name="photo_error">Could not add photo</string>
+    <string name="photos_count">%1$d photos</string>
+    <string name="error_save_before_photo">Write something and wait for auto-save before adding photos</string>
+
     <!-- History -->
     <string name="journal_history">Journal History</string>
     <string name="no_entries_yet">No journal entries yet</string>
@@ -270,5 +285,9 @@
     <string name="enabled">Enabled</string>
     <string name="minutes_format">%1$d minutes</string>
     <string name="words_format">%1$d words</string>
+
+    <!-- Accessibility Service Health Check -->
+    <string name="service_restart_needed_title">Restart Required</string>
+    <string name="service_restart_needed_message">The accessibility service needs to be restarted to work properly.\n\nPlease turn Morning Mindful OFF and then ON again in Accessibility settings.</string>
 
 </resources>

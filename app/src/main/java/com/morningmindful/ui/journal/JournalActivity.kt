@@ -5,16 +5,21 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.morningmindful.R
+import com.morningmindful.data.entity.JournalImage
 import com.morningmindful.data.entity.Moods
 import com.morningmindful.databinding.ActivityJournalBinding
 import com.morningmindful.util.BlockedApps
@@ -22,6 +27,7 @@ import com.morningmindful.util.BlockingState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.io.File
 import java.time.LocalDate
 
 /**
@@ -35,6 +41,16 @@ class JournalActivity : AppCompatActivity() {
 
     // ViewModel is now injected by Hilt - edit_date is pulled from SavedStateHandle
     private val viewModel: JournalViewModel by viewModels()
+
+    // Images adapter
+    private var imagesAdapter: JournalImagesAdapter? = null
+
+    // Photo picker launcher
+    private val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+        if (uri != null) {
+            viewModel.addImage(uri)
+        }
+    }
 
     companion object {
         const val EXTRA_BLOCKED_APP = "blocked_app"
@@ -50,6 +66,7 @@ class JournalActivity : AppCompatActivity() {
 
         setupUI()
         setupMoodSelector()
+        setupImagesRecyclerView()
         observeViewModel()
         handleBlockedAppMessage()
         setupBackPressHandler()
@@ -94,6 +111,46 @@ class JournalActivity : AppCompatActivity() {
         binding.backButton.setOnClickListener {
             handleBackPress()
         }
+
+        // Add photo button
+        binding.addPhotoButton.setOnClickListener {
+            // Check if entry exists (auto-save creates it)
+            if (viewModel.existingEntry.value == null) {
+                // Entry doesn't exist yet, need to type something first
+                Toast.makeText(this, R.string.error_save_before_photo, Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+        }
+    }
+
+    private fun setupImagesRecyclerView() {
+        val imagesDir = File(filesDir, "journal_images")
+        imagesAdapter = JournalImagesAdapter(
+            imagesDir = imagesDir,
+            onDeleteClick = { image ->
+                showDeleteImageConfirmation(image)
+            },
+            onImageClick = { image ->
+                // TODO: Show full-screen image view
+            }
+        )
+
+        binding.imagesRecyclerView.apply {
+            layoutManager = LinearLayoutManager(this@JournalActivity, LinearLayoutManager.HORIZONTAL, false)
+            adapter = imagesAdapter
+        }
+    }
+
+    private fun showDeleteImageConfirmation(image: JournalImage) {
+        MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.delete_photo)
+            .setMessage(R.string.delete_photo_confirm)
+            .setPositiveButton(R.string.delete) { _, _ ->
+                viewModel.deleteImage(image)
+            }
+            .setNegativeButton(R.string.cancel, null)
+            .show()
     }
 
     private fun handleBackPress() {
@@ -309,6 +366,51 @@ class JournalActivity : AppCompatActivity() {
                             }
                             else -> {
                                 binding.autoSaveStatus.visibility = View.GONE
+                            }
+                        }
+                    }
+                }
+
+                // Images list
+                launch {
+                    viewModel.images.collectLatest { images ->
+                        imagesAdapter?.submitList(images)
+                        // Show/hide RecyclerView based on whether there are images
+                        binding.imagesRecyclerView.visibility = if (images.isNotEmpty()) View.VISIBLE else View.GONE
+                    }
+                }
+
+                // Image status
+                launch {
+                    viewModel.imageStatus.collectLatest { status ->
+                        when (status) {
+                            is JournalViewModel.ImageStatus.Adding -> {
+                                binding.addPhotoButton.isEnabled = false
+                            }
+                            is JournalViewModel.ImageStatus.Added -> {
+                                binding.addPhotoButton.isEnabled = true
+                                Toast.makeText(this@JournalActivity, R.string.photo_added, Toast.LENGTH_SHORT).show()
+                                viewModel.clearImageStatus()
+                            }
+                            is JournalViewModel.ImageStatus.Deleted -> {
+                                Toast.makeText(this@JournalActivity, R.string.photo_deleted, Toast.LENGTH_SHORT).show()
+                                viewModel.clearImageStatus()
+                            }
+                            is JournalViewModel.ImageStatus.MaxReached -> {
+                                Toast.makeText(
+                                    this@JournalActivity,
+                                    getString(R.string.max_photos_reached, JournalImage.MAX_IMAGES_PER_ENTRY),
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                viewModel.clearImageStatus()
+                            }
+                            is JournalViewModel.ImageStatus.Error -> {
+                                binding.addPhotoButton.isEnabled = true
+                                Toast.makeText(this@JournalActivity, status.message, Toast.LENGTH_SHORT).show()
+                                viewModel.clearImageStatus()
+                            }
+                            else -> {
+                                binding.addPhotoButton.isEnabled = true
                             }
                         }
                     }

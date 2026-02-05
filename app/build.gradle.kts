@@ -141,6 +141,12 @@ dependencies {
     implementation("com.google.dagger:hilt-android:2.50")
     ksp("com.google.dagger:hilt-compiler:2.50")
 
+    // Image loading
+    implementation("com.github.bumptech.glide:glide:4.16.0")
+
+    // EXIF data reading for image rotation
+    implementation("androidx.exifinterface:exifinterface:1.3.7")
+
     // Testing - Unit Tests
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")

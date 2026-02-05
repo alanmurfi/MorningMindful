@@ -173,6 +173,48 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
+    <!-- Images section - horizontal row with thumbnails + add button -->
+    <LinearLayout
+        android:id="@+id/imagesSection"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/journalInputLayout">
+
+        <!-- Images RecyclerView -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/imagesRecyclerView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:clipToPadding="false"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            tools:visibility="visible"
+            tools:listitem="@layout/item_journal_image" />
+
+        <!-- Add photo button - small text button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/addPhotoButton"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:minWidth="0dp"
+            android:paddingHorizontal="8dp"
+            android:text="@string/add_photo"
+            android:textColor="@color/text_secondary"
+            android:textSize="12sp"
+            app:icon="@drawable/ic_add_photo"
+            app:iconGravity="textStart"
+            app:iconSize="16dp"
+            app:iconTint="@color/text_secondary" />
+
+    </LinearLayout>
+
     <!-- Word count progress -->
     <ProgressBar
         android:id="@+id/wordCountProgress"
@@ -185,7 +227,8 @@
         android:progressDrawable="@drawable/progress_bar_gradient"
         app:layout_constraintBottom_toTopOf="@id/bottomInfoRow"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/imagesSection" />
 
     <!-- Bottom row: skip button on left, word count on right -->
     <LinearLayout

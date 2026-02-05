@@ -3,6 +3,8 @@ package com.morningmindful.di
 import android.content.Context
 import com.morningmindful.data.AppDatabase
 import com.morningmindful.data.dao.JournalEntryDao
+import com.morningmindful.data.dao.JournalImageDao
+import com.morningmindful.data.repository.JournalImageRepository
 import com.morningmindful.data.repository.JournalRepository
 import com.morningmindful.data.repository.SettingsRepository
 import dagger.Module
@@ -41,5 +43,20 @@ object AppModule {
     @Singleton
     fun provideSettingsRepository(@ApplicationContext context: Context): SettingsRepository {
         return SettingsRepository(context)
+    }
+
+    @Provides
+    @Singleton
+    fun provideJournalImageDao(database: AppDatabase): JournalImageDao {
+        return database.journalImageDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideJournalImageRepository(
+        dao: JournalImageDao,
+        @ApplicationContext context: Context
+    ): JournalImageRepository {
+        return JournalImageRepository(dao, context)
     }
 }

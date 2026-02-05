@@ -33,6 +33,7 @@ class SettingsRepository(private val context: Context) {
         private const val KEY_AUTO_BACKUP_URI = "auto_backup_uri"
         private const val KEY_AUTO_BACKUP_PASSWORD = "auto_backup_password"
         private const val KEY_LAST_BACKUP_TIME = "last_backup_time"
+        private const val KEY_INCLUDE_IMAGES_IN_BACKUP = "include_images_in_backup"
 
         // Increment this when adding new default blocked apps
         private const val CURRENT_BLOCKED_APPS_VERSION = 2  // v2 adds browsers
@@ -74,6 +75,7 @@ class SettingsRepository(private val context: Context) {
     private val _autoBackupEnabled = MutableStateFlow(false)
     private val _autoBackupUri = MutableStateFlow<String?>(null)
     private val _lastBackupTime = MutableStateFlow(0L)
+    private val _includeImagesInBackup = MutableStateFlow(false)
 
     init {
         // Load initial values from encrypted storage
@@ -88,6 +90,7 @@ class SettingsRepository(private val context: Context) {
         _autoBackupEnabled.value = encryptedPrefs.getBoolean(KEY_AUTO_BACKUP_ENABLED, false)
         _autoBackupUri.value = encryptedPrefs.getString(KEY_AUTO_BACKUP_URI, null)
         _lastBackupTime.value = encryptedPrefs.getLong(KEY_LAST_BACKUP_TIME, 0L)
+        _includeImagesInBackup.value = encryptedPrefs.getBoolean(KEY_INCLUDE_IMAGES_IN_BACKUP, false)
 
         // Load blocked apps with migration for new default apps
         _blockedApps.value = loadBlockedAppsWithMigration()
@@ -350,5 +353,22 @@ class SettingsRepository(private val context: Context) {
      */
     fun getAutoBackupPasswordSync(): String? {
         return encryptedPrefs.getString(KEY_AUTO_BACKUP_PASSWORD, null)
+    }
+
+    // Include images in backup
+    val includeImagesInBackup: Flow<Boolean> = _includeImagesInBackup.asStateFlow()
+
+    suspend fun setIncludeImagesInBackup(include: Boolean) {
+        withContext(Dispatchers.IO) {
+            encryptedPrefs.edit().putBoolean(KEY_INCLUDE_IMAGES_IN_BACKUP, include).apply()
+            _includeImagesInBackup.value = include
+        }
+    }
+
+    /**
+     * Get include images in backup setting synchronously.
+     */
+    fun isIncludeImagesInBackupSync(): Boolean {
+        return encryptedPrefs.getBoolean(KEY_INCLUDE_IMAGES_IN_BACKUP, false)
     }
 }

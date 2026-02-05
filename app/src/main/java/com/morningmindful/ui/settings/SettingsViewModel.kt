@@ -184,4 +184,15 @@ class SettingsViewModel @Inject constructor(
     fun isAutoBackupEnabled(): Boolean {
         return settingsRepository.isAutoBackupEnabledSync()
     }
+
+    // Include images in backup
+    fun setIncludeImagesInBackup(include: Boolean) {
+        viewModelScope.launch {
+            settingsRepository.setIncludeImagesInBackup(include)
+        }
+    }
+
+    fun isIncludeImagesInBackup(): Boolean {
+        return settingsRepository.isIncludeImagesInBackupSync()
+    }
 }

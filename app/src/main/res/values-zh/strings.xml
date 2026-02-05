@@ -57,6 +57,7 @@
     <string name="reset_today_message">这将删除今天的日记，应用限制将再次激活。可用于测试或重新写日记。</string>
     <string name="reset">重置</string>
     <string name="cancel">取消</string>
+    <string name="delete">删除</string>
     <string name="reset_settings_title">重置所有设置？</string>
     <string name="reset_settings_message">这将把所有设置和受限应用恢复为默认值。</string>
     <string name="default_version">1.0</string>
@@ -122,6 +123,8 @@
     <string name="last_backup">上次备份：%1$s</string>
     <string name="no_backup_yet">尚未备份</string>
     <string name="change_backup_folder">更改文件夹</string>
+    <string name="include_images_in_backup">备份中包含照片</string>
+    <string name="include_images_in_backup_desc">会增加备份大小，但保留你的照片</string>
     <string name="backup_now">立即备份</string>
     <string name="backup_success">备份保存成功</string>
     <string name="backup_failed">备份失败：%1$s</string>
@@ -242,6 +245,18 @@
     <!-- Journal -->
     <string name="how_feeling">你感觉如何？</string>
 
+    <!-- Photos -->
+    <string name="add_photo">添加照片</string>
+    <string name="delete_photo">删除照片</string>
+    <string name="delete_photo_confirm">确定要删除这张照片吗？</string>
+    <string name="photo_added">照片已添加</string>
+    <string name="photo_deleted">照片已删除</string>
+    <string name="max_photos_reached">每条日记最多 %1$d 张照片</string>
+    <string name="photo_too_large">照片太大</string>
+    <string name="photo_error">无法添加照片</string>
+    <string name="photos_count">%1$d 张照片</string>
+    <string name="error_save_before_photo">请先写些内容并等待自动保存后再添加照片</string>
+
     <!-- History -->
     <string name="journal_history">日记历史</string>
     <string name="no_entries_yet">还没有日记</string>
@@ -270,5 +285,9 @@
     <string name="enabled">已启用</string>
     <string name="minutes_format">%1$d 分钟</string>
     <string name="words_format">%1$d 字</string>
+
+    <!-- Accessibility Service Health Check -->
+    <string name="service_restart_needed_title">需要重启服务</string>
+    <string name="service_restart_needed_message">无障碍服务需要重启才能正常工作。\n\n请在无障碍设置中将晨间正念关闭再重新打开。</string>
 
 </resources>

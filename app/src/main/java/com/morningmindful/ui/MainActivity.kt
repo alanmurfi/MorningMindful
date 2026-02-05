@@ -23,6 +23,7 @@ import com.morningmindful.ui.settings.SettingsActivity
 import kotlinx.coroutines.flow.first
 import com.morningmindful.util.PermissionUtils
 import com.morningmindful.data.repository.SettingsRepository
+import com.morningmindful.service.AppBlockerAccessibilityService
 import com.morningmindful.service.UsageStatsBlockerService
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -92,6 +93,7 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         checkPermissions()
+        checkAccessibilityServiceHealth()
         viewModel.refreshTodayStatus()
         startGentleReminderServiceIfNeeded()
     }
@@ -297,5 +299,44 @@ class MainActivity : AppCompatActivity() {
             number >= 1_000 -> String.format("%.1fK", number / 1_000.0)
             else -> number.toString()
         }
+    }
+
+    /**
+     * Check if the Accessibility Service is in an inconsistent state:
+     * - User has enabled the permission in system settings
+     * - But the service isn't actually running (can happen after app reinstall/update)
+     *
+     * This prompts the user to toggle the service off and on to re-establish the connection.
+     */
+    private fun checkAccessibilityServiceHealth() {
+        lifecycleScope.launch {
+            val blockingMode = MorningMindfulApp.getInstance()
+                .settingsRepository.blockingMode.first()
+
+            // Only relevant for Full Block mode
+            if (blockingMode != SettingsRepository.BLOCKING_MODE_FULL) {
+                return@launch
+            }
+
+            // Check if permission appears granted but service isn't running
+            val permissionGranted = PermissionUtils.hasAccessibilityPermission()
+            val serviceRunning = AppBlockerAccessibilityService.isServiceRunning
+
+            if (permissionGranted && !serviceRunning) {
+                Log.w("MainActivity", "Accessibility service inconsistency detected: permission=$permissionGranted, running=$serviceRunning")
+                showAccessibilityServiceRestartDialog()
+            }
+        }
+    }
+
+    private fun showAccessibilityServiceRestartDialog() {
+        MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.service_restart_needed_title)
+            .setMessage(R.string.service_restart_needed_message)
+            .setPositiveButton(R.string.open_settings) { _, _ ->
+                PermissionUtils.openAccessibilitySettings(this)
+            }
+            .setNegativeButton(R.string.later, null)
+            .show()
     }
 }

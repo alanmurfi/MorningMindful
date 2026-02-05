@@ -13,20 +13,23 @@ import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.morningmindful.data.dao.JournalEntryDao
+import com.morningmindful.data.dao.JournalImageDao
 import com.morningmindful.data.entity.JournalEntry
+import com.morningmindful.data.entity.JournalImage
 import net.zetetic.database.sqlcipher.SupportOpenHelperFactory
 import java.io.File
 import java.time.LocalDate
 
 @Database(
-    entities = [JournalEntry::class],
-    version = 2,
+    entities = [JournalEntry::class, JournalImage::class],
+    version = 3,
     exportSchema = false
 )
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun journalEntryDao(): JournalEntryDao
+    abstract fun journalImageDao(): JournalImageDao
 
     companion object {
         private const val TAG = "AppDatabase"
@@ -39,6 +42,28 @@ abstract class AppDatabase : RoomDatabase() {
         private val MIGRATION_1_2 = object : Migration(1, 2) {
             override fun migrate(database: SupportSQLiteDatabase) {
                 database.execSQL("ALTER TABLE journal_entries ADD COLUMN mood TEXT")
+            }
+        }
+
+        // Migration from version 2 to 3: add journal_images table
+        private val MIGRATION_2_3 = object : Migration(2, 3) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("""
+                    CREATE TABLE IF NOT EXISTS journal_images (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                        entryId INTEGER NOT NULL,
+                        filePath TEXT NOT NULL,
+                        originalName TEXT,
+                        mimeType TEXT NOT NULL DEFAULT 'image/jpeg',
+                        fileSize INTEGER NOT NULL DEFAULT 0,
+                        width INTEGER NOT NULL DEFAULT 0,
+                        height INTEGER NOT NULL DEFAULT 0,
+                        position INTEGER NOT NULL DEFAULT 0,
+                        createdAt INTEGER NOT NULL DEFAULT 0,
+                        FOREIGN KEY (entryId) REFERENCES journal_entries(id) ON DELETE CASCADE
+                    )
+                """.trimIndent())
+                database.execSQL("CREATE INDEX IF NOT EXISTS index_journal_images_entryId ON journal_images(entryId)")
             }
         }
 
@@ -59,7 +84,7 @@ abstract class AppDatabase : RoomDatabase() {
                     DATABASE_NAME
                 )
                     .openHelperFactory(factory)
-                    .addMigrations(MIGRATION_1_2)
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
                     .build()
                 INSTANCE = instance
                 instance
@@ -133,7 +158,7 @@ abstract class AppDatabase : RoomDatabase() {
                     DATABASE_NAME
                 )
                     .openHelperFactory(factory)
-                    .addMigrations(MIGRATION_1_2)
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
                     .build()
 
                 // Insert migrated entries

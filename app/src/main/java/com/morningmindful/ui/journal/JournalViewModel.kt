@@ -1,12 +1,15 @@
 package com.morningmindful.ui.journal
 
 import android.app.Application
+import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.morningmindful.R
 import com.morningmindful.data.entity.JournalEntry
+import com.morningmindful.data.entity.JournalImage
+import com.morningmindful.data.repository.JournalImageRepository
 import com.morningmindful.data.repository.JournalRepository
 import com.morningmindful.data.repository.SettingsRepository
 import com.morningmindful.util.BlockingState
@@ -21,6 +24,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.io.File
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
@@ -39,6 +43,7 @@ class JournalViewModel @Inject constructor(
     application: Application,
     private val journalRepository: JournalRepository,
     private val settingsRepository: SettingsRepository,
+    private val journalImageRepository: JournalImageRepository,
     savedStateHandle: SavedStateHandle
 ) : AndroidViewModel(application) {
 
@@ -102,6 +107,14 @@ class JournalViewModel @Inject constructor(
     // Auto-save status for UI feedback
     private val _autoSaveStatus = MutableStateFlow<AutoSaveStatus>(AutoSaveStatus.Idle)
     val autoSaveStatus: StateFlow<AutoSaveStatus> = _autoSaveStatus.asStateFlow()
+
+    // Images for this entry
+    private val _images = MutableStateFlow<List<JournalImage>>(emptyList())
+    val images: StateFlow<List<JournalImage>> = _images.asStateFlow()
+
+    // Image operation status
+    private val _imageStatus = MutableStateFlow<ImageStatus>(ImageStatus.Idle)
+    val imageStatus: StateFlow<ImageStatus> = _imageStatus.asStateFlow()
 
     init {
         startTimer()
@@ -322,16 +335,40 @@ class JournalViewModel @Inject constructor(
                 val allEntries = journalRepository.getAllEntries().first()
 
                 if (allEntries.isNotEmpty()) {
+                    // Check if images should be included
+                    val includeImages = settingsRepository.isIncludeImagesInBackupSync()
+
+                    // Get images if needed
+                    val imagesMap = if (includeImages) {
+                        val allImages = journalImageRepository.getAllImages()
+                        allImages.groupBy { it.entryId }
+                    } else {
+                        emptyMap()
+                    }
+
+                    val imagesDir = if (includeImages) {
+                        File(getApplication<Application>().filesDir, "journal_images")
+                    } else {
+                        null
+                    }
+
                     val result = JournalBackupManager.exportToFolder(
                         context = getApplication(),
                         entries = allEntries,
                         folderUri = uri,
-                        password = password
+                        password = password,
+                        images = imagesMap,
+                        imagesDir = imagesDir,
+                        includeImages = includeImages
                     )
                     when (result) {
                         is JournalBackupManager.ExportResult.Success -> {
                             settingsRepository.setLastBackupTime(System.currentTimeMillis())
-                            Log.d(TAG, "Auto-backup successful: ${result.entryCount} entries")
+                            if (result.imageCount > 0) {
+                                Log.d(TAG, "Auto-backup successful: ${result.entryCount} entries, ${result.imageCount} images")
+                            } else {
+                                Log.d(TAG, "Auto-backup successful: ${result.entryCount} entries")
+                            }
                         }
                         is JournalBackupManager.ExportResult.Error -> {
                             Log.e(TAG, "Auto-backup failed: ${result.message}")
@@ -436,8 +473,80 @@ class JournalViewModel @Inject constructor(
                 // Use the NEW content with timestamp so it's not marked as "unsaved" immediately
                 lastSavedContent = contentWithTimestamp
                 lastSavedMood = entry.mood
+
+                // Load images for this entry
+                loadImagesForEntry(entry.id)
             }
         }
+    }
+
+    /**
+     * Load images for an entry
+     */
+    private fun loadImagesForEntry(entryId: Long) {
+        viewModelScope.launch {
+            journalImageRepository.getImagesForEntry(entryId).collect { imageList ->
+                _images.value = imageList
+            }
+        }
+    }
+
+    /**
+     * Add an image from a content URI
+     */
+    fun addImage(uri: Uri) {
+        viewModelScope.launch {
+            // Check if we have an existing entry to attach to
+            val entry = existingEntry.value
+            if (entry == null) {
+                // Need to save the entry first before adding images
+                _imageStatus.value = ImageStatus.Error(
+                    getApplication<Application>().getString(R.string.error_nothing_to_save)
+                )
+                return@launch
+            }
+
+            // Check max images limit
+            if (_images.value.size >= JournalImage.MAX_IMAGES_PER_ENTRY) {
+                _imageStatus.value = ImageStatus.MaxReached
+                return@launch
+            }
+
+            _imageStatus.value = ImageStatus.Adding
+
+            val image = journalImageRepository.addImageFromUri(entry.id, uri)
+            if (image != null) {
+                _imageStatus.value = ImageStatus.Added
+                // Images will be updated via the Flow
+            } else {
+                _imageStatus.value = ImageStatus.Error(
+                    getApplication<Application>().getString(R.string.photo_error)
+                )
+            }
+        }
+    }
+
+    /**
+     * Delete an image
+     */
+    fun deleteImage(image: JournalImage) {
+        viewModelScope.launch {
+            journalImageRepository.deleteImage(image.id)
+            _imageStatus.value = ImageStatus.Deleted
+            // Images will be updated via the Flow
+        }
+    }
+
+    /**
+     * Get the images directory for the adapter
+     */
+    fun getImagesDir() = journalImageRepository.getImageFile("")
+
+    /**
+     * Clear image status after it's been handled
+     */
+    fun clearImageStatus() {
+        _imageStatus.value = ImageStatus.Idle
     }
 
     private fun getRandomPrompt(): String {
@@ -470,6 +579,15 @@ class JournalViewModel @Inject constructor(
         object Saving : AutoSaveStatus()
         object Saved : AutoSaveStatus()
         object Error : AutoSaveStatus()
+    }
+
+    sealed class ImageStatus {
+        object Idle : ImageStatus()
+        object Adding : ImageStatus()
+        object Added : ImageStatus()
+        object Deleted : ImageStatus()
+        object MaxReached : ImageStatus()
+        data class Error(val message: String) : ImageStatus()
     }
 
     companion object {

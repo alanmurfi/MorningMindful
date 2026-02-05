@@ -272,6 +272,11 @@ class SettingsActivity : AppCompatActivity() {
             backupFolderLauncher.launch(null)
         }
 
+        // Include images in backup checkbox
+        binding.includeImagesCheckbox.setOnCheckedChangeListener { _, isChecked ->
+            viewModel.setIncludeImagesInBackup(isChecked)
+        }
+
         // App version
         try {
             val packageInfo = packageManager.getPackageInfo(packageName, 0)
@@ -460,6 +465,12 @@ class SettingsActivity : AppCompatActivity() {
     private fun updateAutoBackupUI(enabled: Boolean, lastBackupTime: Long) {
         binding.autoBackupSwitch.isChecked = enabled
         binding.changeBackupFolderButton.visibility = if (enabled) View.VISIBLE else View.GONE
+        binding.includeImagesRow.visibility = if (enabled) View.VISIBLE else View.GONE
+
+        // Update include images checkbox state
+        if (enabled) {
+            binding.includeImagesCheckbox.isChecked = viewModel.isIncludeImagesInBackup()
+        }
 
         if (enabled && lastBackupTime > 0) {
             val dateFormat = SimpleDateFormat("MMM d, h:mm a", Locale.getDefault())
