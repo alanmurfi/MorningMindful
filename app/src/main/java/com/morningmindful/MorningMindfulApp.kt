@@ -6,6 +6,7 @@ import android.app.NotificationManager
 import android.os.Build
 import androidx.appcompat.app.AppCompatDelegate
 import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.morningmindful.data.repository.JournalImageRepository
 import com.morningmindful.data.repository.JournalRepository
 import com.morningmindful.data.repository.SettingsRepository
 import dagger.hilt.android.HiltAndroidApp
@@ -21,6 +22,7 @@ class MorningMindfulApp : Application() {
 
     // Injected by Hilt - available after onCreate()
     @Inject lateinit var journalRepository: JournalRepository
+    @Inject lateinit var journalImageRepository: JournalImageRepository
     @Inject lateinit var settingsRepository: SettingsRepository
 
     override fun onCreate() {

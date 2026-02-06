@@ -19,8 +19,12 @@ import com.morningmindful.R
 import com.morningmindful.data.repository.SettingsRepository
 import com.morningmindful.databinding.ActivityOnboardingBinding
 import com.morningmindful.ui.MainActivity
+import com.morningmindful.util.JournalBackupManager
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.time.LocalDate
 
 /**
  * Onboarding flow for first-time users.
@@ -50,9 +54,9 @@ class OnboardingActivity : AppCompatActivity() {
                 uri,
                 Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
             )
-            // Store temporarily and show password dialog
+            // Store temporarily and check for existing backup
             pendingBackupUri = uri
-            showBackupPasswordDialog()
+            checkForExistingBackup(uri)
         }
     }
 
@@ -174,6 +178,147 @@ class OnboardingActivity : AppCompatActivity() {
 
     fun requestBackupFolderSelection() {
         backupFolderLauncher.launch(null)
+    }
+
+    /**
+     * Check if there's an existing backup file in the selected folder.
+     * If yes, offer to restore from it.
+     */
+    private fun checkForExistingBackup(folderUri: Uri) {
+        lifecycleScope.launch {
+            val backupExists = withContext(Dispatchers.IO) {
+                JournalBackupManager.findAutoBackupInFolder(this@OnboardingActivity, folderUri) != null
+            }
+
+            if (backupExists) {
+                showRestoreBackupDialog(folderUri)
+            } else {
+                showBackupPasswordDialog()
+            }
+        }
+    }
+
+    /**
+     * Show dialog asking if user wants to restore from existing backup.
+     */
+    private fun showRestoreBackupDialog(folderUri: Uri) {
+        MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.backup_found_title)
+            .setMessage(R.string.backup_found_restore_question)
+            .setPositiveButton(R.string.restore) { _, _ ->
+                showRestorePasswordDialog(folderUri)
+            }
+            .setNegativeButton(R.string.setup_new_backup) { _, _ ->
+                showBackupPasswordDialog()
+            }
+            .show()
+    }
+
+    /**
+     * Show dialog to enter password for restoring existing backup.
+     */
+    private fun showRestorePasswordDialog(folderUri: Uri) {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_restore_password, null)
+        val passwordInput = dialogView.findViewById<EditText>(R.id.passwordInput)
+
+        MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.import_enter_password)
+            .setMessage(R.string.restore_password_message)
+            .setView(dialogView)
+            .setPositiveButton(R.string.restore) { _, _ ->
+                val password = passwordInput.text.toString()
+                if (password.length < 8) {
+                    Toast.makeText(this, R.string.password_too_short, Toast.LENGTH_SHORT).show()
+                    // Show dialog again
+                    showRestorePasswordDialog(folderUri)
+                } else {
+                    restoreFromBackup(folderUri, password)
+                }
+            }
+            .setNegativeButton(R.string.cancel) { _, _ ->
+                // User cancelled restore, set up new backup instead
+                showBackupPasswordDialog()
+            }
+            .show()
+    }
+
+    /**
+     * Restore journals from the backup file.
+     */
+    private fun restoreFromBackup(folderUri: Uri, password: String) {
+        lifecycleScope.launch {
+            val result = withContext(Dispatchers.IO) {
+                JournalBackupManager.importFromFolderWithImages(
+                    this@OnboardingActivity,
+                    folderUri,
+                    password,
+                    emptySet() // No existing entries during onboarding
+                )
+            }
+
+            when (val importResult = result.result) {
+                is JournalBackupManager.ImportResult.Success -> {
+                    // Save restored entries to database
+                    val app = MorningMindfulApp.getInstance()
+                    withContext(Dispatchers.IO) {
+                        // Insert entries and track their new IDs by date
+                        val dateToIdMap = mutableMapOf<LocalDate, Long>()
+                        result.entries.forEach { entry ->
+                            val newId = app.journalRepository.insert(entry)
+                            dateToIdMap[entry.date] = newId
+                        }
+
+                        // Save images if any
+                        if (result.images.isNotEmpty()) {
+                            val imagesDir = java.io.File(filesDir, "journal_images")
+                            if (!imagesDir.exists()) imagesDir.mkdirs()
+
+                            result.images.forEach { (date, imageDataList) ->
+                                // Get the entry ID for this date
+                                val entryId = dateToIdMap[date]
+                                if (entryId != null) {
+                                    imageDataList.forEach { imageData ->
+                                        // Save image file
+                                        val imageFile = java.io.File(imagesDir, imageData.filename)
+                                        imageFile.writeBytes(imageData.data)
+
+                                        // Save image record
+                                        val journalImage = com.morningmindful.data.entity.JournalImage(
+                                            entryId = entryId,
+                                            filePath = imageData.filename,
+                                            position = imageData.position
+                                        )
+                                        app.journalImageRepository.insert(journalImage)
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    Toast.makeText(
+                        this@OnboardingActivity,
+                        getString(R.string.import_success, importResult.importedCount),
+                        Toast.LENGTH_LONG
+                    ).show()
+
+                    // Now set up backup with the same password
+                    autoBackupUri = pendingBackupUri.toString()
+                    autoBackupPassword = password
+                    autoBackupEnabled = true
+                    pendingBackupUri = null
+                    adapter.notifyDataSetChanged()
+                }
+                is JournalBackupManager.ImportResult.Error -> {
+                    Toast.makeText(
+                        this@OnboardingActivity,
+                        importResult.message,
+                        Toast.LENGTH_LONG
+                    ).show()
+                    // Let user try again or set up new
+                    showRestoreBackupDialog(folderUri)
+                }
+            }
+        }
     }
 
     /**

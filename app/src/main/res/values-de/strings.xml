@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Morning Mindful</string>
+
+    <!-- Journal Activity -->
+    <string name="good_morning">Guten Morgen</string>
+    <string name="journal_hint">Schreibe deine Gedanken auf…</string>
+    <string name="save_entry">Speichern &amp; Entsperren</string>
+    <string name="save_draft">Entwurf speichern</string>
+    <string name="draft_saved">Entwurf gespeichert!</string>
+    <string name="auto_saving">Speichern…</string>
+    <string name="auto_saved">Gespeichert</string>
+    <string name="auto_save_failed">Speichern fehlgeschlagen</string>
+    <string name="unsaved_changes_title">Ungespeicherte Änderungen</string>
+    <string name="unsaved_changes_message">Du hast ungespeicherte Änderungen. Was möchtest du tun?</string>
+    <string name="save_and_exit">Speichern &amp; Beenden</string>
+    <string name="discard">Verwerfen</string>
+    <string name="skip_today">Heute überspringen</string>
+    <string name="journal_saved">Tagebuch gespeichert!</string>
+    <string name="have_a_mindful_day">Hab einen achtsamen Tag.</string>
+    <string name="edit_entry">Eintrag bearbeiten</string>
+    <string name="word_count_format">%1$d / %2$d Wörter</string>
+    <string name="saving">Speichern…</string>
+    <string name="blocked_app_message">Du wolltest %1$s öffnen.\nSchreibe zuerst dein Morgentagebuch.</string>
+    <string name="morning_mindfulness_active">Morgen-Achtsamkeit aktiv</string>
+    <string name="complete_or_wait_message">Vervollständige deinen Tagebucheintrag oder warte %1$s.</string>
+    <string name="keep_writing">Weiterschreiben</string>
+    <string name="skip_journaling_title">Tagebuch überspringen?</string>
+    <string name="skip_journaling_message">Die Sperrzeit ist abgelaufen. Du kannst das Tagebuch heute überspringen, aber Schreiben hilft, den Tag achtsam zu beginnen.</string>
+    <string name="error">Fehler</string>
+    <string name="ok">OK</string>
+
+    <!-- Main Activity -->
+    <string name="streak_days">%1$d Tage</string>
+    <string name="streak_day">1 Tag</string>
+    <string name="current_streak">Aktuelle Serie</string>
+    <string name="longest_streak">Längste Serie</string>
+    <string name="streak_fire">🔥 %1$d Tage Serie!</string>
+    <string name="streak_fire_plural">🔥 %1$d Tage Serie!</string>
+    <string name="no_streak">Starte heute deine Serie!</string>
+    <string name="new_record">🎉 Neuer Rekord!</string>
+    <string name="journal_completed_today">Tagebuch heute abgeschlossen</string>
+    <string name="view_todays_entry">Heutigen Eintrag ansehen</string>
+    <string name="no_journal_yet">Noch kein Tagebucheintrag heute</string>
+    <string name="write_now">Jetzt schreiben</string>
+    <string name="permissions_needed_intro">Morning Mindful benötigt diese Berechtigungen zum Sperren von Apps:\n\n</string>
+    <string name="accessibility_permission_needed">• Bedienungshilfe - um zu erkennen, wenn gesperrte Apps geöffnet werden\n</string>
+    <string name="overlay_permission_needed">• Über anderen Apps anzeigen - um den Tagebuchbildschirm anzuzeigen\n</string>
+    <string name="setup_permissions">Berechtigungen einrichten</string>
+    <string name="open_settings">Einstellungen öffnen</string>
+    <string name="later">Später</string>
+
+    <!-- Settings Activity -->
+    <string name="duration_minutes">%1$d Minuten</string>
+    <string name="word_count_setting">%1$d Wörter</string>
+    <string name="reset_today_title">Heutigen Fortschritt zurücksetzen?</string>
+    <string name="reset_today_message">Dies löscht den heutigen Tagebucheintrag, sodass die App-Sperre wieder aktiviert wird. Nutze dies zum Testen oder wenn du dein Tagebuch neu schreiben möchtest.</string>
+    <string name="reset">Zurücksetzen</string>
+    <string name="cancel">Abbrechen</string>
+    <string name="delete">Löschen</string>
+    <string name="reset_settings_title">Alle Einstellungen zurücksetzen?</string>
+    <string name="reset_settings_message">Dies setzt alle Einstellungen und gesperrten Apps auf die Standardwerte zurück.</string>
+    <string name="default_version">1.0</string>
+    <string name="status_enabled">Aktiviert</string>
+    <string name="status_disabled">Deaktiviert</string>
+    <string name="select_app_to_block">App zum Sperren auswählen</string>
+    <string name="time_12am">0:00 Uhr</string>
+    <string name="time_am">%1$d:00 Uhr</string>
+    <string name="time_12pm">12:00 Uhr</string>
+    <string name="time_12am_next_day">0:00 Uhr (nächster Tag)</string>
+    <string name="time_pm">%1$d:00 Uhr</string>
+
+    <!-- Entry Detail Activity -->
+    <string name="word_count_display">%1$d Wörter</string>
+    <string name="written_at">Geschrieben um %1$s</string>
+    <string name="feeling_mood">Stimmung: %1$s</string>
+
+    <!-- Notification Service -->
+    <string name="notification_journal_completed">Tagebuch abgeschlossen! Hab einen achtsamen Tag.</string>
+    <string name="notification_time_remaining">Vervollständige dein Tagebuch, um Apps zu entsperren. Verbleibend: %1$dm %2$ds</string>
+    <string name="notification_routine_complete">Morgenroutine abgeschlossen</string>
+
+    <!-- Journal Prompts -->
+    <string name="prompt_grateful">Wofür bist du heute Morgen dankbar?</string>
+    <string name="prompt_accomplish">Was möchtest du heute erreichen?</string>
+    <string name="prompt_feeling">Wie fühlst du dich gerade? Warum könnte das so sein?</string>
+    <string name="prompt_on_mind">Was beschäftigt dich in letzter Zeit?</string>
+    <string name="prompt_ideal_day">Beschreibe deinen idealen Tag. Was würde heute großartig machen?</string>
+    <string name="prompt_self_care">Was ist eine kleine Sache, die du heute für dich selbst tun kannst?</string>
+    <string name="prompt_looking_forward">Schreibe über etwas, worauf du dich freust.</string>
+    <string name="prompt_younger_self">Was würdest du deinem jüngeren Ich sagen?</string>
+    <string name="prompt_challenge">Vor welcher Herausforderung stehst du? Wie könntest du sie angehen?</string>
+    <string name="prompt_joy">Beschreibe einen Moment, der dir kürzlich Freude bereitet hat.</string>
+
+    <!-- Error Messages -->
+    <string name="error_minimum_words">Bitte schreibe mindestens %1$d Wörter</string>
+    <string name="error_failed_to_save">Speichern fehlgeschlagen: %1$s</string>
+    <string name="error_nothing_to_save">Nichts zum Speichern</string>
+
+    <!-- Export/Import -->
+    <string name="data_section">Daten</string>
+    <string name="export_journals">Tagebuch exportieren</string>
+    <string name="export_description">Verschlüsseltes Backup in Datei speichern</string>
+    <string name="import_journals">Tagebuch importieren</string>
+    <string name="import_description">Aus verschlüsseltem Backup wiederherstellen</string>
+    <string name="export_set_password">Backup-Passwort festlegen</string>
+    <string name="export_password_message">Wähle ein sicheres Passwort, um dein Tagebuch-Backup zu verschlüsseln. Du benötigst dieses Passwort, um deine Daten wiederherzustellen.</string>
+    <string name="import_enter_password">Passwort eingeben</string>
+    <string name="import_password_message">Gib das Passwort ein, das du beim Erstellen dieses Backups verwendet hast.</string>
+    <string name="password_hint">Passwort</string>
+    <string name="confirm_password_hint">Passwort bestätigen</string>
+    <string name="password_too_short">Passwort muss mindestens 8 Zeichen haben</string>
+    <string name="passwords_dont_match">Passwörter stimmen nicht überein</string>
+    <string name="export_button">Exportieren</string>
+    <string name="import_button">Importieren</string>
+    <string name="export_success">%1$d Tagebucheinträge erfolgreich exportiert</string>
+    <string name="import_success">%1$d Tagebucheinträge erfolgreich importiert</string>
+    <string name="import_success_with_skipped">%1$d Einträge importiert, %2$d Duplikate übersprungen</string>
+    <string name="auto_backup">Auto-Backup</string>
+    <string name="auto_backup_desc">Backups automatisch beim Schreiben speichern</string>
+    <string name="auto_backup_enabled">Auto-Backup aktiviert</string>
+    <string name="auto_backup_disabled">Auto-Backup deaktiviert</string>
+    <string name="last_backup">Letztes Backup: %1$s</string>
+    <string name="no_backup_yet">Noch kein Backup</string>
+    <string name="change_backup_folder">Ordner ändern</string>
+    <string name="include_images_in_backup">Fotos im Backup einschließen</string>
+    <string name="include_images_in_backup_desc">Erhöht die Backup-Größe, bewahrt aber deine Fotos</string>
+    <string name="backup_now">Jetzt sichern</string>
+    <string name="backup_success">Backup erfolgreich gespeichert</string>
+    <string name="backup_failed">Backup fehlgeschlagen: %1$s</string>
+    <string name="restore_found_title">Backup gefunden</string>
+    <string name="restore_found_message">Wir haben ein Backup mit %1$d Tagebucheinträgen gefunden. Möchtest du es wiederherstellen?</string>
+    <string name="restore">Wiederherstellen</string>
+    <string name="restore_later">Später</string>
+
+    <!-- Accessibility Service -->
+    <string name="accessibility_service_description">Morning Mindful nutzt die Bedienungshilfe, um zu erkennen, wenn du während deiner Morgen-Achtsamkeitszeit gesperrte Apps öffnest. So kann die App dich stattdessen zu deinem Tagebuch weiterleiten. Es werden keine persönlichen Daten gesammelt oder geteilt.</string>
+
+    <!-- Notifications -->
+    <string name="notification_title">Morning Mindful aktiv</string>
+    <string name="notification_text">Vervollständige dein Tagebuch, um Apps zu entsperren</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_welcome_title">Willkommen bei Morning Mindful</string>
+    <string name="onboarding_welcome_desc">Beginne deine Morgen mit Absicht.\n\nDiese App hilft dir, die Gewohnheit des Doom-Scrollings zu durchbrechen, indem sie Social Media sanft sperrt, bis du einen kurzen Tagebucheintrag geschrieben hast.</string>
+
+    <string name="onboarding_duration_title">Sperrdauer</string>
+    <string name="onboarding_duration_desc">Wie lange sollen Apps nach dem Entsperren deines Handys gesperrt sein?</string>
+
+    <string name="onboarding_wordcount_title">Wortanzahl</string>
+    <string name="onboarding_wordcount_desc">Wie viele Wörter möchtest du schreiben, um deine Apps zu entsperren?</string>
+
+    <string name="onboarding_window_title">Morgenfenster</string>
+    <string name="onboarding_window_desc">Wann soll die Sperre aktiv sein?\n\nAußerhalb dieser Zeiten werden deine Apps nicht gesperrt.</string>
+
+    <string name="onboarding_perm_accessibility_title">Bedienungshilfe-Berechtigung</string>
+    <string name="onboarding_perm_accessibility_desc">Diese Berechtigung wird für den Vollständigen Sperrmodus benötigt, um Apps sofort zu erkennen und zu sperren.\n\nAndroid zeigt eine Warnung, aber wir nutzen sie nur, um zu sehen, welche App du geöffnet hast - nichts anderes.</string>
+
+    <string name="onboarding_perm_overlay_title">Anzeige-Berechtigung</string>
+    <string name="onboarding_perm_overlay_desc">Wir benötigen diese Berechtigung, um den Tagebuchbildschirm anzuzeigen, wenn du eine gesperrte App öffnest.</string>
+
+    <string name="onboarding_perm_usage_stats_title">Nutzungszugriff-Berechtigung</string>
+    <string name="onboarding_perm_usage_stats_desc">Wir benötigen diese Berechtigung, um zu sehen, welche App du verwendest, damit wir sanfte Erinnerungen anzeigen können.</string>
+
+    <string name="onboarding_perm_notifications_title">Benachrichtigungen erlauben</string>
+    <string name="onboarding_perm_notifications_desc">Wir benötigen diese Berechtigung, um dir Erinnerungen zu zeigen und dich zu informieren, wenn deine Morgenroutine aktiv ist.</string>
+
+    <string name="onboarding_backup_title">Schütze deine Tagebücher</string>
+    <string name="onboarding_backup_desc">Deine Tagebucheinträge sind wertvoll. Aktiviere Auto-Backup, um sie in einem Ordner deiner Wahl zu speichern.\n\nDies schützt deine Daten auch wenn du die App deinstallierst.</string>
+    <string name="enable_auto_backup">Auto-Backup aktivieren</string>
+    <string name="choose_backup_folder">Ordner wählen</string>
+    <string name="backup_folder_selected">Backup-Ordner ausgewählt</string>
+    <string name="skip_backup_setup">Vorerst überspringen</string>
+    <string name="auto_backup_password_title">Backup-Passwort festlegen</string>
+    <string name="auto_backup_password_message">Wähle ein Passwort, um deine Backups zu verschlüsseln. Du benötigst dieses Passwort, wenn du aus einem Backup wiederherstellst.</string>
+
+    <string name="onboarding_ready_title">Du bist bereit!</string>
+    <string name="onboarding_ready_desc">Die Sperre ist jetzt aktiviert.\n\nDu kannst diese Einstellungen jederzeit ändern.\n\nGenieße deine achtsamen Morgen!</string>
+
+    <string name="next">Weiter</string>
+    <string name="back">Zurück</string>
+    <string name="skip">Überspringen</string>
+    <string name="get_started">Los geht\'s</string>
+
+    <!-- Gentle Reminder Mode -->
+    <string name="gentle_reminder_title">Achtsamer Moment</string>
+    <string name="open_journal">Tagebuch öffnen</string>
+    <string name="continue_anyway">Trotzdem fortfahren</string>
+
+    <!-- Blocking Mode Selection -->
+    <string name="onboarding_mode_title">Sperrstil wählen</string>
+    <string name="onboarding_mode_desc">Wie soll die App funktionieren?</string>
+    <string name="blocking_mode_full_title">Vollständige Sperre</string>
+    <string name="blocking_mode_full_desc">Apps werden sofort gesperrt.\nErfordert Bedienungshilfe-Berechtigung.</string>
+    <string name="blocking_mode_gentle_title">Sanfte Erinnerung</string>
+    <string name="blocking_mode_gentle_desc">Zeigt eine schließbare Erinnerung.\nKeine Bedienungshilfe-Berechtigung nötig.</string>
+
+    <!-- Permission prompts -->
+    <string name="revoke_accessibility_title">Bedienungshilfe-Berechtigung widerrufen?</string>
+    <string name="revoke_accessibility_message">Der Sanfte Erinnerungsmodus benötigt keine Bedienungshilfe-Berechtigung. Möchtest du sie deaktivieren, um Akku zu sparen?\n\nTippe auf \"Einstellungen öffnen\" und schalte Morning Mindful aus.</string>
+    <string name="no_thanks">Nein danke</string>
+
+    <!-- Settings -->
+    <string name="redo_introduction">Einführung wiederholen</string>
+    <string name="settings_title">Einstellungen</string>
+    <string name="enable_blocking">Sperre aktivieren</string>
+    <string name="enable_blocking_desc">Apps beim ersten Entsperren jeden Morgen sperren</string>
+    <string name="blocking_style">Sperrstil</string>
+    <string name="blocking_style_desc">Wie Apps gesperrt werden</string>
+    <string name="blocking_duration">Sperrdauer</string>
+    <string name="required_word_count">Erforderliche Wortanzahl</string>
+    <string name="morning_window">Morgenfenster</string>
+    <string name="morning_window_desc">Sperre nur während dieser Zeiten aktiv</string>
+    <string name="start_time">Startzeit</string>
+    <string name="end_time">Endzeit</string>
+    <string name="permissions">Berechtigungen</string>
+    <string name="accessibility_service">Bedienungshilfe</string>
+    <string name="accessibility_full_block_only">Nur für Vollständigen Sperrmodus erforderlich</string>
+    <string name="usage_access">Nutzungszugriff</string>
+    <string name="usage_access_desc">Für sanfte Erinnerungen erforderlich</string>
+    <string name="display_over_apps">Über anderen Apps anzeigen</string>
+    <string name="display_over_apps_desc">Zum Anzeigen des Tagebuchbildschirms erforderlich</string>
+    <string name="blocked_apps">Gesperrte Apps</string>
+    <string name="add_app">+ App hinzufügen</string>
+    <string name="testing_reset">Testen &amp; Zurücksetzen</string>
+    <string name="reset_today_progress">Heutigen Fortschritt zurücksetzen</string>
+    <string name="reset_today_progress_desc">Heutigen Tagebucheintrag löschen, damit Sperre wieder aktiviert wird</string>
+    <string name="reset_all_settings">Alle Einstellungen zurücksetzen</string>
+    <string name="reset_all_settings_desc">Einstellungen und gesperrte Apps auf Standard zurücksetzen</string>
+    <string name="appearance">Erscheinungsbild</string>
+    <string name="theme">Design</string>
+    <string name="theme_desc">Wähle dein bevorzugtes Erscheinungsbild</string>
+    <string name="theme_system">Systemstandard</string>
+    <string name="theme_light">Hell</string>
+    <string name="theme_dark">Dunkel</string>
+    <string name="about">Über</string>
+    <string name="privacy_policy">Datenschutzerklärung</string>
+    <string name="version">Version</string>
+
+    <!-- Onboarding extras -->
+    <string name="start_label">Start:</string>
+    <string name="end_label">Ende:</string>
+    <string name="recommended">Empfohlen</string>
+
+    <!-- Journal -->
+    <string name="how_feeling">Wie fühlst du dich?</string>
+
+    <!-- Photos -->
+    <string name="add_photo">Foto hinzufügen</string>
+    <string name="delete_photo">Foto löschen</string>
+    <string name="delete_photo_confirm">Möchtest du dieses Foto wirklich löschen?</string>
+    <string name="photo_added">Foto hinzugefügt</string>
+    <string name="photo_deleted">Foto gelöscht</string>
+    <string name="max_photos_reached">Maximal %1$d Fotos pro Eintrag</string>
+    <string name="photo_too_large">Foto ist zu groß</string>
+    <string name="photo_error">Foto konnte nicht hinzugefügt werden</string>
+    <string name="photos_count">%1$d Fotos</string>
+    <string name="error_save_before_photo">Schreibe etwas und warte auf Auto-Speichern, bevor du Fotos hinzufügst</string>
+
+    <!-- History -->
+    <string name="journal_history">Tagebuch-Verlauf</string>
+    <string name="no_entries_yet">Noch keine Tagebucheinträge</string>
+    <string name="start_writing_history">Fang an zu schreiben, um hier deinen Verlauf zu sehen</string>
+    <string name="entries">Einträge</string>
+
+    <!-- Blocked Apps -->
+    <string name="not_installed">Nicht installiert</string>
+
+    <!-- Main Activity extras -->
+    <string name="setup_required">Einrichtung erforderlich</string>
+    <string name="setup_required_desc">Aktiviere Berechtigungen, um Apps zu sperren.</string>
+    <string name="setup_now">Jetzt einrichten</string>
+    <string name="words_label">Wörter</string>
+    <string name="streak_label">Serie</string>
+    <string name="recent_entries">Letzte Einträge</string>
+    <string name="view_all">Alle anzeigen</string>
+    <string name="empty_no_entries">Noch keine Tagebucheinträge</string>
+    <string name="empty_start_routine">Starte deine achtsame Morgenroutine!</string>
+
+    <!-- Onboarding dynamic text -->
+    <string name="permission_granted">✓ Berechtigung erteilt</string>
+    <string name="tap_to_open_settings">Tippen, um Einstellungen zu öffnen</string>
+    <string name="tap_to_allow_notifications">Tippen, um Benachrichtigungen zu erlauben</string>
+    <string name="allow_notifications">Benachrichtigungen erlauben</string>
+    <string name="enabled">Aktiviert</string>
+    <string name="minutes_format">%1$d Minuten</string>
+    <string name="words_format">%1$d Wörter</string>
+
+    <!-- Accessibility Service Health Check -->
+    <string name="service_restart_needed_title">Neustart erforderlich</string>
+    <string name="service_restart_needed_message">Die Bedienungshilfe muss neu gestartet werden, um richtig zu funktionieren.\n\nBitte schalte Morning Mindful in den Bedienungshilfe-Einstellungen AUS und wieder AN.</string>
+
+    <!-- Image Viewer -->
+    <string name="photo_full_view">Foto in voller Größe</string>
+
+    <!-- Backup Restore in Onboarding -->
+    <string name="backup_found_title">Backup gefunden</string>
+    <string name="backup_found_restore_question">Wir haben ein vorhandenes Backup in diesem Ordner gefunden. Möchtest du deine Tagebücher daraus wiederherstellen?</string>
+    <string name="restore_password_message">Gib das Passwort ein, das du beim Erstellen dieses Backups verwendet hast.</string>
+    <string name="setup_new_backup">Neu beginnen</string>
+
+</resources>

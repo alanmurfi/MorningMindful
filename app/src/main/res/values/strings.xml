@@ -293,4 +293,10 @@
     <!-- Image Viewer -->
     <string name="photo_full_view">Full size photo</string>
 
+    <!-- Backup Restore in Onboarding -->
+    <string name="backup_found_title">Backup Found</string>
+    <string name="backup_found_restore_question">We found an existing backup in this folder. Would you like to restore your journals from it?</string>
+    <string name="restore_password_message">Enter the password you used when creating this backup.</string>
+    <string name="setup_new_backup">Start Fresh</string>
+
 </resources>
