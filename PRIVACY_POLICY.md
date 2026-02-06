@@ -1,6 +1,7 @@
 # Privacy Policy for Morning Mindful
 
-**Last updated:** January 28, 2026
+**Last updated:** February 6, 2026  
+**App Version:** 1.0.17
 
 ## Introduction
 
@@ -12,23 +13,24 @@ Morning Mindful ("we", "our", or "the app") is committed to protecting your priv
 
 Morning Mindful stores the following data **locally on your device only**:
 
-- **Journal entries**: Your written journal content, including text and timestamps
+- **Journal entries**: Your written journal content, including text, timestamps, and attached photos
 - **App settings**: Your preferences such as blocking duration, word count requirements, and selected apps to block
 - **Usage statistics**: Entry counts, word counts, and streaks (stored locally for your personal tracking)
+- **Backup files**: Encrypted backup files stored in a folder you choose (if auto-backup is enabled)
 
-**Important**: All data is stored exclusively on your device using encrypted storage. We do not have access to your journal entries or personal data.
+**Important**: All data is stored exclusively on your device using encrypted storage. We do not have access to your journal entries, photos, or personal data.
 
 ### Information We Do NOT Collect
 
 - We do not collect or transmit your journal entries to any server
 - We do not collect personal identification information
 - We do not track your location
-- We do not access your contacts, photos, or other personal files
+- We do not access your contacts, photos (except when you explicitly attach them), or other personal files
 - We do not sell or share any data with third parties
 
 ## Permissions We Request
 
-### Accessibility Service
+### Accessibility Service (Full Block Mode)
 
 Morning Mindful uses Android's Accessibility Service to detect when you open apps that you've chosen to block during your morning mindfulness period. This permission is used **solely** to redirect you to your journal when blocked apps are opened.
 
@@ -37,15 +39,34 @@ Morning Mindful uses Android's Accessibility Service to detect when you open app
 - Log which apps you use
 - Transmit any accessibility data off your device
 
+### Usage Stats Access (Gentle Reminder Mode)
+
+If you choose Gentle Reminder mode, we use Usage Stats permission to detect the current foreground app. This is only used to show reminder overlays.
+
 ### Display Over Other Apps
 
-This permission allows the app to show the journal screen when you attempt to open a blocked app.
+This permission allows the app to show the journal screen or reminder overlay when you attempt to open a blocked app.
 
 ### Notifications
 
 Used to show a notification when app blocking is active, allowing you to track your remaining time.
 
+### Storage Access
+
+Used only for:
+- Saving photos you attach to journal entries
+- Creating encrypted backup files in a folder you choose
+
 ## Third-Party Services
+
+### Firebase Crashlytics
+
+Morning Mindful uses Firebase Crashlytics to collect crash reports. This helps us identify and fix bugs. Crashlytics may collect:
+- Device type and OS version
+- Crash logs and stack traces
+- App version information
+
+Crashlytics is disabled in debug builds. No personal data or journal content is included in crash reports.
 
 ### Google AdMob
 
@@ -58,8 +79,18 @@ You can opt out of personalized advertising in your device's Google settings.
 All locally stored data is encrypted using:
 - SQLCipher for database encryption (AES-256)
 - Android Keystore-backed EncryptedSharedPreferences for settings and encryption keys
+- AES-256-GCM for backup file encryption
 
-Your journal entries and settings are protected with industry-standard encryption and cannot be accessed by other apps or by us.
+Your journal entries, photos, and settings are protected with industry-standard encryption and cannot be accessed by other apps or by us.
+
+## Backup & Restore
+
+Morning Mindful offers encrypted backup functionality:
+- **Auto-Backup**: Automatically saves encrypted backups to a folder you choose
+- **Manual Export**: Create password-protected backup files
+- **Restore**: Restore from backups during setup or reinstall
+
+All backups are encrypted with AES-256 using a password you create. We cannot access or decrypt your backups.
 
 ## Data Retention
 
@@ -91,7 +122,7 @@ If you are located in the European Economic Area (EEA), you have certain data pr
 - **Access**: Your data is stored on your device and accessible through the app
 - **Rectification**: You can edit or delete your journal entries within the app
 - **Erasure**: You can delete all data by uninstalling the app or clearing app data
-- **Data portability**: Your data remains on your device under your control
+- **Data portability**: Export your data using the backup feature
 - **Withdraw consent**: You can stop using the app at any time and delete all data
 
 For any questions regarding your rights, please contact us at the email address provided above.
@@ -123,6 +154,16 @@ This data is collected by Google, not by us, and is subject to [Google's Privacy
 
 - Going to your device Settings → Google → Ads → Opt out of Ads Personalization
 - Or visiting [Google Ads Settings](https://adssettings.google.com)
+
+### Firebase Crashlytics
+
+Firebase Crashlytics collects crash and error data to help us improve app stability. This includes:
+
+- Device and OS information
+- Crash stack traces
+- App state at time of crash
+
+No personal data or journal content is included. For more information, see [Firebase Privacy Policy](https://firebase.google.com/support/privacy).
 
 ## Your Consent
 

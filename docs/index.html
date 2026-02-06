@@ -63,6 +63,15 @@
             margin-bottom: 30px;
         }
 
+        .version-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin-bottom: 20px;
+        }
+
         .cta-button {
             display: inline-block;
             background: var(--accent);
@@ -120,6 +129,17 @@
 
         .feature-card p {
             color: var(--text-secondary);
+        }
+
+        .new-badge {
+            display: inline-block;
+            background: var(--accent);
+            color: white;
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            border-radius: 10px;
+            margin-left: 8px;
+            vertical-align: middle;
         }
 
         /* Setup Guide Section */
@@ -292,6 +312,7 @@
         <div class="hero-content">
             <div class="logo">🌅</div>
             <h1>Morning Mindful</h1>
+            <div class="version-badge">Version 1.0.17</div>
             <p class="tagline">Break the doom-scrolling habit. Start your mornings with intention by writing a short journal entry before accessing social media.</p>
             <a href="https://play.google.com/store/apps/details?id=com.morningmindful" class="cta-button">
                 Download on Google Play
@@ -319,9 +340,9 @@
                 <p>Blocking is only active during your chosen morning hours. Outside this window, your apps work normally.</p>
             </div>
             <div class="feature-card">
-                <div class="feature-icon">🔥</div>
-                <h3>Track Your Streak</h3>
-                <p>Build a journaling habit with streak tracking. See how many consecutive days you've written.</p>
+                <div class="feature-icon">📸</div>
+                <h3>Photo Attachments <span class="new-badge">NEW</span></h3>
+                <p>Capture moments by adding photos to your journal entries. See them displayed inline with your text in a beautiful timeline view.</p>
             </div>
             <div class="feature-card">
                 <div class="feature-icon">🔒</div>
@@ -330,8 +351,8 @@
             </div>
             <div class="feature-card">
                 <div class="feature-icon">💾</div>
-                <h3>Auto-Backup</h3>
-                <p>Enable automatic backups to a local folder. Your journals are saved with AES-256 encryption whenever you write.</p>
+                <h3>Auto-Backup & Restore</h3>
+                <p>Enable automatic backups to a local folder. Restore from existing backups when you reinstall - your journals are always safe.</p>
             </div>
         </div>
     </section>
@@ -364,8 +385,8 @@
             <div class="step">
                 <div class="step-number">4</div>
                 <div class="step-content">
-                    <h3>Select Apps to Block</h3>
-                    <p>Choose which apps to block during your morning window. Popular choices: Instagram, TikTok, Twitter/X, Facebook.</p>
+                    <h3>Set Up Backup (Recommended)</h3>
+                    <p>Choose a folder for auto-backup and set a password. If you have an existing backup, you can restore from it during setup!</p>
                 </div>
             </div>
             <div class="step">
@@ -381,25 +402,16 @@
     <!-- Backup Info -->
     <section class="backup-info">
         <h2>💾 Protect Your Journals</h2>
-        <p>Your journal entries are precious. Enable auto-backup during setup or use manual export to keep them safe.</p>
+        <p>Your journal entries are precious. Enable auto-backup during setup to keep them safe. If you reinstall the app, we'll automatically detect your existing backup and offer to restore it!</p>
 
         <div class="backup-steps">
-            <strong>Option 1: Auto-Backup (Recommended)</strong>
+            <strong>Auto-Backup (Recommended)</strong>
             <ol>
                 <li>During onboarding, choose <strong>Protect Your Journals</strong></li>
                 <li>Select a folder on your device (e.g., Documents)</li>
                 <li>Set a memorable password (8+ characters)</li>
                 <li>Your journals are automatically backed up every time you write!</li>
-            </ol>
-        </div>
-
-        <div class="backup-steps">
-            <strong>Option 2: Manual Export</strong>
-            <ol>
-                <li>Go to <strong>Settings</strong> → <strong>Data</strong></li>
-                <li>Tap <strong>Export Journals</strong></li>
-                <li>Set a strong password (8+ characters)</li>
-                <li>Save the .mmbackup file to Google Drive, email, or your computer</li>
+                <li>Reinstalling? Just select the same folder and we'll offer to restore</li>
             </ol>
         </div>
         <p><em>All backups are encrypted with AES-256 - the same encryption used by banks.</em></p>
@@ -427,12 +439,17 @@
 
         <div class="faq-item">
             <h3>What happens if I uninstall the app?</h3>
-            <p>By default, your journal entries will be deleted. However, if you have auto-backup enabled, your journals are safely stored in the folder you chose. After reinstalling, you can restore from the backup using your password. Android may also prompt you to "Keep app data" during uninstall if you want to preserve your data.</p>
+            <p>If you have auto-backup enabled, your journals are safely stored in the folder you chose. After reinstalling, select the same folder during setup and we'll automatically detect the backup and offer to restore it with your password.</p>
         </div>
 
         <div class="faq-item">
-            <h3>Can I use Morning Mindful in Chinese?</h3>
-            <p>Yes! The app fully supports Chinese (Simplified). It will automatically use Chinese if your phone's language is set to Chinese. Chinese characters are also properly counted (each character = 1 word).</p>
+            <h3>Can I add photos to my journal?</h3>
+            <p>Yes! Tap the camera icon while writing to add photos. They'll be displayed inline with your text in a beautiful timeline view, showing when each photo was added.</p>
+        </div>
+
+        <div class="faq-item">
+            <h3>What languages are supported?</h3>
+            <p>Morning Mindful supports English, German, and Chinese (Simplified). The app automatically uses your phone's language setting. Chinese characters are properly counted (each character = 1 word).</p>
         </div>
 
         <div class="faq-item">
@@ -448,7 +465,7 @@
             <a href="mailto:alanwmurphy@gmail.com">Contact</a>
             <a href="https://github.com/alanmurfi/MorningMindful">GitHub</a>
         </div>
-        <p class="copyright">© 2025 Morning Mindful. Made with 🧘 for mindful mornings.</p>
+        <p class="copyright">© 2026 Morning Mindful. Made with 🧘 for mindful mornings.</p>
     </footer>
 </body>
 </html>

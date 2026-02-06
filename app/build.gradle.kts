@@ -42,8 +42,8 @@ android {
         applicationId = "com.morningmindful"
         minSdk = 26
         targetSdk = 35
-        versionCode = 16
-        versionName = "1.0.16"
+        versionCode = 17
+        versionName = "1.0.17"
 
         testInstrumentationRunner = "com.morningmindful.HiltTestRunner"
 
