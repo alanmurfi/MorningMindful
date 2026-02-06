@@ -85,29 +85,15 @@
 
             </LinearLayout>
 
-            <!-- Journal content -->
-            <TextView
-                android:id="@+id/journalContent"
+            <!-- Timeline content (text and images mixed chronologically) -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/timelineRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                android:lineSpacingExtra="8dp"
-                android:textColor="@color/text_primary"
-                android:textSize="16sp"
-                tools:text="Today I woke up feeling refreshed and ready to tackle the day. The morning air was crisp and I enjoyed my coffee while watching the sunrise through the kitchen window.\n\nI've been thinking a lot about gratitude lately. Sometimes it's easy to focus on what we don't have instead of appreciating what we do. This morning I'm grateful for the quiet moments, for the warmth of my home, and for the opportunity to start fresh each day.\n\nMy goals for today are simple but meaningful: be present in each moment, show kindness to others, and make progress on my personal projects. I believe small steps lead to big changes over time." />
-
-            <!-- Images section -->
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/imagesRecyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
                 android:clipToPadding="false"
-                android:orientation="horizontal"
-                android:paddingVertical="8dp"
-                android:visibility="gone"
-                tools:visibility="visible"
-                tools:listitem="@layout/item_journal_image_view" />
+                android:nestedScrollingEnabled="false"
+                tools:listitem="@layout/item_timeline_text" />
 
             <!-- Meta info -->
             <LinearLayout

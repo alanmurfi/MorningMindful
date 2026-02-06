@@ -290,4 +290,7 @@
     <string name="service_restart_needed_title">需要重启服务</string>
     <string name="service_restart_needed_message">无障碍服务需要重启才能正常工作。\n\n请在无障碍设置中将晨间正念关闭再重新打开。</string>
 
+    <!-- Image Viewer -->
+    <string name="photo_full_view">查看完整照片</string>
+
 </resources>

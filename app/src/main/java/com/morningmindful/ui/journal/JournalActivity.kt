@@ -1,5 +1,6 @@
 package com.morningmindful.ui.journal
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -22,6 +23,7 @@ import com.morningmindful.R
 import com.morningmindful.data.entity.JournalImage
 import com.morningmindful.data.entity.Moods
 import com.morningmindful.databinding.ActivityJournalBinding
+import com.morningmindful.ui.ImageViewerActivity
 import com.morningmindful.util.BlockedApps
 import com.morningmindful.util.BlockingState
 import dagger.hilt.android.AndroidEntryPoint
@@ -132,7 +134,7 @@ class JournalActivity : AppCompatActivity() {
                 showDeleteImageConfirmation(image)
             },
             onImageClick = { image ->
-                // TODO: Show full-screen image view
+                openFullScreenImage(image)
             }
         )
 
@@ -151,6 +153,14 @@ class JournalActivity : AppCompatActivity() {
             }
             .setNegativeButton(R.string.cancel, null)
             .show()
+    }
+
+    private fun openFullScreenImage(image: JournalImage) {
+        val intent = Intent(this, ImageViewerActivity::class.java).apply {
+            putExtra(ImageViewerActivity.EXTRA_IMAGE_PATH, image.filePath)
+            putExtra(ImageViewerActivity.EXTRA_IMAGE_TIMESTAMP, image.createdAt)
+        }
+        startActivity(intent)
     }
 
     private fun handleBackPress() {

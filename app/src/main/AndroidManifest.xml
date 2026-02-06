@@ -109,6 +109,12 @@
             android:exported="false"
             android:theme="@style/Theme.MorningMindful" />
 
+        <!-- Image Viewer Activity -->
+        <activity
+            android:name=".ui.ImageViewerActivity"
+            android:exported="false"
+            android:theme="@style/Theme.MorningMindful.Fullscreen" />
+
         <!-- Onboarding Activity -->
         <activity
             android:name=".ui.onboarding.OnboardingActivity"

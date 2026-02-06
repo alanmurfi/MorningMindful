@@ -290,4 +290,7 @@
     <string name="service_restart_needed_title">Restart Required</string>
     <string name="service_restart_needed_message">The accessibility service needs to be restarted to work properly.\n\nPlease turn Morning Mindful OFF and then ON again in Accessibility settings.</string>
 
+    <!-- Image Viewer -->
+    <string name="photo_full_view">Full size photo</string>
+
 </resources>
