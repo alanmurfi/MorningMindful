@@ -166,7 +166,7 @@
     <string name="onboarding_perm_notifications_desc">We need this permission to show you reminders and let you know when your morning routine is active.</string>
 
     <string name="onboarding_backup_title">Protect Your Journals</string>
-    <string name="onboarding_backup_desc">Your journal entries are precious. Enable auto-backup to save them to a folder you choose.\n\nThis protects your data even if you uninstall the app.</string>
+    <string name="onboarding_backup_desc">Your journal entries are precious. Choose a folder to enable auto-backup.\n\nIf you have an existing backup from before, we\'ll offer to restore it. Otherwise, we\'ll set up a new backup.</string>
     <string name="enable_auto_backup">Enable Auto-Backup</string>
     <string name="choose_backup_folder">Choose Folder</string>
     <string name="backup_folder_selected">Backup folder selected</string>

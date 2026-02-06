@@ -166,7 +166,7 @@
     <string name="onboarding_perm_notifications_desc">我们需要此权限来显示提醒并让你知道晨间例程何时激活。</string>
 
     <string name="onboarding_backup_title">保护你的日记</string>
-    <string name="onboarding_backup_desc">你的日记非常珍贵。启用自动备份，将它们保存到你选择的文件夹。\n\n即使卸载应用，这也能保护你的数据。</string>
+    <string name="onboarding_backup_desc">你的日记非常珍贵。选择一个文件夹来启用自动备份。\n\n如果你有现有的备份，我们会提供恢复选项。否则，我们会设置一个新的备份。</string>
     <string name="enable_auto_backup">启用自动备份</string>
     <string name="choose_backup_folder">选择文件夹</string>
     <string name="backup_folder_selected">备份文件夹已选择</string>

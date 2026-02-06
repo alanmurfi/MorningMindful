@@ -166,7 +166,7 @@
     <string name="onboarding_perm_notifications_desc">Wir benötigen diese Berechtigung, um dir Erinnerungen zu zeigen und dich zu informieren, wenn deine Morgenroutine aktiv ist.</string>
 
     <string name="onboarding_backup_title">Schütze deine Tagebücher</string>
-    <string name="onboarding_backup_desc">Deine Tagebucheinträge sind wertvoll. Aktiviere Auto-Backup, um sie in einem Ordner deiner Wahl zu speichern.\n\nDies schützt deine Daten auch wenn du die App deinstallierst.</string>
+    <string name="onboarding_backup_desc">Deine Tagebucheinträge sind wertvoll. Wähle einen Ordner für das Auto-Backup.\n\nWenn du bereits ein Backup hast, bieten wir dir an, es wiederherzustellen. Andernfalls richten wir ein neues ein.</string>
     <string name="enable_auto_backup">Auto-Backup aktivieren</string>
     <string name="choose_backup_folder">Ordner wählen</string>
     <string name="backup_folder_selected">Backup-Ordner ausgewählt</string>
