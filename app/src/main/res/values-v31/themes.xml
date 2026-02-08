@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Material You (Dynamic Colors) theme for Android 12+ -->
+    <style name="Theme.MorningMindful" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Use dynamic colors from user's wallpaper -->
+        <item name="android:colorPrimary">@android:color/system_accent1_600</item>
+        <item name="colorPrimary">@android:color/system_accent1_600</item>
+        <item name="colorPrimaryContainer">@android:color/system_accent1_100</item>
+        <item name="colorOnPrimaryContainer">@android:color/system_accent1_900</item>
+
+        <!-- Secondary colors -->
+        <item name="colorSecondary">@android:color/system_accent2_600</item>
+        <item name="colorSecondaryContainer">@android:color/system_accent2_100</item>
+        <item name="colorOnSecondaryContainer">@android:color/system_accent2_900</item>
+
+        <!-- Tertiary colors -->
+        <item name="colorTertiary">@android:color/system_accent3_600</item>
+        <item name="colorTertiaryContainer">@android:color/system_accent3_100</item>
+
+        <!-- Surface colors -->
+        <item name="colorSurface">@android:color/system_neutral1_10</item>
+        <item name="colorSurfaceVariant">@android:color/system_neutral2_100</item>
+        <item name="colorOnSurface">@android:color/system_neutral1_900</item>
+        <item name="colorOnSurfaceVariant">@android:color/system_neutral2_700</item>
+
+        <!-- Background -->
+        <item name="android:colorBackground">@android:color/system_neutral1_10</item>
+
+        <!-- Status bar -->
+        <item name="android:statusBarColor">@android:color/system_neutral1_10</item>
+        <item name="android:windowLightStatusBar">true</item>
+
+        <!-- Navigation bar -->
+        <item name="android:navigationBarColor">@android:color/system_neutral1_10</item>
+        <item name="android:windowLightNavigationBar">true</item>
+    </style>
+
+    <!-- Overlay theme for gentle reminder -->
+    <style name="Theme.MorningMindful.Overlay" parent="Theme.MorningMindful">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+    </style>
+
+    <!-- Fullscreen theme for image viewer -->
+    <style name="Theme.MorningMindful.Fullscreen" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:statusBarColor">@android:color/black</item>
+        <item name="android:navigationBarColor">@android:color/black</item>
+        <item name="android:windowBackground">@android:color/black</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+</resources>
