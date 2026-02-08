@@ -9,7 +9,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdSize
+import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.MobileAds
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.morningmindful.BuildConfig
@@ -78,8 +81,38 @@ class MainActivity : AppCompatActivity() {
                 Log.d("MainActivity", "AdMob initialized: $initializationStatus")
             }
 
-            // Set adUnitId from BuildConfig (loaded from secrets.properties)
+            // Set ad size and adUnitId programmatically
+            binding.adView.setAdSize(AdSize.BANNER)
             binding.adView.adUnitId = bannerId
+
+            // Add listener to debug ad loading
+            binding.adView.adListener = object : AdListener() {
+                override fun onAdLoaded() {
+                    Log.d("MainActivity", "Ad loaded successfully")
+                    binding.adView.visibility = View.VISIBLE
+                }
+
+                override fun onAdFailedToLoad(error: LoadAdError) {
+                    Log.e("MainActivity", "Ad failed to load: ${error.code} - ${error.message}")
+                    // Error codes: https://developers.google.com/android/reference/com/google/android/gms/ads/AdRequest
+                    // 0 = ERROR_CODE_INTERNAL_ERROR
+                    // 1 = ERROR_CODE_INVALID_REQUEST
+                    // 2 = ERROR_CODE_NETWORK_ERROR
+                    // 3 = ERROR_CODE_NO_FILL (no ads available)
+                }
+
+                override fun onAdOpened() {
+                    Log.d("MainActivity", "Ad opened")
+                }
+
+                override fun onAdClicked() {
+                    Log.d("MainActivity", "Ad clicked")
+                }
+
+                override fun onAdClosed() {
+                    Log.d("MainActivity", "Ad closed")
+                }
+            }
 
             // Load a banner ad
             val adRequest = AdRequest.Builder().build()
