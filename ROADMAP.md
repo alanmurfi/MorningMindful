@@ -26,22 +26,23 @@
 | Feature | Status | Code Location |
 |---------|--------|---------------|
 | **PHASE 1: PRODUCTION** |
-| Unit Tests | ❌ Empty | `app/src/test/` |
-| Integration Tests | ❌ Empty | `app/src/androidTest/` |
+| Unit Tests | ✅ **DONE** | `app/src/test/` (WordCount, Converters, Backup) |
+| Integration Tests | ❌ Missing | `app/src/androidTest/` |
 | UI Tests (Espresso) | ❌ Missing | - |
 | CI/CD Pipeline | ✅ **DONE** | `.github/workflows/android-ci.yml` |
 | Firebase Performance | ❌ Missing | - |
-| Firebase Analytics | ❌ Missing | No `logEvent()` calls |
+| Firebase Analytics | ✅ **DONE** | `Analytics.kt` - events & user properties |
 | **PHASE 2: UX POLISH** |
 | Dark Mode | ✅ **DONE** | `SettingsActivity.kt:228`, `MorningMindfulApp.kt:51` |
-| Material You Colors | ❌ Missing | - |
+| Material You Colors | ✅ **DONE** | `values-v31/themes.xml` |
+| Color-Coded UI | ✅ **DONE** | Mode colors in `colors.xml`, `activity_settings.xml` |
 | Haptic Feedback | ❌ Missing | - |
 | Accessibility | ⚠️ Partial | 13 contentDescriptions in layouts |
 | Daily Reminders | ❌ Missing | No scheduled notifications |
 | **PHASE 3: FEATURES** |
-| Daily Prompts | ✅ **DONE** | `JournalViewModel.kt:552` (`getRandomPrompt()`) |
+| Daily Prompts | ✅ **DONE** | `JournalViewModel.kt` (`getRandomPrompt()`) |
 | Custom Prompts | ❌ Missing | - |
-| Mood Selector | ✅ **DONE** | `JournalActivity.kt:205` (`setupMoodSelector()`) |
+| Mood Selector | ✅ **DONE** | `JournalActivity.kt` (`setupMoodSelector()`) |
 | Mood History Graph | ❌ Missing | - |
 | Tags/Categories | ❌ Missing | - |
 | Search | ❌ Missing | - |
@@ -57,22 +58,23 @@
 | Cloud Sync | ❌ Missing | Local storage only |
 | **PHASE 6: GROWTH** |
 | Multi-language | ✅ **DONE** | `values/`, `values-de/`, `values-zh/` |
+| Website | ✅ **DONE** | `docs/index.html` - modern redesign |
 
 ### 📈 Progress Summary
 ```
-✅ Done:      10 features
+✅ Done:      15 features
 ⚠️ Partial:   1 feature
-❌ Not Done: 17 features
+❌ Not Done: 12 features
 ━━━━━━━━━━━━━━━━━━━━
-Progress:    ~37%
+Progress:    ~54%
 ```
 
 ### 🎯 Top 5 Quick Wins (High Impact, Low Effort)
-1. **Firebase Analytics** - Add event tracking (~2 hours)
+1. ~~**Firebase Analytics** - Add event tracking (~2 hours)~~ ✅ DONE
 2. **Firebase Performance** - Add monitoring (~1 hour)
 3. **Daily reminder notification** - Scheduled prompt (~4 hours)
-4. **Basic unit tests** - Repository tests (~4 hours)
-5. **In-app review prompt** - After streak milestone (~2 hours)
+4. **In-app review prompt** - After streak milestone (~2 hours)
+5. **Search entries** - Full-text search (~6 hours)
 
 ---
 
@@ -519,14 +521,40 @@ Effort: Medium
 
 | Version | Target | Key Features |
 |---------|--------|--------------|
-| 1.1.0 | Week 2 | Bug fixes, analytics, CI/CD |
-| 1.2.0 | Week 4 | Dark mode, prompts |
-| 1.3.0 | Week 6 | Premium tier launch |
-| 1.4.0 | Week 8 | Mood tracking, search |
-| 1.5.0 | Week 10 | Widgets, export |
-| 2.0.0 | Week 16 | Cloud sync, major redesign |
+| 1.0.21 | ✅ Done | Reliable blocking, Analytics, Material You, Website redesign |
+| 1.1.0 | Next | Daily reminders, In-app review, Performance monitoring |
+| 1.2.0 | +2 weeks | Search, Premium tier launch |
+| 1.3.0 | +4 weeks | Widgets, Export to PDF |
+| 2.0.0 | +8 weeks | Cloud sync, major redesign |
+
+---
+
+## Recent Changes (v1.0.21)
+
+### Blocking Reliability
+- ✅ `MorningMonitorService` - Foreground service for reliable unlock detection
+- ✅ Multiple detection methods: USER_PRESENT, SCREEN_ON, date change
+- ✅ Cleaned up redundant blocking code
+
+### Analytics
+- ✅ `Analytics.kt` - Centralized event tracking
+- ✅ Journal events: created, edited, mood selected
+- ✅ Blocking events: triggered, app redirected
+- ✅ Onboarding events: started, completed
+- ✅ User properties: entries, streak, mode
+
+### UI Polish
+- ✅ Material You dynamic colors (Android 12+)
+- ✅ Color-coded permissions (purple=Full, green=Gentle)
+- ✅ "Tap to change" hint on permissions
+
+### Website
+- ✅ Modern redesign with gradient hero
+- ✅ Animated floating elements
+- ✅ Blocking modes comparison section
+- ✅ Visual changelog
 
 ---
 
 *Last Updated: February 2026*
-*Version: 1.0.19*
+*Version: 1.0.21*
