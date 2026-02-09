@@ -1,7 +1,6 @@
 package com.morningmindful.service
 
 import android.content.Context
-import android.content.Intent
 import android.util.Log
 import androidx.work.CoroutineWorker
 import androidx.work.ExistingPeriodicWorkPolicy
@@ -9,7 +8,6 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import com.morningmindful.MorningMindfulApp
-import com.morningmindful.data.repository.SettingsRepository
 import com.morningmindful.util.BlockingState
 import kotlinx.coroutines.flow.first
 import java.time.LocalTime
@@ -94,46 +92,24 @@ class MorningCheckWorker(
             }
             Log.d(TAG, "Within morning window ($morningStart:00 - $morningEnd:00)")
 
-            // Start the morning monitor service to detect screen unlocks reliably
-            if (!MorningMonitorService.isServiceRunning) {
-                Log.d(TAG, "Starting MorningMonitorService")
-                MorningMonitorService.start(applicationContext)
-            }
-
             // Check if we already journaled today
             val requiredWords = app.settingsRepository.requiredWordCount.first()
             val todayEntry = app.journalRepository.getTodayEntry().first()
             if (todayEntry != null && todayEntry.wordCount >= requiredWords) {
                 Log.d(TAG, "Journal already completed today (${todayEntry.wordCount} words)")
                 BlockingState.setJournalCompletedToday(true)
+                // Stop monitor service if running since journal is complete
+                if (MorningMonitorService.isServiceRunning) {
+                    MorningMonitorService.stop(applicationContext)
+                }
                 return Result.success()
             }
 
-            // Get blocking duration from settings
-            val blockingMinutes = app.settingsRepository.blockingDurationMinutes.first()
-
-            // Start blocking period (this is idempotent - won't restart if already started today)
-            BlockingState.onFirstUnlock(blockingMinutes)
-            Log.d(TAG, "Blocking state updated for $blockingMinutes minutes")
-
-            // Only start service if blocking is actually active
-            if (BlockingState.shouldBlock()) {
-                // Check blocking mode and start appropriate service
-                val blockingMode = app.settingsRepository.blockingMode.first()
-
-                if (blockingMode == SettingsRepository.BLOCKING_MODE_GENTLE) {
-                    // Gentle mode: Use UsageStatsBlockerService for polling-based detection
-                    if (!UsageStatsBlockerService.isServiceRunning) {
-                        Log.d(TAG, "Starting Gentle Reminder service")
-                        UsageStatsBlockerService.start(applicationContext)
-                    }
-                } else {
-                    // Full mode: Start foreground service to maintain blocking state
-                    // Accessibility Service handles the actual blocking
-                    Log.d(TAG, "Starting Full Block service")
-                    val serviceIntent = Intent(applicationContext, MorningBlockerService::class.java)
-                    applicationContext.startForegroundService(serviceIntent)
-                }
+            // Start the morning monitor service to detect screen unlocks reliably
+            // The service handles all blocking logic - we just ensure it's running
+            if (!MorningMonitorService.isServiceRunning) {
+                Log.d(TAG, "Starting MorningMonitorService")
+                MorningMonitorService.start(applicationContext)
             }
 
             return Result.success()

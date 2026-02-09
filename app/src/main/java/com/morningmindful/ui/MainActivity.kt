@@ -27,7 +27,7 @@ import kotlinx.coroutines.flow.first
 import com.morningmindful.util.PermissionUtils
 import com.morningmindful.data.repository.SettingsRepository
 import com.morningmindful.service.AppBlockerAccessibilityService
-import com.morningmindful.service.UsageStatsBlockerService
+import com.morningmindful.service.MorningMonitorService
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -128,18 +128,16 @@ class MainActivity : AppCompatActivity() {
         checkPermissions()
         checkAccessibilityServiceHealth()
         viewModel.refreshTodayStatus()
-        triggerMorningBlockingCheck()
-        startGentleReminderServiceIfNeeded()
+        ensureMorningMonitorRunning()
     }
 
     /**
-     * Trigger an immediate blocking check when the app opens.
-     * This ensures blocking starts reliably even if the WorkManager hasn't run yet.
+     * Ensure the MorningMonitorService is running if we're in the morning window.
+     * The service handles all blocking logic - we just make sure it's started.
      */
-    private fun triggerMorningBlockingCheck() {
+    private fun ensureMorningMonitorRunning() {
         lifecycleScope.launch {
             val settings = MorningMindfulApp.getInstance().settingsRepository
-            val journalRepo = MorningMindfulApp.getInstance().journalRepository
 
             // Check if blocking is enabled
             val isEnabled = settings.isBlockingEnabled.first()
@@ -156,69 +154,17 @@ class MainActivity : AppCompatActivity() {
 
             // Check if already journaled today
             val requiredWords = settings.requiredWordCount.first()
-            val todayEntry = journalRepo.getTodayEntry().first()
+            val todayEntry = MorningMindfulApp.getInstance().journalRepository.getTodayEntry().first()
             if (todayEntry != null && todayEntry.wordCount >= requiredWords) {
                 com.morningmindful.util.BlockingState.setJournalCompletedToday(true)
                 return@launch
             }
 
-            // Start blocking period
-            val blockingMinutes = settings.blockingDurationMinutes.first()
-            com.morningmindful.util.BlockingState.onFirstUnlock(blockingMinutes)
-            Log.d("MainActivity", "Morning blocking triggered: $blockingMinutes minutes")
-
-            // Start the appropriate blocking service if blocking is now active
-            if (com.morningmindful.util.BlockingState.shouldBlock()) {
-                val blockingMode = settings.blockingMode.first()
-                if (blockingMode == SettingsRepository.BLOCKING_MODE_GENTLE) {
-                    if (!UsageStatsBlockerService.isServiceRunning) {
-                        Log.d("MainActivity", "Starting Gentle Reminder service from blocking check")
-                        UsageStatsBlockerService.start(this@MainActivity)
-                    }
-                }
-                // Full Block mode uses Accessibility Service which is always running if enabled
+            // Start the monitor service if not running - it handles all blocking logic
+            if (!MorningMonitorService.isServiceRunning) {
+                Log.d("MainActivity", "Starting MorningMonitorService from onResume")
+                MorningMonitorService.start(this@MainActivity)
             }
-        }
-    }
-
-    private fun startGentleReminderServiceIfNeeded() {
-        lifecycleScope.launch {
-            val settings = MorningMindfulApp.getInstance().settingsRepository
-
-            // Check if blocking is enabled and in gentle mode
-            val isEnabled = settings.isBlockingEnabled.first()
-            val blockingMode = settings.blockingMode.first()
-
-            if (!isEnabled || blockingMode != SettingsRepository.BLOCKING_MODE_GENTLE) {
-                return@launch
-            }
-
-            // Check if we're in the morning window
-            val currentHour = LocalTime.now().hour
-            val startHour = settings.morningStartHour.first()
-            val endHour = settings.morningEndHour.first()
-
-            if (currentHour < startHour || currentHour >= endHour) {
-                Log.d("MainActivity", "Outside morning window, not starting gentle reminder service")
-                return@launch
-            }
-
-            // Check if service is already running
-            if (UsageStatsBlockerService.isServiceRunning) {
-                Log.d("MainActivity", "Gentle reminder service already running")
-                return@launch
-            }
-
-            // Check if permissions are granted
-            if (!PermissionUtils.hasUsageStatsPermission(this@MainActivity) ||
-                !PermissionUtils.hasOverlayPermission(this@MainActivity)) {
-                Log.d("MainActivity", "Missing permissions for gentle reminder")
-                return@launch
-            }
-
-            // Start the service
-            Log.d("MainActivity", "Starting gentle reminder service")
-            UsageStatsBlockerService.start(this@MainActivity)
         }
     }
 
