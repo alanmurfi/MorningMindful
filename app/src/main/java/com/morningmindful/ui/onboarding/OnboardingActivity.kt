@@ -78,6 +78,9 @@ class OnboardingActivity : AppCompatActivity() {
         binding = ActivityOnboardingBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Track onboarding started
+        com.morningmindful.util.Analytics.trackOnboardingStarted()
+
         setupViewPager()
         setupButtons()
     }
@@ -158,6 +161,9 @@ class OnboardingActivity : AppCompatActivity() {
             settings.setAutoBackupEnabled(autoBackupEnabled)
             settings.setAutoBackupUri(autoBackupUri)
             settings.setAutoBackupPassword(autoBackupPassword)
+
+            // Track onboarding completed
+            com.morningmindful.util.Analytics.trackOnboardingCompleted()
 
             startActivity(Intent(this@OnboardingActivity, MainActivity::class.java))
             finish()

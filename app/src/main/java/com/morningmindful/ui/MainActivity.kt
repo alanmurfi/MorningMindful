@@ -64,6 +64,7 @@ class MainActivity : AppCompatActivity() {
         setupUI()
         observeViewModel()
         initializeAds()
+        updateAnalyticsUserProperties()
     }
 
     private fun initializeAds() {
@@ -367,5 +368,38 @@ class MainActivity : AppCompatActivity() {
             }
             .setNegativeButton(R.string.later, null)
             .show()
+    }
+
+    /**
+     * Update Firebase Analytics user properties with current user state.
+     * Called on app launch to keep user properties current.
+     */
+    private fun updateAnalyticsUserProperties() {
+        lifecycleScope.launch {
+            val app = MorningMindfulApp.getInstance()
+            val settings = app.settingsRepository
+
+            // Get current values
+            val totalEntries = viewModel.totalEntries.first()
+            val currentStreak = viewModel.currentStreak.first()
+            val blockingEnabled = settings.isBlockingEnabled.first()
+            val blockingMode = if (settings.blockingMode.first() == SettingsRepository.BLOCKING_MODE_GENTLE) "gentle" else "full"
+
+            // Update analytics
+            com.morningmindful.util.Analytics.setUserProperties(
+                totalEntries = totalEntries,
+                currentStreak = currentStreak,
+                blockingEnabled = blockingEnabled,
+                blockingMode = blockingMode
+            )
+
+            // Track app opened
+            com.morningmindful.util.Analytics.trackAppOpened()
+
+            // Check for streak milestones
+            if (currentStreak in listOf(3, 7, 14, 30, 60, 90, 180, 365)) {
+                com.morningmindful.util.Analytics.trackStreakMilestone(currentStreak)
+            }
+        }
     }
 }

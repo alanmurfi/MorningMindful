@@ -330,6 +330,10 @@ class MorningMonitorService : Service() {
 
                 // Start the appropriate blocking service
                 val blockingMode = app.settingsRepository.blockingMode.first()
+                val blockingModeStr = if (blockingMode == SettingsRepository.BLOCKING_MODE_GENTLE) "gentle" else "full"
+
+                // Track blocking triggered
+                com.morningmindful.util.Analytics.trackBlockingTriggered(blockingModeStr, blockingMinutes)
 
                 if (blockingMode == SettingsRepository.BLOCKING_MODE_GENTLE) {
                     Log.d(TAG, "Starting Gentle Reminder service")

@@ -164,6 +164,9 @@ class JournalViewModel @Inject constructor(
     fun setMood(mood: String?) {
         _selectedMood.value = mood
 
+        // Track mood selection
+        mood?.let { com.morningmindful.util.Analytics.trackMoodSelected(it) }
+
         // Check if mood has changed from last saved state
         _hasUnsavedChanges.value = _journalText.value != lastSavedContent || mood != lastSavedMood
 
@@ -308,10 +311,20 @@ class JournalViewModel @Inject constructor(
             updatedAt = System.currentTimeMillis()
         )
 
+        val isNewEntry = existingId == null
         if (existingId != null) {
             journalRepository.update(entry)
+            // Track edit
+            com.morningmindful.util.Analytics.trackJournalEntryEdited(sanitizedWordCount)
         } else {
             journalRepository.insert(entry)
+            // Track creation with photo count
+            val photoCount = _images.value.size
+            com.morningmindful.util.Analytics.trackJournalEntryCreated(
+                wordCount = sanitizedWordCount,
+                photoCount = photoCount,
+                mood = _selectedMood.value
+            )
         }
 
         // Trigger auto-backup if enabled

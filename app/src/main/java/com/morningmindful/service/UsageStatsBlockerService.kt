@@ -265,6 +265,9 @@ class UsageStatsBlockerService : Service() {
     }
 
     private fun showReminderOverlay(blockedPackage: String) {
+        // Track app redirect (gentle reminder)
+        com.morningmindful.util.Analytics.trackAppRedirected(blockedPackage)
+
         val intent = Intent(this, ReminderOverlayActivity::class.java).apply {
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)

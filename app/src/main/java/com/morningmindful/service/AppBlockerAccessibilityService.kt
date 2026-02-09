@@ -365,6 +365,9 @@ class AppBlockerAccessibilityService : AccessibilityService() {
      * Redirect the user to the journal activity.
      */
     private fun redirectToJournal(blockedPackage: String) {
+        // Track app redirect
+        com.morningmindful.util.Analytics.trackAppRedirected(blockedPackage)
+
         val intent = Intent(this, JournalActivity::class.java).apply {
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
