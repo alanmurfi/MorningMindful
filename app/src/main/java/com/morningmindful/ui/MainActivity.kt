@@ -128,7 +128,45 @@ class MainActivity : AppCompatActivity() {
         checkPermissions()
         checkAccessibilityServiceHealth()
         viewModel.refreshTodayStatus()
+        triggerMorningBlockingCheck()
         startGentleReminderServiceIfNeeded()
+    }
+
+    /**
+     * Trigger an immediate blocking check when the app opens.
+     * This ensures blocking starts reliably even if the WorkManager hasn't run yet.
+     */
+    private fun triggerMorningBlockingCheck() {
+        lifecycleScope.launch {
+            val settings = MorningMindfulApp.getInstance().settingsRepository
+            val journalRepo = MorningMindfulApp.getInstance().journalRepository
+
+            // Check if blocking is enabled
+            val isEnabled = settings.isBlockingEnabled.first()
+            if (!isEnabled) return@launch
+
+            // Check if we're in the morning window
+            val currentHour = LocalTime.now().hour
+            val startHour = settings.morningStartHour.first()
+            val endHour = settings.morningEndHour.first()
+
+            if (currentHour < startHour || currentHour >= endHour) {
+                return@launch
+            }
+
+            // Check if already journaled today
+            val requiredWords = settings.requiredWordCount.first()
+            val todayEntry = journalRepo.getTodayEntry().first()
+            if (todayEntry != null && todayEntry.wordCount >= requiredWords) {
+                com.morningmindful.util.BlockingState.setJournalCompletedToday(true)
+                return@launch
+            }
+
+            // Start blocking period
+            val blockingMinutes = settings.blockingDurationMinutes.first()
+            com.morningmindful.util.BlockingState.onFirstUnlock(blockingMinutes)
+            Log.d("MainActivity", "Morning blocking triggered: $blockingMinutes minutes")
+        }
     }
 
     private fun startGentleReminderServiceIfNeeded() {

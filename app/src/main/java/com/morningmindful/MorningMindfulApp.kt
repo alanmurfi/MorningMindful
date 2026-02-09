@@ -9,6 +9,7 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.morningmindful.data.repository.JournalImageRepository
 import com.morningmindful.data.repository.JournalRepository
 import com.morningmindful.data.repository.SettingsRepository
+import com.morningmindful.service.MorningCheckWorker
 import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
 
@@ -40,6 +41,10 @@ class MorningMindfulApp : Application() {
         applyThemeMode()
 
         createNotificationChannel()
+
+        // Schedule the morning check worker for reliable blocking
+        // This replaces the unreliable USER_PRESENT broadcast
+        MorningCheckWorker.schedule(this)
     }
 
     /**

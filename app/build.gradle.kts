@@ -42,8 +42,8 @@ android {
         applicationId = "com.morningmindful"
         minSdk = 26
         targetSdk = 35
-        versionCode = 17
-        versionName = "1.0.17"
+        versionCode = 19
+        versionName = "1.0.19"
 
         testInstrumentationRunner = "com.morningmindful.HiltTestRunner"
 
@@ -146,6 +146,9 @@ dependencies {
 
     // EXIF data reading for image rotation
     implementation("androidx.exifinterface:exifinterface:1.3.7")
+
+    // WorkManager for reliable background scheduling
+    implementation("androidx.work:work-runtime-ktx:2.9.0")
 
     // Testing - Unit Tests
     testImplementation("junit:junit:4.13.2")
