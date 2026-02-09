@@ -154,6 +154,16 @@
                 android:value="Gentle reminder for morning mindfulness routine" />
         </service>
 
+        <!-- Morning monitor service for reliable screen unlock detection -->
+        <service
+            android:name=".service.MorningMonitorService"
+            android:exported="false"
+            android:foregroundServiceType="specialUse">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="Monitors for screen unlock during morning hours" />
+        </service>
+
         <!-- Reminder overlay activity (shown in Gentle Reminder mode) -->
         <activity
             android:name=".service.ReminderOverlayActivity"

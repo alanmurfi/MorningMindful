@@ -5,8 +5,10 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.os.Build
 import android.util.Log
 import android.view.accessibility.AccessibilityEvent
+import com.morningmindful.BuildConfig
 import com.morningmindful.MorningMindfulApp
 import com.morningmindful.ui.journal.JournalActivity
 import com.morningmindful.util.BlockedApps
@@ -56,17 +58,22 @@ class AppBlockerAccessibilityService : AccessibilityService() {
         @Volatile
         var isServiceRunning = false
             private set
+
+        /** Debug logging helper - only logs in debug builds */
+        private fun logDebug(message: String) {
+            if (BuildConfig.DEBUG) Log.d(TAG, message)
+        }
     }
 
     override fun onCreate() {
         super.onCreate()
-        Log.d(TAG, "Accessibility Service created")
+        logDebug( "Accessibility Service created")
     }
 
     override fun onServiceConnected() {
         super.onServiceConnected()
         isServiceRunning = true
-        Log.d(TAG, "Accessibility Service connected")
+        logDebug( "Accessibility Service connected")
 
         // Start all reactive listeners - no blocking calls
         startSettingsListeners()
@@ -80,7 +87,7 @@ class AppBlockerAccessibilityService : AccessibilityService() {
         isServiceRunning = false
         serviceScope.cancel()
         unregisterUnlockReceiver()
-        Log.d(TAG, "Accessibility Service destroyed")
+        logDebug( "Accessibility Service destroyed")
     }
 
     /**
@@ -93,22 +100,26 @@ class AppBlockerAccessibilityService : AccessibilityService() {
         unlockReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
                 if (intent?.action == Intent.ACTION_USER_PRESENT) {
-                    Log.d(TAG, "Screen unlocked (USER_PRESENT)")
+                    logDebug( "Screen unlocked (USER_PRESENT)")
                     handleScreenUnlock()
                 }
             }
         }
 
         val filter = IntentFilter(Intent.ACTION_USER_PRESENT)
-        registerReceiver(unlockReceiver, filter)
-        Log.d(TAG, "Unlock receiver registered")
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(unlockReceiver, filter, Context.RECEIVER_NOT_EXPORTED)
+        } else {
+            registerReceiver(unlockReceiver, filter)
+        }
+        logDebug("Unlock receiver registered")
     }
 
     private fun unregisterUnlockReceiver() {
         unlockReceiver?.let {
             try {
                 unregisterReceiver(it)
-                Log.d(TAG, "Unlock receiver unregistered")
+                logDebug( "Unlock receiver unregistered")
             } catch (e: Exception) {
                 Log.e(TAG, "Error unregistering unlock receiver", e)
             }
@@ -122,28 +133,28 @@ class AppBlockerAccessibilityService : AccessibilityService() {
     private fun handleScreenUnlock() {
         // Check if blocking is enabled
         if (!isBlockingEnabled) {
-            Log.d(TAG, "Blocking is disabled in settings")
+            logDebug( "Blocking is disabled in settings")
             return
         }
 
         // Check if we're within the morning window
         val currentHour = LocalTime.now().hour
         if (currentHour < morningStartHour || currentHour >= morningEndHour) {
-            Log.d(TAG, "Outside morning window ($morningStartHour:00 - $morningEndHour:00), current hour: $currentHour")
+            logDebug( "Outside morning window ($morningStartHour:00 - $morningEndHour:00), current hour: $currentHour")
             return
         }
-        Log.d(TAG, "Within morning window ($morningStartHour:00 - $morningEndHour:00)")
+        logDebug( "Within morning window ($morningStartHour:00 - $morningEndHour:00)")
 
         // Check if already journaled today
         if (todayJournalWordCount >= requiredWordCount) {
-            Log.d(TAG, "Journal already completed today")
+            logDebug( "Journal already completed today")
             BlockingState.setJournalCompletedToday(true)
             return
         }
 
         // Start blocking period with timer
         BlockingState.onFirstUnlock(blockingDurationMinutes)
-        Log.d(TAG, "Started blocking period for $blockingDurationMinutes minutes")
+        logDebug( "Started blocking period for $blockingDurationMinutes minutes")
 
         // Start foreground service to maintain blocking state and show notification
         val serviceIntent = Intent(this, MorningBlockerService::class.java)
@@ -163,7 +174,7 @@ class AppBlockerAccessibilityService : AccessibilityService() {
             try {
                 app.settingsRepository.isBlockingEnabled.collect { enabled ->
                     isBlockingEnabled = enabled
-                    Log.d(TAG, "Settings updated: isBlockingEnabled = $enabled")
+                    logDebug( "Settings updated: isBlockingEnabled = $enabled")
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "Error listening to isBlockingEnabled", e)
@@ -175,7 +186,7 @@ class AppBlockerAccessibilityService : AccessibilityService() {
             try {
                 app.settingsRepository.morningStartHour.collect { hour ->
                     morningStartHour = hour
-                    Log.d(TAG, "Settings updated: morningStartHour = $hour")
+                    logDebug( "Settings updated: morningStartHour = $hour")
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "Error listening to morningStartHour", e)
@@ -187,7 +198,7 @@ class AppBlockerAccessibilityService : AccessibilityService() {
             try {
                 app.settingsRepository.morningEndHour.collect { hour ->
                     morningEndHour = hour
-                    Log.d(TAG, "Settings updated: morningEndHour = $hour")
+                    logDebug( "Settings updated: morningEndHour = $hour")
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "Error listening to morningEndHour", e)
@@ -199,7 +210,7 @@ class AppBlockerAccessibilityService : AccessibilityService() {
             try {
                 app.settingsRepository.requiredWordCount.collect { count ->
                     requiredWordCount = count
-                    Log.d(TAG, "Settings updated: requiredWordCount = $count")
+                    logDebug( "Settings updated: requiredWordCount = $count")
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "Error listening to requiredWordCount", e)
@@ -211,7 +222,7 @@ class AppBlockerAccessibilityService : AccessibilityService() {
             try {
                 app.settingsRepository.blockedApps.collect { apps ->
                     blockedPackages = apps
-                    Log.d(TAG, "Loaded ${blockedPackages.size} blocked apps")
+                    logDebug( "Loaded ${blockedPackages.size} blocked apps")
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "Error loading blocked apps, using defaults", e)
@@ -224,7 +235,7 @@ class AppBlockerAccessibilityService : AccessibilityService() {
             try {
                 app.settingsRepository.blockingDurationMinutes.collect { minutes ->
                     blockingDurationMinutes = minutes
-                    Log.d(TAG, "Settings updated: blockingDurationMinutes = $minutes")
+                    logDebug( "Settings updated: blockingDurationMinutes = $minutes")
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "Error listening to blockingDurationMinutes", e)
@@ -238,7 +249,7 @@ class AppBlockerAccessibilityService : AccessibilityService() {
             try {
                 app.journalRepository.getTodayEntry().collect { entry ->
                     todayJournalWordCount = entry?.wordCount ?: 0
-                    Log.d(TAG, "Journal updated: todayJournalWordCount = $todayJournalWordCount")
+                    logDebug( "Journal updated: todayJournalWordCount = $todayJournalWordCount")
 
                     // Update BlockingState if journal is completed
                     if (todayJournalWordCount >= requiredWordCount) {
@@ -259,7 +270,7 @@ class AppBlockerAccessibilityService : AccessibilityService() {
 
         val packageName = event.packageName?.toString() ?: return
 
-        Log.d(TAG, "App opened: $packageName")
+        logDebug( "App opened: $packageName")
 
         // Ignore our own app
         if (packageName == applicationContext.packageName) return
@@ -269,14 +280,14 @@ class AppBlockerAccessibilityService : AccessibilityService() {
 
         // Check if this app should be blocked
         if (!blockedPackages.contains(packageName)) {
-            Log.d(TAG, "App not in blocked list: $packageName")
+            logDebug( "App not in blocked list: $packageName")
             return
         }
 
         // Check if blocking should be active (morning window + not journaled)
         // This is now instant - no database queries, just cached values
         if (!shouldBlockNow()) {
-            Log.d(TAG, "Blocking not active right now")
+            logDebug( "Blocking not active right now")
             return
         }
 
@@ -289,11 +300,11 @@ class AppBlockerAccessibilityService : AccessibilityService() {
         lastBlockedPackage = packageName
         lastBlockTime = now
 
-        Log.d(TAG, "Blocking app: $packageName")
+        logDebug( "Blocking app: $packageName")
 
         // Start timer if not already started (fallback in case unlock wasn't detected)
         if (BlockingState.blockingEndTime.value == null) {
-            Log.d(TAG, "Timer not started yet, starting now as fallback")
+            logDebug( "Timer not started yet, starting now as fallback")
             BlockingState.onFirstUnlock(blockingDurationMinutes)
         }
 
@@ -314,33 +325,40 @@ class AppBlockerAccessibilityService : AccessibilityService() {
      * 1. Blocking is enabled in settings
      * 2. Current time is within morning window
      * 3. Journal not completed today (word count < required)
+     * 4. Blocking timer has not expired (BlockingState.shouldBlock())
      */
     private fun shouldBlockNow(): Boolean {
         // Check if blocking is enabled (cached value)
         if (!isBlockingEnabled) {
-            Log.d(TAG, "Blocking disabled in settings")
+            logDebug( "Blocking disabled in settings")
             return false
         }
 
         // Check morning window (cached values)
         val currentHour = LocalTime.now().hour
         if (currentHour < morningStartHour || currentHour >= morningEndHour) {
-            Log.d(TAG, "Outside morning window: $currentHour not in $morningStartHour-$morningEndHour")
+            logDebug( "Outside morning window: $currentHour not in $morningStartHour-$morningEndHour")
             return false
         }
 
         // Check if already journaled today (cached values)
         if (todayJournalWordCount >= requiredWordCount) {
-            Log.d(TAG, "Journal already completed today ($todayJournalWordCount words)")
+            logDebug( "Journal already completed today ($todayJournalWordCount words)")
             return false
         }
 
-        Log.d(TAG, "Blocking is active! Morning window: $morningStartHour-$morningEndHour, current: $currentHour")
+        // Check if blocking timer has expired
+        if (!BlockingState.shouldBlock()) {
+            logDebug( "Blocking timer has expired or not started")
+            return false
+        }
+
+        logDebug( "Blocking is active! Morning window: $morningStartHour-$morningEndHour, current: $currentHour")
         return true
     }
 
     override fun onInterrupt() {
-        Log.d(TAG, "Accessibility Service interrupted")
+        logDebug( "Accessibility Service interrupted")
     }
 
     /**

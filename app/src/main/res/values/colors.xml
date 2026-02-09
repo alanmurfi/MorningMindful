@@ -26,4 +26,9 @@
     <color name="progress_start">#6B5CE7</color>
     <color name="progress_end">#48BB78</color>
     <color name="progress_background">#E2E8F0</color>
+
+    <!-- Blocking mode colors (cohesive with primary purple) -->
+    <color name="mode_full_block">#5648C7</color>
+    <color name="mode_gentle">#38A169</color>
+    <color name="mode_both">#718096</color>
 </resources>

@@ -170,7 +170,10 @@ abstract class AppDatabase : RoomDatabase() {
                 tempDb.close()
 
             } catch (e: Exception) {
-                Log.e(TAG, "Error during migration, data may be lost", e)
+                // Log error without full stack trace in production (stack trace goes to Crashlytics)
+                Log.e(TAG, "Error during migration, data may be lost: ${e.message}")
+                // Report to Crashlytics for debugging
+                com.google.firebase.crashlytics.FirebaseCrashlytics.getInstance().recordException(e)
                 // If migration fails, delete old database to prevent crash loop
                 deleteOldDatabaseFiles(oldDbFile)
             } finally {

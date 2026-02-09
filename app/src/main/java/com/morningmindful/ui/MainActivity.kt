@@ -166,6 +166,18 @@ class MainActivity : AppCompatActivity() {
             val blockingMinutes = settings.blockingDurationMinutes.first()
             com.morningmindful.util.BlockingState.onFirstUnlock(blockingMinutes)
             Log.d("MainActivity", "Morning blocking triggered: $blockingMinutes minutes")
+
+            // Start the appropriate blocking service if blocking is now active
+            if (com.morningmindful.util.BlockingState.shouldBlock()) {
+                val blockingMode = settings.blockingMode.first()
+                if (blockingMode == SettingsRepository.BLOCKING_MODE_GENTLE) {
+                    if (!UsageStatsBlockerService.isServiceRunning) {
+                        Log.d("MainActivity", "Starting Gentle Reminder service from blocking check")
+                        UsageStatsBlockerService.start(this@MainActivity)
+                    }
+                }
+                // Full Block mode uses Accessibility Service which is always running if enabled
+            }
         }
     }
 

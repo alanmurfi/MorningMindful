@@ -10,7 +10,14 @@ import com.morningmindful.data.repository.JournalImageRepository
 import com.morningmindful.data.repository.JournalRepository
 import com.morningmindful.data.repository.SettingsRepository
 import com.morningmindful.service.MorningCheckWorker
+import com.morningmindful.service.MorningMonitorService
 import dagger.hilt.android.HiltAndroidApp
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+import java.time.LocalTime
 import javax.inject.Inject
 
 /**
@@ -45,6 +52,44 @@ class MorningMindfulApp : Application() {
         // Schedule the morning check worker for reliable blocking
         // This replaces the unreliable USER_PRESENT broadcast
         MorningCheckWorker.schedule(this)
+
+        // Start morning monitor service immediately if within morning window
+        startMorningMonitorIfNeeded()
+    }
+
+    private val appScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+
+    private fun startMorningMonitorIfNeeded() {
+        appScope.launch {
+            try {
+                // Check if blocking is enabled
+                val isEnabled = settingsRepository.isBlockingEnabled.first()
+                if (!isEnabled) return@launch
+
+                // Check if we're within the morning window
+                val currentHour = LocalTime.now().hour
+                val morningStart = settingsRepository.morningStartHour.first()
+                val morningEnd = settingsRepository.morningEndHour.first()
+
+                if (currentHour < morningStart || currentHour >= morningEnd) {
+                    return@launch
+                }
+
+                // Check if already journaled today
+                val requiredWords = settingsRepository.requiredWordCount.first()
+                val todayEntry = journalRepository.getTodayEntry().first()
+                if (todayEntry != null && todayEntry.wordCount >= requiredWords) {
+                    return@launch
+                }
+
+                // Start the monitor service
+                if (!MorningMonitorService.isServiceRunning) {
+                    MorningMonitorService.start(this@MorningMindfulApp)
+                }
+            } catch (e: Exception) {
+                // Ignore errors during startup
+            }
+        }
     }
 
     /**

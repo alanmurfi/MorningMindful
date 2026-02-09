@@ -86,9 +86,19 @@ class MorningCheckWorker(
 
             if (currentHour < morningStart || currentHour >= morningEnd) {
                 Log.d(TAG, "Outside morning window ($morningStart:00 - $morningEnd:00), current hour: $currentHour")
+                // Stop monitor service if running outside morning window
+                if (MorningMonitorService.isServiceRunning) {
+                    MorningMonitorService.stop(applicationContext)
+                }
                 return Result.success()
             }
             Log.d(TAG, "Within morning window ($morningStart:00 - $morningEnd:00)")
+
+            // Start the morning monitor service to detect screen unlocks reliably
+            if (!MorningMonitorService.isServiceRunning) {
+                Log.d(TAG, "Starting MorningMonitorService")
+                MorningMonitorService.start(applicationContext)
+            }
 
             // Check if we already journaled today
             val requiredWords = app.settingsRepository.requiredWordCount.first()

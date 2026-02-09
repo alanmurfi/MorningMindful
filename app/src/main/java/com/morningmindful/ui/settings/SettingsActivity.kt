@@ -612,12 +612,14 @@ class SettingsActivity : AppCompatActivity() {
     private fun updatePermissionVisibility(mode: Int) {
         val isGentleMode = mode == SettingsRepository.BLOCKING_MODE_GENTLE
 
-        // Show/hide appropriate permission rows based on mode
-        binding.accessibilityPermissionButton.visibility = if (isGentleMode) View.GONE else View.VISIBLE
-        binding.accessibilityDivider.visibility = if (isGentleMode) View.GONE else View.VISIBLE
+        // Dim permissions not needed for current mode (but still show them)
+        val activeAlpha = 1.0f
+        val dimmedAlpha = 0.4f
 
-        binding.usageStatsPermissionButton.visibility = if (isGentleMode) View.VISIBLE else View.GONE
-        binding.usageStatsDivider.visibility = if (isGentleMode) View.VISIBLE else View.GONE
+        binding.accessibilityPermissionButton.alpha = if (isGentleMode) dimmedAlpha else activeAlpha
+        binding.usageStatsPermissionButton.alpha = if (isGentleMode) activeAlpha else dimmedAlpha
+        // Overlay is always needed
+        binding.overlayPermissionButton.alpha = activeAlpha
     }
 
     private fun getBlockedAppsList(blockedPackages: Set<String>): List<BlockedAppItem> {
