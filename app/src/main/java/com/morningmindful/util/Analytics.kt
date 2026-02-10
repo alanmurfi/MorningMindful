@@ -49,6 +49,7 @@ object Analytics {
         // Engagement Events
         const val APP_OPENED = "app_opened"
         const val STREAK_MILESTONE = "streak_milestone"
+        const val REVIEW_REQUESTED = "review_requested"
     }
 
     // Parameters
@@ -69,6 +70,7 @@ object Analytics {
         const val ENTRY_COUNT = "entry_count"
         const val SUCCESS = "success"
         const val ERROR_MESSAGE = "error_message"
+        const val TRIGGER = "trigger"
     }
 
     // User Properties
@@ -242,6 +244,13 @@ object Analytics {
             putInt(Params.STREAK_DAYS, days)
         }
         firebaseAnalytics.logEvent(Events.STREAK_MILESTONE, params)
+    }
+
+    fun trackReviewRequested(trigger: String) {
+        val params = Bundle().apply {
+            putString(Params.TRIGGER, trigger)
+        }
+        firebaseAnalytics.logEvent(Events.REVIEW_REQUESTED, params)
     }
 
     // ==================== USER PROPERTIES ====================

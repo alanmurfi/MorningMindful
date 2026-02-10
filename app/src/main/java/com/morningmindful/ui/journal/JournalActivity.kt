@@ -28,6 +28,7 @@ import com.morningmindful.util.BlockedApps
 import com.morningmindful.util.BlockingState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.io.File
 import java.time.LocalDate
@@ -479,11 +480,42 @@ class JournalActivity : AppCompatActivity() {
             .alpha(1f)
             .setDuration(300)
             .withEndAction {
+                // Check for review prompt opportunity
+                checkForReviewPrompt()
+
                 binding.successOverlay.postDelayed({
                     finish()
                 }, 1500)
             }
             .start()
+    }
+
+    /**
+     * Check if we should show an in-app review prompt.
+     * Triggered after successfully saving a journal entry.
+     */
+    private fun checkForReviewPrompt() {
+        lifecycleScope.launch {
+            try {
+                val app = com.morningmindful.MorningMindfulApp.getInstance()
+
+                // Get current stats
+                val totalEntries = app.journalRepository.getAllEntries().first().size
+                val currentStreak = app.journalRepository.getCurrentStreak().first()
+
+                // Check for review opportunities
+                com.morningmindful.util.InAppReviewManager.checkAndRequestReviewForStreak(
+                    this@JournalActivity,
+                    currentStreak
+                )
+                com.morningmindful.util.InAppReviewManager.checkAndRequestReviewForEntries(
+                    this@JournalActivity,
+                    totalEntries
+                )
+            } catch (e: Exception) {
+                android.util.Log.e("JournalActivity", "Error checking for review prompt", e)
+            }
+        }
     }
 
     private fun showError(message: String) {

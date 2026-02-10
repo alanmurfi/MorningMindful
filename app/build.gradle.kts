@@ -132,6 +132,9 @@ dependencies {
     // Google AdMob
     implementation("com.google.android.gms:play-services-ads:23.0.0")
 
+    // Google Play In-App Review
+    implementation("com.google.android.play:review-ktx:2.0.1")
+
     // Firebase
     implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
     implementation("com.google.firebase:firebase-crashlytics-ktx")
