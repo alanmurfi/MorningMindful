@@ -52,6 +52,15 @@ class SettingsViewModel @Inject constructor(
     val lastBackupTime: StateFlow<Long> = settingsRepository.lastBackupTime
         .stateIn(viewModelScope, SharingStarted.Eagerly, 0L)
 
+    val dailyReminderEnabled: StateFlow<Boolean> = settingsRepository.dailyReminderEnabled
+        .stateIn(viewModelScope, SharingStarted.Eagerly, false)
+
+    val dailyReminderHour: StateFlow<Int> = settingsRepository.dailyReminderHour
+        .stateIn(viewModelScope, SharingStarted.Eagerly, 8)
+
+    val dailyReminderMinute: StateFlow<Int> = settingsRepository.dailyReminderMinute
+        .stateIn(viewModelScope, SharingStarted.Eagerly, 0)
+
     fun setBlockingEnabled(enabled: Boolean) {
         viewModelScope.launch {
             settingsRepository.setBlockingEnabled(enabled)
@@ -194,5 +203,31 @@ class SettingsViewModel @Inject constructor(
 
     fun isIncludeImagesInBackup(): Boolean {
         return settingsRepository.isIncludeImagesInBackupSync()
+    }
+
+    // Daily reminder methods
+    fun setDailyReminderEnabled(enabled: Boolean) {
+        viewModelScope.launch {
+            settingsRepository.setDailyReminderEnabled(enabled)
+        }
+    }
+
+    fun setDailyReminderTime(hour: Int, minute: Int) {
+        viewModelScope.launch {
+            settingsRepository.setDailyReminderHour(hour)
+            settingsRepository.setDailyReminderMinute(minute)
+        }
+    }
+
+    fun getDailyReminderHourSync(): Int {
+        return settingsRepository.getDailyReminderHourSync()
+    }
+
+    fun getDailyReminderMinuteSync(): Int {
+        return settingsRepository.getDailyReminderMinuteSync()
+    }
+
+    fun isDailyReminderEnabledSync(): Boolean {
+        return settingsRepository.isDailyReminderEnabledSync()
     }
 }

@@ -22,9 +22,13 @@ import com.morningmindful.R
 import com.morningmindful.databinding.ActivitySettingsBinding
 import com.morningmindful.data.repository.SettingsRepository
 import com.morningmindful.ui.onboarding.OnboardingActivity
+import com.morningmindful.service.DailyReminderScheduler
+import com.morningmindful.util.Analytics
 import com.morningmindful.util.BlockedApps
 import com.morningmindful.util.JournalBackupManager
 import com.morningmindful.util.PermissionUtils
+import com.google.android.material.timepicker.MaterialTimePicker
+import com.google.android.material.timepicker.TimeFormat
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -284,6 +288,62 @@ class SettingsActivity : AppCompatActivity() {
         } catch (e: PackageManager.NameNotFoundException) {
             binding.appVersion.text = getString(R.string.default_version)
         }
+
+        // Daily reminder switch
+        binding.reminderEnabledSwitch.setOnCheckedChangeListener { _, isChecked ->
+            viewModel.setDailyReminderEnabled(isChecked)
+            if (isChecked) {
+                val hour = viewModel.getDailyReminderHourSync()
+                val minute = viewModel.getDailyReminderMinuteSync()
+                DailyReminderScheduler.schedule(this, hour, minute)
+                Analytics.trackReminderEnabled(hour, minute)
+            } else {
+                DailyReminderScheduler.cancel(this)
+                Analytics.trackReminderDisabled()
+            }
+            binding.reminderTimeContainer.visibility = if (isChecked) View.VISIBLE else View.GONE
+        }
+
+        // Reminder time picker
+        binding.reminderTimeContainer.setOnClickListener {
+            showReminderTimePicker()
+        }
+    }
+
+    private fun showReminderTimePicker() {
+        val currentHour = viewModel.getDailyReminderHourSync()
+        val currentMinute = viewModel.getDailyReminderMinuteSync()
+
+        val picker = MaterialTimePicker.Builder()
+            .setTimeFormat(TimeFormat.CLOCK_12H)
+            .setHour(currentHour)
+            .setMinute(currentMinute)
+            .setTitleText(getString(R.string.reminder_time))
+            .build()
+
+        picker.addOnPositiveButtonClickListener {
+            val hour = picker.hour
+            val minute = picker.minute
+            viewModel.setDailyReminderTime(hour, minute)
+            updateReminderTimeDisplay(hour, minute)
+
+            // Reschedule with new time
+            if (viewModel.isDailyReminderEnabledSync()) {
+                DailyReminderScheduler.schedule(this, hour, minute)
+            }
+        }
+
+        picker.show(supportFragmentManager, "reminder_time_picker")
+    }
+
+    private fun updateReminderTimeDisplay(hour: Int, minute: Int) {
+        val amPm = if (hour < 12) "AM" else "PM"
+        val displayHour = when {
+            hour == 0 -> 12
+            hour > 12 -> hour - 12
+            else -> hour
+        }
+        binding.reminderTimeValue.text = String.format("%d:%02d %s", displayHour, minute, amPm)
     }
 
     private fun showExportPasswordDialog() {
@@ -572,6 +632,29 @@ class SettingsActivity : AppCompatActivity() {
                     viewModel.lastBackupTime.collectLatest { time ->
                         val enabled = viewModel.isAutoBackupEnabled()
                         updateAutoBackupUI(enabled, time)
+                    }
+                }
+
+                // Daily reminder enabled
+                launch {
+                    viewModel.dailyReminderEnabled.collectLatest { enabled ->
+                        binding.reminderEnabledSwitch.isChecked = enabled
+                        binding.reminderTimeContainer.visibility = if (enabled) View.VISIBLE else View.GONE
+                    }
+                }
+
+                // Daily reminder time
+                launch {
+                    viewModel.dailyReminderHour.collectLatest { hour ->
+                        val minute = viewModel.getDailyReminderMinuteSync()
+                        updateReminderTimeDisplay(hour, minute)
+                    }
+                }
+
+                launch {
+                    viewModel.dailyReminderMinute.collectLatest { minute ->
+                        val hour = viewModel.getDailyReminderHourSync()
+                        updateReminderTimeDisplay(hour, minute)
                     }
                 }
             }

@@ -301,4 +301,23 @@
     <string name="restore_password_message">Enter the password you used when creating this backup.</string>
     <string name="setup_new_backup">Start Fresh</string>
 
+    <!-- Daily Reminder -->
+    <string name="daily_reminder">Daily Reminder</string>
+    <string name="daily_reminder_desc">Get notified to write your journal</string>
+    <string name="reminder_time">Reminder Time</string>
+    <string name="reminder_notification_title">Time to Journal</string>
+    <string name="reminder_channel_name">Daily Reminders</string>
+    <string name="reminder_channel_description">Daily reminder to write your journal</string>
+
+    <string-array name="reminder_messages">
+        <item>Take a moment to reflect on your day.</item>
+        <item>Your journal is waiting. What\'s on your mind?</item>
+        <item>A few minutes of writing can change your whole day.</item>
+        <item>Ready to start your day mindfully?</item>
+        <item>Good morning! Time to capture your thoughts.</item>
+        <item>Your future self will thank you for journaling today.</item>
+        <item>5 minutes of journaling, a lifetime of memories.</item>
+        <item>What will you be grateful for today?</item>
+    </string-array>
+
 </resources>

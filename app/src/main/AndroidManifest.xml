@@ -10,6 +10,7 @@
         tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
     <!-- AdMob Advertising ID permission (required for Android 13+) -->
     <uses-permission android:name="com.google.android.gms.permission.AD_ID" />
 
@@ -189,6 +190,11 @@
                 <action android:name="android.intent.action.USER_PRESENT" />
             </intent-filter>
         </receiver>
+
+        <!-- Daily reminder receiver -->
+        <receiver
+            android:name=".service.DailyReminderReceiver"
+            android:exported="false" />
 
     </application>
 

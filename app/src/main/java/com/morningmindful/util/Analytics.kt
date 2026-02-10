@@ -50,6 +50,9 @@ object Analytics {
         const val APP_OPENED = "app_opened"
         const val STREAK_MILESTONE = "streak_milestone"
         const val REVIEW_REQUESTED = "review_requested"
+        const val REMINDER_SHOWN = "reminder_shown"
+        const val REMINDER_ENABLED = "reminder_enabled"
+        const val REMINDER_DISABLED = "reminder_disabled"
     }
 
     // Parameters
@@ -251,6 +254,21 @@ object Analytics {
             putString(Params.TRIGGER, trigger)
         }
         firebaseAnalytics.logEvent(Events.REVIEW_REQUESTED, params)
+    }
+
+    fun trackReminderShown() {
+        firebaseAnalytics.logEvent(Events.REMINDER_SHOWN, null)
+    }
+
+    fun trackReminderEnabled(hour: Int, minute: Int) {
+        val params = Bundle().apply {
+            putString("time", "${hour}:${minute.toString().padStart(2, '0')}")
+        }
+        firebaseAnalytics.logEvent(Events.REMINDER_ENABLED, params)
+    }
+
+    fun trackReminderDisabled() {
+        firebaseAnalytics.logEvent(Events.REMINDER_DISABLED, null)
     }
 
     // ==================== USER PROPERTIES ====================

@@ -34,6 +34,9 @@ class SettingsRepository(private val context: Context) {
         private const val KEY_AUTO_BACKUP_PASSWORD = "auto_backup_password"
         private const val KEY_LAST_BACKUP_TIME = "last_backup_time"
         private const val KEY_INCLUDE_IMAGES_IN_BACKUP = "include_images_in_backup"
+        private const val KEY_DAILY_REMINDER_ENABLED = "daily_reminder_enabled"
+        private const val KEY_DAILY_REMINDER_HOUR = "daily_reminder_hour"
+        private const val KEY_DAILY_REMINDER_MINUTE = "daily_reminder_minute"
 
         // Increment this when adding new default blocked apps
         private const val CURRENT_BLOCKED_APPS_VERSION = 2  // v2 adds browsers
@@ -76,6 +79,9 @@ class SettingsRepository(private val context: Context) {
     private val _autoBackupUri = MutableStateFlow<String?>(null)
     private val _lastBackupTime = MutableStateFlow(0L)
     private val _includeImagesInBackup = MutableStateFlow(false)
+    private val _dailyReminderEnabled = MutableStateFlow(false)
+    private val _dailyReminderHour = MutableStateFlow(8)  // Default 8 AM
+    private val _dailyReminderMinute = MutableStateFlow(0)
 
     init {
         // Load initial values from encrypted storage
@@ -91,6 +97,9 @@ class SettingsRepository(private val context: Context) {
         _autoBackupUri.value = encryptedPrefs.getString(KEY_AUTO_BACKUP_URI, null)
         _lastBackupTime.value = encryptedPrefs.getLong(KEY_LAST_BACKUP_TIME, 0L)
         _includeImagesInBackup.value = encryptedPrefs.getBoolean(KEY_INCLUDE_IMAGES_IN_BACKUP, false)
+        _dailyReminderEnabled.value = encryptedPrefs.getBoolean(KEY_DAILY_REMINDER_ENABLED, false)
+        _dailyReminderHour.value = encryptedPrefs.getInt(KEY_DAILY_REMINDER_HOUR, 8)
+        _dailyReminderMinute.value = encryptedPrefs.getInt(KEY_DAILY_REMINDER_MINUTE, 0)
 
         // Load blocked apps with migration for new default apps
         _blockedApps.value = loadBlockedAppsWithMigration()
@@ -370,5 +379,47 @@ class SettingsRepository(private val context: Context) {
      */
     fun isIncludeImagesInBackupSync(): Boolean {
         return encryptedPrefs.getBoolean(KEY_INCLUDE_IMAGES_IN_BACKUP, false)
+    }
+
+    // Daily reminder settings
+    val dailyReminderEnabled: Flow<Boolean> = _dailyReminderEnabled.asStateFlow()
+
+    suspend fun setDailyReminderEnabled(enabled: Boolean) {
+        withContext(Dispatchers.IO) {
+            encryptedPrefs.edit().putBoolean(KEY_DAILY_REMINDER_ENABLED, enabled).apply()
+            _dailyReminderEnabled.value = enabled
+        }
+    }
+
+    fun isDailyReminderEnabledSync(): Boolean {
+        return encryptedPrefs.getBoolean(KEY_DAILY_REMINDER_ENABLED, false)
+    }
+
+    val dailyReminderHour: Flow<Int> = _dailyReminderHour.asStateFlow()
+
+    suspend fun setDailyReminderHour(hour: Int) {
+        withContext(Dispatchers.IO) {
+            val bounded = hour.coerceIn(0, 23)
+            encryptedPrefs.edit().putInt(KEY_DAILY_REMINDER_HOUR, bounded).apply()
+            _dailyReminderHour.value = bounded
+        }
+    }
+
+    fun getDailyReminderHourSync(): Int {
+        return encryptedPrefs.getInt(KEY_DAILY_REMINDER_HOUR, 8)
+    }
+
+    val dailyReminderMinute: Flow<Int> = _dailyReminderMinute.asStateFlow()
+
+    suspend fun setDailyReminderMinute(minute: Int) {
+        withContext(Dispatchers.IO) {
+            val bounded = minute.coerceIn(0, 59)
+            encryptedPrefs.edit().putInt(KEY_DAILY_REMINDER_MINUTE, bounded).apply()
+            _dailyReminderMinute.value = bounded
+        }
+    }
+
+    fun getDailyReminderMinuteSync(): Int {
+        return encryptedPrefs.getInt(KEY_DAILY_REMINDER_MINUTE, 0)
     }
 }

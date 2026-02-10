@@ -33,6 +33,7 @@
 | Firebase Performance | ❌ Missing | - |
 | Firebase Analytics | ✅ **DONE** | `Analytics.kt` - events & user properties |
 | Firebase Performance | ✅ **DONE** | `PerformanceTraces.kt` - startup, db, backup traces |
+| Daily Reminders | ✅ **DONE** | `DailyReminderScheduler.kt`, `DailyReminderReceiver.kt` |
 | **PHASE 2: UX POLISH** |
 | Dark Mode | ✅ **DONE** | `SettingsActivity.kt:228`, `MorningMindfulApp.kt:51` |
 | Material You Colors | ✅ **DONE** | `values-v31/themes.xml` |
@@ -63,17 +64,17 @@
 
 ### 📈 Progress Summary
 ```
-✅ Done:      17 features
+✅ Done:      18 features
 ⚠️ Partial:   1 feature
-❌ Not Done: 10 features
+❌ Not Done:  9 features
 ━━━━━━━━━━━━━━━━━━━━
-Progress:    ~61%
+Progress:    ~64%
 ```
 
 ### 🎯 Top 5 Quick Wins (High Impact, Low Effort)
 1. ~~**Firebase Analytics** - Add event tracking (~2 hours)~~ ✅ DONE
 2. ~~**Firebase Performance** - Add monitoring (~1 hour)~~ ✅ DONE
-3. **Daily reminder notification** - Scheduled prompt (~4 hours)
+3. ~~**Daily reminder notification** - Scheduled prompt (~4 hours)~~ ✅ DONE
 4. ~~**In-app review prompt** - After streak milestone (~2 hours)~~ ✅ DONE
 5. **Search entries** - Full-text search (~6 hours)
 
@@ -544,6 +545,13 @@ Effort: Medium
 - ✅ Streak milestones (3, 7, 14, 30 days)
 - ✅ Entry milestones (5, 15, 30 entries)
 - ✅ Rate limiting (30 days between prompts)
+
+### Daily Reminders
+- ✅ `DailyReminderScheduler.kt` - AlarmManager scheduling
+- ✅ `DailyReminderReceiver.kt` - Notification display
+- ✅ Settings UI with time picker
+- ✅ Only shows notification if not journaled today
+- ✅ Random motivational messages
 
 ---
 
