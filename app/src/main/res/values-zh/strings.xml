@@ -299,4 +299,34 @@
     <string name="restore_password_message">输入创建此备份时使用的密码。</string>
     <string name="setup_new_backup">重新开始</string>
 
+    <!-- Morning Monitor -->
+    <string name="morning_monitor_active">等待晨间日记</string>
+
+    <!-- Settings extras -->
+    <string name="tap_to_change">点击更改</string>
+    <string name="notifications">通知</string>
+    <string name="notifications_desc">用于提醒和限制状态</string>
+
+    <!-- Debug -->
+    <string name="test_crash">测试崩溃</string>
+    <string name="test_crash_desc">强制崩溃以验证 Crashlytics 是否工作</string>
+    <string name="test_crash_confirm_title">触发测试崩溃？</string>
+    <string name="test_crash_confirm_message">这将使应用崩溃以测试 Firebase Crashlytics。崩溃应该会在几分钟内出现在你的 Firebase 控制台中。</string>
+    <string name="crash">崩溃</string>
+
+    <!-- Search -->
+    <string name="search_entries">搜索日记…</string>
+    <string name="search_results_count">找到 %1$d 条日记</string>
+    <string name="search_results_one">找到 1 条日记</string>
+    <string name="no_search_results">没有匹配的日记</string>
+    <string name="try_different_search">试试其他搜索词</string>
+
+    <!-- Daily Reminder -->
+    <string name="daily_reminder">每日提醒</string>
+    <string name="daily_reminder_desc">获取写日记的通知提醒</string>
+    <string name="reminder_time">提醒时间</string>
+    <string name="reminder_notification_title">写日记的时间到了</string>
+    <string name="reminder_channel_name">每日提醒</string>
+    <string name="reminder_channel_description">每日提醒写日记</string>
+
 </resources>

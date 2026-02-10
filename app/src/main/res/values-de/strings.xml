@@ -299,4 +299,34 @@
     <string name="restore_password_message">Gib das Passwort ein, das du beim Erstellen dieses Backups verwendet hast.</string>
     <string name="setup_new_backup">Neu beginnen</string>
 
+    <!-- Morning Monitor -->
+    <string name="morning_monitor_active">Warten auf Morgentagebuch</string>
+
+    <!-- Settings extras -->
+    <string name="tap_to_change">Tippen zum Ändern</string>
+    <string name="notifications">Benachrichtigungen</string>
+    <string name="notifications_desc">Für Erinnerungen und Sperrstatus</string>
+
+    <!-- Debug -->
+    <string name="test_crash">Test-Absturz</string>
+    <string name="test_crash_desc">Absturz erzwingen, um Crashlytics zu testen</string>
+    <string name="test_crash_confirm_title">Test-Absturz auslösen?</string>
+    <string name="test_crash_confirm_message">Dies wird die App abstürzen lassen, um Firebase Crashlytics zu testen. Der Absturz sollte innerhalb weniger Minuten in deiner Firebase-Konsole erscheinen.</string>
+    <string name="crash">Absturz</string>
+
+    <!-- Search -->
+    <string name="search_entries">Einträge suchen…</string>
+    <string name="search_results_count">%1$d Einträge gefunden</string>
+    <string name="search_results_one">1 Eintrag gefunden</string>
+    <string name="no_search_results">Keine Einträge gefunden</string>
+    <string name="try_different_search">Versuche einen anderen Suchbegriff</string>
+
+    <!-- Daily Reminder -->
+    <string name="daily_reminder">Tägliche Erinnerung</string>
+    <string name="daily_reminder_desc">Benachrichtigung zum Tagebuchschreiben erhalten</string>
+    <string name="reminder_time">Erinnerungszeit</string>
+    <string name="reminder_notification_title">Zeit zum Tagebuchschreiben</string>
+    <string name="reminder_channel_name">Tägliche Erinnerungen</string>
+    <string name="reminder_channel_description">Tägliche Erinnerung zum Tagebuchschreiben</string>
+
 </resources>
