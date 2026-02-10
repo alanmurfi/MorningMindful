@@ -32,10 +32,11 @@ import com.morningmindful.util.PermissionUtils
 import com.morningmindful.data.repository.SettingsRepository
 import com.morningmindful.service.AppBlockerAccessibilityService
 import com.morningmindful.service.MorningMonitorService
+import com.morningmindful.util.Analytics
+import com.morningmindful.util.BlockingState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import java.time.LocalTime
 
 /**
  * Main activity showing journal history, stats, and access to settings.
@@ -163,19 +164,18 @@ class MainActivity : AppCompatActivity() {
             if (!isEnabled) return@launch
 
             // Check if we're in the morning window
-            val currentHour = LocalTime.now().hour
             val startHour = settings.morningStartHour.first()
             val endHour = settings.morningEndHour.first()
 
-            if (currentHour < startHour || currentHour >= endHour) {
+            if (!BlockingState.isWithinMorningWindow(startHour, endHour)) {
                 return@launch
             }
 
             // Check if already journaled today
             val requiredWords = settings.requiredWordCount.first()
             val todayEntry = MorningMindfulApp.getInstance().journalRepository.getTodayEntry().first()
-            if (todayEntry != null && todayEntry.wordCount >= requiredWords) {
-                com.morningmindful.util.BlockingState.setJournalCompletedToday(true)
+            if (BlockingState.isJournalRequirementMet(todayEntry, requiredWords)) {
+                BlockingState.setJournalCompletedToday(true)
                 return@launch
             }
 
@@ -404,7 +404,7 @@ class MainActivity : AppCompatActivity() {
             val blockingMode = if (settings.blockingMode.first() == SettingsRepository.BLOCKING_MODE_GENTLE) "gentle" else "full"
 
             // Update analytics
-            com.morningmindful.util.Analytics.setUserProperties(
+            Analytics.setUserProperties(
                 totalEntries = totalEntries,
                 currentStreak = currentStreak,
                 blockingEnabled = blockingEnabled,
@@ -412,11 +412,11 @@ class MainActivity : AppCompatActivity() {
             )
 
             // Track app opened
-            com.morningmindful.util.Analytics.trackAppOpened()
+            Analytics.trackAppOpened()
 
             // Check for streak milestones
             if (currentStreak in listOf(3, 7, 14, 30, 60, 90, 180, 365)) {
-                com.morningmindful.util.Analytics.trackStreakMilestone(currentStreak)
+                Analytics.trackStreakMilestone(currentStreak)
             }
         }
     }

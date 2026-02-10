@@ -13,13 +13,13 @@ import com.morningmindful.data.repository.JournalRepository
 import com.morningmindful.data.repository.SettingsRepository
 import com.morningmindful.service.MorningCheckWorker
 import com.morningmindful.service.MorningMonitorService
+import com.morningmindful.util.BlockingState
 import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import java.time.LocalTime
 import javax.inject.Inject
 
 /**
@@ -80,18 +80,17 @@ class MorningMindfulApp : Application() {
                 if (!isEnabled) return@launch
 
                 // Check if we're within the morning window
-                val currentHour = LocalTime.now().hour
                 val morningStart = settingsRepository.morningStartHour.first()
                 val morningEnd = settingsRepository.morningEndHour.first()
 
-                if (currentHour < morningStart || currentHour >= morningEnd) {
+                if (!BlockingState.isWithinMorningWindow(morningStart, morningEnd)) {
                     return@launch
                 }
 
                 // Check if already journaled today
                 val requiredWords = settingsRepository.requiredWordCount.first()
                 val todayEntry = journalRepository.getTodayEntry().first()
-                if (todayEntry != null && todayEntry.wordCount >= requiredWords) {
+                if (BlockingState.isJournalRequirementMet(todayEntry, requiredWords)) {
                     return@launch
                 }
 

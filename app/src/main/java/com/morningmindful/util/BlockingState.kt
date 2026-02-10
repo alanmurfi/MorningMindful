@@ -1,10 +1,12 @@
 package com.morningmindful.util
 
+import com.morningmindful.data.entity.JournalEntry
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.LocalTime
 
 /**
  * Singleton object that manages the current blocking state.
@@ -116,5 +118,26 @@ object BlockingState {
         if (completed) {
             _isBlocking.value = false
         }
+    }
+
+    /**
+     * Check if the current time is within the morning window.
+     * @param morningStartHour Hour when morning window starts (0-23)
+     * @param morningEndHour Hour when morning window ends (0-23)
+     * @return true if current time is within the morning window
+     */
+    fun isWithinMorningWindow(morningStartHour: Int, morningEndHour: Int): Boolean {
+        val currentHour = LocalTime.now().hour
+        return currentHour >= morningStartHour && currentHour < morningEndHour
+    }
+
+    /**
+     * Check if today's journal entry meets the required word count.
+     * @param todayEntry Today's journal entry, or null if none exists
+     * @param requiredWordCount Minimum words required to complete the journal
+     * @return true if journal requirement is satisfied
+     */
+    fun isJournalRequirementMet(todayEntry: JournalEntry?, requiredWordCount: Int): Boolean {
+        return todayEntry != null && todayEntry.wordCount >= requiredWordCount
     }
 }
