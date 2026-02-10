@@ -93,6 +93,7 @@ object JournalBackupManager {
         imagesDir: File? = null,
         includeImages: Boolean = false
     ): ExportResult {
+        val trace = PerformanceTraces.startCreateBackup()
         return try {
             if (password.length < 8) {
                 return ExportResult.Error("Password must be at least 8 characters")
@@ -162,8 +163,12 @@ object JournalBackupManager {
                 outputStream.write(encryptedData.toByteArray(Charsets.UTF_8))
             } ?: return ExportResult.Error("Could not open output file")
 
+            trace.putMetric("entry_count", entries.size.toLong())
+            trace.putMetric("image_count", imageCount.toLong())
+            trace.stop()
             ExportResult.Success(entries.size, imageCount)
         } catch (e: Exception) {
+            trace.stop()
             ExportResult.Error("Export failed: ${e.message}")
         }
     }
@@ -202,6 +207,7 @@ object JournalBackupManager {
         password: String,
         existingDates: Set<LocalDate>
     ): ImportData {
+        val trace = PerformanceTraces.startRestoreBackup()
         return try {
             // Read encrypted data from file
             val encryptedData = context.contentResolver.openInputStream(inputUri)?.use { inputStream ->
@@ -282,8 +288,13 @@ object JournalBackupManager {
                 }
             }
 
+            trace.putMetric("imported_count", importedEntries.size.toLong())
+            trace.putMetric("skipped_count", skippedCount.toLong())
+            trace.putMetric("image_count", imageCount.toLong())
+            trace.stop()
             ImportData(importedEntries, importedImages, ImportResult.Success(importedEntries.size, skippedCount, imageCount))
         } catch (e: Exception) {
+            trace.stop()
             ImportData(emptyList(), emptyMap(), ImportResult.Error("Import failed: ${e.message}"))
         }
     }

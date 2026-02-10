@@ -32,6 +32,7 @@
 | CI/CD Pipeline | ✅ **DONE** | `.github/workflows/android-ci.yml` |
 | Firebase Performance | ❌ Missing | - |
 | Firebase Analytics | ✅ **DONE** | `Analytics.kt` - events & user properties |
+| Firebase Performance | ✅ **DONE** | `PerformanceTraces.kt` - startup, db, backup traces |
 | **PHASE 2: UX POLISH** |
 | Dark Mode | ✅ **DONE** | `SettingsActivity.kt:228`, `MorningMindfulApp.kt:51` |
 | Material You Colors | ✅ **DONE** | `values-v31/themes.xml` |
@@ -62,18 +63,18 @@
 
 ### 📈 Progress Summary
 ```
-✅ Done:      15 features
+✅ Done:      17 features
 ⚠️ Partial:   1 feature
-❌ Not Done: 12 features
+❌ Not Done: 10 features
 ━━━━━━━━━━━━━━━━━━━━
-Progress:    ~54%
+Progress:    ~61%
 ```
 
 ### 🎯 Top 5 Quick Wins (High Impact, Low Effort)
 1. ~~**Firebase Analytics** - Add event tracking (~2 hours)~~ ✅ DONE
-2. **Firebase Performance** - Add monitoring (~1 hour)
+2. ~~**Firebase Performance** - Add monitoring (~1 hour)~~ ✅ DONE
 3. **Daily reminder notification** - Scheduled prompt (~4 hours)
-4. **In-app review prompt** - After streak milestone (~2 hours)
+4. ~~**In-app review prompt** - After streak milestone (~2 hours)~~ ✅ DONE
 5. **Search entries** - Full-text search (~6 hours)
 
 ---
@@ -529,7 +530,24 @@ Effort: Medium
 
 ---
 
-## Recent Changes (v1.0.21)
+## Recent Changes (v1.0.22)
+
+### Performance Monitoring
+- ✅ `PerformanceTraces.kt` - Centralized Firebase Performance tracing
+- ✅ App startup trace
+- ✅ Database operations (save/update entry)
+- ✅ Backup/restore operations
+- ✅ Blocking check performance
+
+### In-App Review
+- ✅ `InAppReviewManager.kt` - Google Play review prompts
+- ✅ Streak milestones (3, 7, 14, 30 days)
+- ✅ Entry milestones (5, 15, 30 entries)
+- ✅ Rate limiting (30 days between prompts)
+
+---
+
+## Previous Changes (v1.0.21)
 
 ### Blocking Reliability
 - ✅ `MorningMonitorService` - Foreground service for reliable unlock detection

@@ -20,6 +20,7 @@ import com.morningmindful.R
 import com.morningmindful.data.repository.SettingsRepository
 import com.morningmindful.ui.MainActivity
 import com.morningmindful.util.BlockingState
+import com.morningmindful.util.PerformanceTraces
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -285,6 +286,7 @@ class MorningMonitorService : Service() {
 
     private fun handleScreenUnlock() {
         serviceScope.launch {
+            val trace = PerformanceTraces.startBlockingCheck()
             try {
                 val app = applicationContext as? MorningMindfulApp
                 if (app == null) {
@@ -344,8 +346,13 @@ class MorningMonitorService : Service() {
                     startForegroundService(serviceIntent)
                 }
 
+                trace.putAttribute("blocking_mode", blockingModeStr)
+                trace.putMetric("blocking_duration_minutes", blockingMinutes.toLong())
+                trace.stop()
+
             } catch (e: Exception) {
                 Log.e(TAG, "Error handling unlock", e)
+                trace.stop()
             }
         }
     }

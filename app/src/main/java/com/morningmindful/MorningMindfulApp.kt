@@ -6,7 +6,9 @@ import android.app.NotificationManager
 import android.os.Build
 import androidx.appcompat.app.AppCompatDelegate
 import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.google.firebase.perf.metrics.Trace
 import com.morningmindful.data.repository.JournalImageRepository
+import com.morningmindful.util.PerformanceTraces
 import com.morningmindful.data.repository.JournalRepository
 import com.morningmindful.data.repository.SettingsRepository
 import com.morningmindful.service.MorningCheckWorker
@@ -33,9 +35,15 @@ class MorningMindfulApp : Application() {
     @Inject lateinit var journalImageRepository: JournalImageRepository
     @Inject lateinit var settingsRepository: SettingsRepository
 
+    // Performance trace for app startup
+    private var startupTrace: Trace? = null
+
     override fun onCreate() {
         super.onCreate()
         instance = this
+
+        // Start tracking app startup performance
+        startupTrace = PerformanceTraces.startAppStartup()
 
         // Load SQLCipher native library before any database access
         System.loadLibrary("sqlcipher")
@@ -55,6 +63,10 @@ class MorningMindfulApp : Application() {
 
         // Start morning monitor service immediately if within morning window
         startMorningMonitorIfNeeded()
+
+        // Stop startup trace - app is now ready
+        startupTrace?.stop()
+        startupTrace = null
     }
 
     private val appScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)

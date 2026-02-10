@@ -2,6 +2,8 @@ package com.morningmindful.data.repository
 
 import com.morningmindful.data.dao.JournalEntryDao
 import com.morningmindful.data.entity.JournalEntry
+import com.morningmindful.util.PerformanceTraces
+import com.morningmindful.util.addMetric
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import java.time.LocalDate
@@ -9,11 +11,17 @@ import java.time.LocalDate
 class JournalRepository(private val journalEntryDao: JournalEntryDao) {
 
     suspend fun insert(entry: JournalEntry): Long {
-        return journalEntryDao.insert(entry)
+        return PerformanceTraces.traceSuspend("save_journal_entry") { trace ->
+            trace.addMetric("word_count", entry.wordCount.toLong())
+            journalEntryDao.insert(entry)
+        }
     }
 
     suspend fun update(entry: JournalEntry) {
-        journalEntryDao.update(entry)
+        PerformanceTraces.traceSuspend("update_journal_entry") { trace ->
+            trace.addMetric("word_count", entry.wordCount.toLong())
+            journalEntryDao.update(entry)
+        }
     }
 
     fun getTodayEntry(): Flow<JournalEntry?> {
