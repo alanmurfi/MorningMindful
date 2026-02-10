@@ -41,7 +41,17 @@ Morning Mindful uses Android's Accessibility Service to detect when you open app
 
 ### Usage Stats Access (Gentle Reminder Mode)
 
-If you choose Gentle Reminder mode, we use Usage Stats permission to detect the current foreground app. This is only used to show reminder overlays.
+If you choose Gentle Reminder mode, Morning Mindful requests access to Usage Stats. This permission allows the app to:
+
+- Detect which app is currently in the foreground
+- Determine when you open a blocked app so we can show a reminder overlay
+
+**We do not**:
+- Collect or store your app usage history
+- Track how long you use other apps
+- Transmit any usage data off your device
+
+This permission is only used in real-time to detect blocked apps and is never logged or shared.
 
 ### Display Over Other Apps
 
