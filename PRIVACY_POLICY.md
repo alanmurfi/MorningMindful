@@ -1,7 +1,7 @@
 # Privacy Policy for Morning Mindful
 
 **Last updated:** February 10, 2026
-**App Version:** 1.0.21
+**App Version:** 1.0.22
 
 ## Introduction
 
