@@ -180,6 +180,11 @@ class SettingsActivity : AppCompatActivity() {
             startActivity(PermissionUtils.getUsageStatsSettingsIntent())
         }
 
+        // Notifications permission button
+        binding.notificationsPermissionButton.setOnClickListener {
+            startActivity(PermissionUtils.getNotificationSettingsIntent(this))
+        }
+
         // Blocking mode radio group
         binding.blockingModeRadioGroup.setOnCheckedChangeListener { _, checkedId ->
             val mode = when (checkedId) {
@@ -675,6 +680,7 @@ class SettingsActivity : AppCompatActivity() {
         val hasAccessibility = PermissionUtils.hasAccessibilityPermission()
         val hasOverlay = PermissionUtils.hasOverlayPermission(this)
         val hasUsageStats = PermissionUtils.hasUsageStatsPermission(this)
+        val hasNotifications = PermissionUtils.hasNotificationPermission(this)
 
         binding.accessibilityStatus.text = if (hasAccessibility) getString(R.string.status_enabled) else getString(R.string.status_disabled)
         binding.accessibilityStatus.setTextColor(
@@ -689,6 +695,11 @@ class SettingsActivity : AppCompatActivity() {
         binding.usageStatsStatus.text = if (hasUsageStats) getString(R.string.status_enabled) else getString(R.string.status_disabled)
         binding.usageStatsStatus.setTextColor(
             getColor(if (hasUsageStats) android.R.color.holo_green_dark else android.R.color.holo_red_dark)
+        )
+
+        binding.notificationsStatus.text = if (hasNotifications) getString(R.string.status_enabled) else getString(R.string.status_disabled)
+        binding.notificationsStatus.setTextColor(
+            getColor(if (hasNotifications) android.R.color.holo_green_dark else android.R.color.holo_red_dark)
         )
     }
 

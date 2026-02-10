@@ -222,6 +222,8 @@
     <string name="usage_access_desc">Gentle Reminder mode only</string>
     <string name="display_over_apps">Display Over Apps</string>
     <string name="display_over_apps_desc">Needed for both modes</string>
+    <string name="notifications">Notifications</string>
+    <string name="notifications_desc">For reminders and blocking status</string>
     <string name="blocked_apps">Blocked Apps</string>
     <string name="add_app">+ Add App</string>
     <string name="testing_reset">Testing &amp; Reset</string>
