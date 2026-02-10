@@ -159,6 +159,13 @@ class JournalRepository(private val journalEntryDao: JournalEntryDao) {
             journalEntryDao.insert(entry)
         }
     }
+
+    /**
+     * Search entries by content or mood.
+     */
+    fun searchEntries(query: String): Flow<List<JournalEntry>> {
+        return journalEntryDao.searchEntries(query)
+    }
 }
 
 /**

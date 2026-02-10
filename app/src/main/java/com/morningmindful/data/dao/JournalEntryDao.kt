@@ -64,4 +64,16 @@ interface JournalEntryDao {
      */
     @Query("SELECT * FROM journal_entries ORDER BY date DESC")
     suspend fun getAllEntriesOnce(): List<JournalEntry>
+
+    /**
+     * Search entries by content or mood.
+     * Uses LIKE with wildcards for partial matching.
+     */
+    @Query("""
+        SELECT * FROM journal_entries
+        WHERE content LIKE '%' || :query || '%'
+           OR mood LIKE '%' || :query || '%'
+        ORDER BY date DESC
+    """)
+    fun searchEntries(query: String): Flow<List<JournalEntry>>
 }

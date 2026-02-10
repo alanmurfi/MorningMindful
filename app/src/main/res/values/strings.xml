@@ -266,6 +266,11 @@
     <string name="no_entries_yet">No journal entries yet</string>
     <string name="start_writing_history">Start writing to see your history here</string>
     <string name="entries">Entries</string>
+    <string name="search_entries">Search entries…</string>
+    <string name="search_results_count">%1$d entries found</string>
+    <string name="search_results_one">1 entry found</string>
+    <string name="no_search_results">No entries match your search</string>
+    <string name="try_different_search">Try a different search term</string>
 
     <!-- Blocked Apps -->
     <string name="not_installed">Not installed</string>
