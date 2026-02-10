@@ -67,7 +67,7 @@ A digital wellbeing Android app that helps you build a mindful morning routine b
 
 ## Project Structure
 
-\`\`\`
+```
 app/src/main/java/com/morningmindful/
 ├── MorningMindfulApp.kt              # Application class
 ├── data/
@@ -79,13 +79,14 @@ app/src/main/java/com/morningmindful/
 ├── di/                               # Hilt modules
 ├── service/
 │   ├── AppBlockerAccessibilityService.kt  # Core blocking logic
-│   ├── GentleReminderService.kt      # Gentle reminder overlay
-│   ├── ScreenUnlockReceiver.kt       # Screen unlock detection
+│   ├── UsageStatsBlockerService.kt   # Gentle reminder mode
+│   ├── MorningMonitorService.kt      # Background monitoring
+│   ├── DailyReminderScheduler.kt     # Notification reminders
 │   └── BootReceiver.kt               # Boot completion handler
 ├── ui/
-│   ├── main/                         # Home screen
+│   ├── MainActivity.kt               # Home screen
 │   ├── journal/                      # Journal entry screen
-│   ├── detail/                       # Entry detail with timeline view
+│   ├── history/                      # Entry list, detail, timeline
 │   ├── settings/                     # Settings screen
 │   └── onboarding/                   # Onboarding flow
 └── util/
@@ -93,7 +94,7 @@ app/src/main/java/com/morningmindful/
     ├── BlockedApps.kt                # Default blocked apps list
     ├── JournalBackupManager.kt       # Backup/restore functionality
     └── PermissionUtils.kt            # Permission helpers
-\`\`\`
+```
 
 ## Building
 
@@ -106,30 +107,30 @@ app/src/main/java/com/morningmindful/
 ### Setup
 
 1. Clone the repository
-   \`\`\`bash
+   ```bash
    git clone https://github.com/alanmurfi/MorningMindful.git
    cd MorningMindful
-   \`\`\`
+   ```
 
 2. Create \`secrets.properties\` in the root directory (not tracked in git):
-   \`\`\`properties
+   ```properties
    ADMOB_APP_ID=ca-app-pub-xxxxx~xxxxx
    ADMOB_BANNER_ID=ca-app-pub-xxxxx/xxxxx
-   \`\`\`
+   ```
 
 3. Create \`keystore.properties\` for release builds (not tracked in git):
-   \`\`\`properties
+   ```properties
    storeFile=/path/to/keystore.jks
    storePassword=your_password
    keyAlias=your_alias
    keyPassword=your_key_password
-   \`\`\`
+   ```
 
 4. Build and run
-   \`\`\`bash
+   ```bash
    ./gradlew assembleDebug
    ./gradlew installDebug
-   \`\`\`
+   ```
 
 ## Required Permissions
 
@@ -216,13 +217,13 @@ See our full [Privacy Policy](https://alanmurfi.github.io/MorningMindful/privacy
 
 ## Testing
 
-\`\`\`bash
+```bash
 # Run unit tests
 ./gradlew test
 
 # Run instrumented tests (requires device/emulator)
 ./gradlew connectedAndroidTest
-\`\`\`
+```
 
 ## Contributing
 
