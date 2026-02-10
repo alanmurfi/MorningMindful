@@ -49,7 +49,8 @@ class MorningMindfulApp : Application() {
         System.loadLibrary("sqlcipher")
 
         // Initialize Firebase Crashlytics
-        // Disable in debug builds to avoid noise during development
+        // Only enable in release builds to avoid noise during development
+        // Debug builds can still test via the "Test Crash" button in Settings
         FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(!BuildConfig.DEBUG)
 
         // Apply saved theme mode

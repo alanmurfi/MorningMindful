@@ -18,6 +18,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
+import com.morningmindful.BuildConfig
 import com.morningmindful.R
 import com.morningmindful.databinding.ActivitySettingsBinding
 import com.morningmindful.data.repository.SettingsRepository
@@ -223,6 +224,25 @@ class SettingsActivity : AppCompatActivity() {
                 }
                 .setNegativeButton(R.string.cancel, null)
                 .show()
+        }
+
+        // Test crash for Crashlytics - only show in debug builds
+        if (BuildConfig.DEBUG) {
+            binding.testCrashDivider.visibility = View.VISIBLE
+            binding.testCrashButton.visibility = View.VISIBLE
+            binding.testCrashButton.setOnClickListener {
+                MaterialAlertDialogBuilder(this)
+                    .setTitle(R.string.test_crash_confirm_title)
+                    .setMessage(R.string.test_crash_confirm_message)
+                    .setPositiveButton(R.string.crash) { _, _ ->
+                        throw RuntimeException("Test Crash for Firebase Crashlytics")
+                    }
+                    .setNegativeButton(R.string.cancel, null)
+                    .show()
+            }
+        } else {
+            binding.testCrashDivider.visibility = View.GONE
+            binding.testCrashButton.visibility = View.GONE
         }
 
         // Theme radio group

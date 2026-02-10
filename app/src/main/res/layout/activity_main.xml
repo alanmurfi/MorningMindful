@@ -378,12 +378,11 @@
 
     </ScrollView>
 
-    <!-- Banner Ad at bottom - adUnitId is set programmatically from BuildConfig -->
-    <com.google.android.gms.ads.AdView
-        android:id="@+id/adView"
+    <!-- Banner Ad container - AdView is created programmatically -->
+    <FrameLayout
+        android:id="@+id/adContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|center_horizontal"
-        ads:adSize="BANNER" />
+        android:fitsSystemWindows="true" />
 
 </LinearLayout>

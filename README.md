@@ -3,7 +3,7 @@
 [![Android](https://img.shields.io/badge/Platform-Android-green.svg)](https://developer.android.com)
 [![API](https://img.shields.io/badge/API-26%2B-brightgreen.svg)](https://android-arsenal.com/api?level=26)
 [![Kotlin](https://img.shields.io/badge/Kotlin-2.0-blue.svg)](https://kotlinlang.org)
-[![Version](https://img.shields.io/badge/Version-1.0.17-purple.svg)](https://github.com/alanmurfi/MorningMindful/releases)
+[![Version](https://img.shields.io/badge/Version-1.0.21-purple.svg)](https://github.com/alanmurfi/MorningMindful/releases)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 A digital wellbeing Android app that helps you build a mindful morning routine by blocking social media apps until you complete a journal entry.
@@ -31,6 +31,8 @@ A digital wellbeing Android app that helps you build a mindful morning routine b
 - **Dark Mode** - Full dark theme support with system, light, and dark options
 - **Photo Attachments** - Add photos to your journal entries
 - **Timeline View** - See your journal entries with photos displayed inline chronologically
+- **Search History** - Search through your past journal entries
+- **Daily Reminders** - Configurable notification reminders to journal
 - **Streak Tracking** - Track your journaling streak and total word count
 - **Multi-Language** - English, German, and Chinese (Simplified) support
 
@@ -61,6 +63,7 @@ A digital wellbeing Android app that helps you build a mindful morning routine b
 | **Material Design 3** | Modern UI components |
 | **Glide** | Image loading and caching |
 | **Firebase Crashlytics** | Crash reporting |
+| **Firebase Performance** | Performance monitoring |
 
 ## Project Structure
 
@@ -174,6 +177,13 @@ Customize the blocked apps list in Settings.
 See our full [Privacy Policy](https://alanmurfi.github.io/MorningMindful/privacy.html).
 
 ## Version History
+
+### v1.0.21 (February 2026)
+- Search functionality for journal history
+- Daily reminder notifications with customizable time
+- Firebase Performance Monitoring integration
+- Firebase Crashlytics for crash reporting
+- Bug fixes and stability improvements
 
 ### v1.0.17 (February 2026)
 - Updated backup onboarding text to mention restore option

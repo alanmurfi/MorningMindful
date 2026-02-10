@@ -1,7 +1,7 @@
 # Privacy Policy for Morning Mindful
 
-**Last updated:** February 6, 2026  
-**App Version:** 1.0.17
+**Last updated:** February 10, 2026
+**App Version:** 1.0.21
 
 ## Introduction
 
@@ -67,6 +67,16 @@ Morning Mindful uses Firebase Crashlytics to collect crash reports. This helps u
 - App version information
 
 Crashlytics is disabled in debug builds. No personal data or journal content is included in crash reports.
+
+### Firebase Performance Monitoring
+
+Morning Mindful uses Firebase Performance Monitoring to track app performance and identify slow operations. This service collects:
+- App startup time
+- Network request latency
+- Screen rendering performance
+- Device and OS information
+
+This data helps us optimize the app experience. No personal data or journal content is included in performance reports.
 
 ### Google AdMob
 

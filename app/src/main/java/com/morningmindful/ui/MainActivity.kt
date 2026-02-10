@@ -6,12 +6,16 @@ import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
+import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.MobileAds
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -61,10 +65,20 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        setupWindowInsets()
         setupUI()
         observeViewModel()
         initializeAds()
         updateAnalyticsUserProperties()
+    }
+
+    private fun setupWindowInsets() {
+        // Apply window insets to the ad container so it sits above the navigation bar
+        ViewCompat.setOnApplyWindowInsetsListener(binding.adContainer) { view, windowInsets ->
+            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.updatePadding(bottom = insets.bottom)
+            windowInsets
+        }
     }
 
     private fun initializeAds() {
@@ -73,7 +87,7 @@ class MainActivity : AppCompatActivity() {
             val bannerId = BuildConfig.ADMOB_BANNER_ID
             if (bannerId.isNullOrBlank()) {
                 Log.w("MainActivity", "AdMob Banner ID not configured, hiding ad view")
-                binding.adView.visibility = android.view.View.GONE
+                binding.adContainer.visibility = View.GONE
                 return
             }
 
@@ -82,15 +96,16 @@ class MainActivity : AppCompatActivity() {
                 Log.d("MainActivity", "AdMob initialized: $initializationStatus")
             }
 
-            // Set ad size and adUnitId programmatically
-            binding.adView.setAdSize(AdSize.BANNER)
-            binding.adView.adUnitId = bannerId
+            // Create AdView programmatically to avoid XML initialization issues
+            val adView = AdView(this)
+            adView.setAdSize(AdSize.BANNER)
+            adView.adUnitId = bannerId
 
             // Add listener to debug ad loading
-            binding.adView.adListener = object : AdListener() {
+            adView.adListener = object : AdListener() {
                 override fun onAdLoaded() {
                     Log.d("MainActivity", "Ad loaded successfully")
-                    binding.adView.visibility = View.VISIBLE
+                    adView.visibility = View.VISIBLE
                 }
 
                 override fun onAdFailedToLoad(error: LoadAdError) {
@@ -115,12 +130,15 @@ class MainActivity : AppCompatActivity() {
                 }
             }
 
+            // Add AdView to container
+            binding.adContainer.addView(adView)
+
             // Load a banner ad
             val adRequest = AdRequest.Builder().build()
-            binding.adView.loadAd(adRequest)
+            adView.loadAd(adRequest)
         } catch (e: Exception) {
             Log.e("MainActivity", "Error initializing ads", e)
-            binding.adView.visibility = android.view.View.GONE
+            binding.adContainer.visibility = View.GONE
         }
     }
 
