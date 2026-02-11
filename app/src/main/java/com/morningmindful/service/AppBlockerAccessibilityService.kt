@@ -325,7 +325,7 @@ class AppBlockerAccessibilityService : AccessibilityService() {
      * 1. Blocking is enabled in settings
      * 2. Current time is within morning window
      * 3. Journal not completed today (word count < required)
-     * 4. Blocking timer has not expired (BlockingState.shouldBlock())
+     * 4. Blocking timer has not expired OR timer not started yet (we'll start it)
      */
     private fun shouldBlockNow(): Boolean {
         // Check if blocking is enabled (cached value)
@@ -347,10 +347,25 @@ class AppBlockerAccessibilityService : AccessibilityService() {
             return false
         }
 
-        // Check if blocking timer has expired
-        if (!BlockingState.shouldBlock()) {
-            logDebug( "Blocking timer has expired or not started")
+        // Check if journal was already completed today via BlockingState
+        if (BlockingState.journalCompletedToday.value) {
+            logDebug("Journal already completed today (BlockingState)")
             return false
+        }
+
+        // If blocking timer hasn't started yet, that's OK - we'll start it when blocking
+        // This handles the case where USER_PRESENT wasn't detected but we're in morning window
+        val timerStarted = BlockingState.blockingEndTime.value != null
+        if (timerStarted) {
+            // Timer is running - check if it's expired
+            if (!BlockingState.shouldBlock()) {
+                logDebug("Blocking timer has expired")
+                return false
+            }
+        } else {
+            // Timer not started yet - we're in morning window and haven't journaled
+            // We should block and will start the timer in onAccessibilityEvent
+            logDebug("Timer not started yet, but in morning window - will start timer")
         }
 
         logDebug( "Blocking is active! Morning window: $morningStartHour-$morningEndHour, current: $currentHour")
