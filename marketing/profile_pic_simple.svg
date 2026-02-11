@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+  <defs>
+    <clipPath id="circleClip">
+      <circle cx="200" cy="200" r="200"/>
+    </clipPath>
+  </defs>
+  <!-- Everything clipped to circle -->
+  <g clip-path="url(#circleClip)">
+    <!-- Circle background - solid purple -->
+    <rect x="0" y="0" width="400" height="400" fill="#5D4AA7"/>
+    <!-- Sun - solid orange -->
+    <circle cx="200" cy="250" r="65" fill="#FF8C42"/>
+    <!-- Horizon block - covers bottom half of sun -->
+    <rect x="0" y="250" width="400" height="150" fill="#5D4AA7"/>
+    <!-- Journal lines -->
+    <rect x="100" y="275" width="200" height="12" rx="6" fill="#FFFFFF"/>
+    <rect x="100" y="305" width="150" height="12" rx="6" fill="#B8B0D0"/>
+    <rect x="100" y="335" width="180" height="12" rx="6" fill="#8A80A8"/>
+  </g>
+</svg>

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+  <!-- Purple circle background -->
+  <circle cx="200" cy="200" r="200" fill="#6B4EAE"/>
+  <!-- White center (sun core) -->
+  <circle cx="200" cy="200" r="64" fill="white"/>
+  <!-- Sun rays - 8 rays evenly spaced at 45 degree intervals -->
+  <!-- Top (0°) -->
+  <rect x="188" y="32" width="24" height="56" rx="12" fill="white"/>
+  <!-- Top-right (45°) -->
+  <rect x="188" y="32" width="24" height="56" rx="12" fill="white" transform="rotate(45 200 200)"/>
+  <!-- Right (90°) -->
+  <rect x="188" y="32" width="24" height="56" rx="12" fill="white" transform="rotate(90 200 200)"/>
+  <!-- Bottom-right (135°) -->
+  <rect x="188" y="32" width="24" height="56" rx="12" fill="white" transform="rotate(135 200 200)"/>
+  <!-- Bottom (180°) -->
+  <rect x="188" y="32" width="24" height="56" rx="12" fill="white" transform="rotate(180 200 200)"/>
+  <!-- Bottom-left (225°) -->
+  <rect x="188" y="32" width="24" height="56" rx="12" fill="white" transform="rotate(225 200 200)"/>
+  <!-- Left (270°) -->
+  <rect x="188" y="32" width="24" height="56" rx="12" fill="white" transform="rotate(270 200 200)"/>
+  <!-- Top-left (315°) -->
+  <rect x="188" y="32" width="24" height="56" rx="12" fill="white" transform="rotate(315 200 200)"/>
+</svg>

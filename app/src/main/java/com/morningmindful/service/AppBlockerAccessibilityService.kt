@@ -51,6 +51,12 @@ class AppBlockerAccessibilityService : AccessibilityService() {
     // Screen unlock receiver for starting the timer
     private var unlockReceiver: BroadcastReceiver? = null
 
+    // Date change receiver for resetting state on new day
+    private var dateChangeReceiver: BroadcastReceiver? = null
+
+    // Job for journal entry listener (needs to be restarted on date change)
+    private var journalListenerJob: kotlinx.coroutines.Job? = null
+
     companion object {
         private const val TAG = "AppBlockerService"
         private const val BLOCK_COOLDOWN_MS = 1000L  // Prevent rapid-fire redirects
@@ -80,6 +86,9 @@ class AppBlockerAccessibilityService : AccessibilityService() {
 
         // Register unlock receiver dynamically (manifest-declared doesn't work reliably on newer Android)
         registerUnlockReceiver()
+
+        // Register date change receiver to reset state on new day
+        registerDateChangeReceiver()
     }
 
     override fun onDestroy() {
@@ -87,6 +96,7 @@ class AppBlockerAccessibilityService : AccessibilityService() {
         isServiceRunning = false
         serviceScope.cancel()
         unregisterUnlockReceiver()
+        unregisterDateChangeReceiver()
         logDebug( "Accessibility Service destroyed")
     }
 
@@ -125,6 +135,68 @@ class AppBlockerAccessibilityService : AccessibilityService() {
             }
         }
         unlockReceiver = null
+    }
+
+    /**
+     * Register a date change receiver to reset state when the date changes.
+     * This ensures the cached journal word count is refreshed for the new day.
+     */
+    private fun registerDateChangeReceiver() {
+        if (dateChangeReceiver != null) return
+
+        dateChangeReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                when (intent?.action) {
+                    Intent.ACTION_DATE_CHANGED,
+                    Intent.ACTION_TIME_CHANGED,
+                    Intent.ACTION_TIMEZONE_CHANGED -> {
+                        logDebug("Date/time changed detected! Resetting cached state.")
+                        handleDateChange()
+                    }
+                }
+            }
+        }
+
+        val filter = IntentFilter().apply {
+            addAction(Intent.ACTION_DATE_CHANGED)
+            addAction(Intent.ACTION_TIME_CHANGED)
+            addAction(Intent.ACTION_TIMEZONE_CHANGED)
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(dateChangeReceiver, filter, Context.RECEIVER_NOT_EXPORTED)
+        } else {
+            registerReceiver(dateChangeReceiver, filter)
+        }
+        logDebug("Date change receiver registered")
+    }
+
+    private fun unregisterDateChangeReceiver() {
+        dateChangeReceiver?.let {
+            try {
+                unregisterReceiver(it)
+                logDebug("Date change receiver unregistered")
+            } catch (e: Exception) {
+                Log.e(TAG, "Error unregistering date change receiver", e)
+            }
+        }
+        dateChangeReceiver = null
+    }
+
+    /**
+     * Handle date change - reset cached journal word count and restart listener.
+     */
+    private fun handleDateChange() {
+        // Reset cached journal word count for new day
+        todayJournalWordCount = 0
+
+        // Force reset BlockingState for new day
+        BlockingState.forceReset()
+
+        // Cancel and restart the journal listener to query the new date
+        journalListenerJob?.cancel()
+        startJournalEntryListener()
+
+        logDebug("Date change handled - reset journal word count and restarted listener")
     }
 
     /**
@@ -242,10 +314,21 @@ class AppBlockerAccessibilityService : AccessibilityService() {
             }
         }
 
+        // Start the journal entry listener
+        startJournalEntryListener()
+    }
+
+    /**
+     * Start listening to journal entry changes.
+     * This is separate so it can be restarted when the date changes.
+     */
+    private fun startJournalEntryListener() {
+        val app = MorningMindfulApp.getInstance()
+
         // Listen to journal entry changes - this is the key optimization
         // Instead of querying the database on every accessibility event,
         // we cache the word count and update it reactively
-        serviceScope.launch {
+        journalListenerJob = serviceScope.launch {
             try {
                 app.journalRepository.getTodayEntry().collect { entry ->
                     todayJournalWordCount = entry?.wordCount ?: 0
