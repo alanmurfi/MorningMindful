@@ -74,10 +74,12 @@ object BlockingState {
 
         // Check if journal was completed
         if (_journalCompletedToday.value) {
+            _isBlocking.value = false
             return false
         }
 
-        return _isBlocking.value
+        // Timer is running and journal not complete - should block
+        return true
     }
 
     /**

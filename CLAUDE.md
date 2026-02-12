@@ -4,7 +4,7 @@ Android app that blocks social media until you write a journal entry. Built with
 
 ## Quick Context
 
-- **Version:** 1.0.24
+- **Version:** 1.0.25
 - **Status:** Closed Testing (Play Store)
 - **Testers:** 28
 - **Package:** `com.morningmindful`
@@ -77,6 +77,17 @@ app/src/main/java/com/morningmindful/
 - Secrets in `secrets.properties`, never committed
 - Use existing patterns when adding features
 - Update `docs/PRD.md` when adding major features
+- **Always update version in CLAUDE.md and tag releases when making a release**
+
+## Environment
+
+```bash
+# Java (use Android Studio's bundled JDK)
+export JAVA_HOME="/Applications/Android Studio.app/Contents/jbr/Contents/Home"
+
+# ADB
+~/Library/Android/sdk/platform-tools/adb
+```
 
 ## Commands
 
@@ -92,6 +103,9 @@ app/src/main/java/com/morningmindful/
 
 # Check for issues
 ./gradlew lint
+
+# Install on device
+~/Library/Android/sdk/platform-tools/adb install -r app/build/outputs/apk/release/app-release.apk
 ```
 
 ## Links
