@@ -51,6 +51,15 @@ object BlockingState {
     }
 
     /**
+     * Update the blocking duration mid-session.
+     * Recalculates the end time based on first unlock time + new duration.
+     */
+    fun updateBlockingDuration(newDurationMinutes: Int) {
+        val unlockTime = _firstUnlockTime.value ?: return
+        _blockingEndTime.value = unlockTime.plusMinutes(newDurationMinutes.toLong())
+    }
+
+    /**
      * Call this when a valid journal entry has been completed.
      * Immediately ends the blocking period.
      */

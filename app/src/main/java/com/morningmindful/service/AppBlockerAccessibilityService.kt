@@ -307,6 +307,8 @@ class AppBlockerAccessibilityService : AccessibilityService() {
             try {
                 app.settingsRepository.blockingDurationMinutes.collect { minutes ->
                     blockingDurationMinutes = minutes
+                    // Update the timer if blocking is active
+                    BlockingState.updateBlockingDuration(minutes)
                     logDebug( "Settings updated: blockingDurationMinutes = $minutes")
                 }
             } catch (e: Exception) {
