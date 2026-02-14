@@ -77,7 +77,7 @@ app/src/main/java/com/morningmindful/
 - Secrets in `secrets.properties`, never committed
 - Use existing patterns when adding features
 - Update `docs/PRD.md` when adding major features
-- **Always update version in CLAUDE.md and tag releases when making a release**
+- **When making a release:** Update version in CLAUDE.md, README.md, docs/PRD.md, docs/index.html, and tag the release
 
 ## Environment
 
