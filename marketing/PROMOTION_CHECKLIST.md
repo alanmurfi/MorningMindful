@@ -3,10 +3,9 @@
 ## Timeline Overview
 
 ```
-Day 9-12 (NOW)     → Prepare all assets, content, and accounts
-Day 12 (Testing)   → Move from Closed to Open Testing (20 testers, 14 days)
-Day 12-26          → Open Testing period - gather reviews, iterate
-Day 26+            → Production release candidate
+Closed Testing     → Completed (28 testers, 14 days) ✅
+Production         → Approved and live on Google Play ✅
+NOW                → Growth, marketing, and user acquisition
 ```
 
 ---
@@ -20,7 +19,7 @@ Day 26+            → Production release candidate
   - Suggested: "Morning Mindful: Journal First" or "Morning Mindful: Block & Journal"
 
 - [ ] **Update short description** (80 chars)
-  - Use: "Block social media until you journal. Build mindful mornings, break doom-scrolling."
+  - Use: "Block social media until you journal. Build mindful mornings."
 
 - [ ] **Update full description**
   - Copy from: `/marketing/PLAY_STORE_LISTING.md`

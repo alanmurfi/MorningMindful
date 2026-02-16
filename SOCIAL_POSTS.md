@@ -4,10 +4,10 @@
 
 ### r/androidapps (Best for discovery)
 
-**Title:** I built a free journaling app that blocks social media until you write - looking for feedback
+**Title:** I built a free journaling app that blocks social media until you write - would love feedback
 
 **Body:**
-Hey everyone! After months of development, I'm looking for beta testers for my app **Morning Mindful**.
+Hey everyone! I just launched my app **Morning Mindful** on Google Play.
 
 **The Problem:** I kept waking up and immediately doom-scrolling Instagram/TikTok. By the time I stopped, an hour had passed and I felt awful.
 
@@ -26,9 +26,9 @@ Hey everyone! After months of development, I'm looking for beta testers for my a
 - **Full Block**: Must complete journal to access apps
 - **Gentle Reminder**: Shows reminder, lets you snooze
 
-Currently in closed testing on Play Store. Completely free, no subscriptions, just a small banner ad.
+Free on Google Play, no subscriptions, just a small banner ad.
 
-Looking for feedback on:
+Would love feedback on:
 - Is the blocking too aggressive or not enough?
 - What features would you want?
 - Any bugs you encounter
@@ -57,7 +57,7 @@ After 2 weeks of using it myself:
 - Actually remember what I was grateful for
 - Feel more intentional about my day
 
-It's free on Play Store (closed beta). Would love feedback from this community.
+It's free on Google Play. Would love feedback from this community.
 
 ---
 
@@ -100,7 +100,7 @@ Features:
 
 It's helped me journal every single day for the past month - when before I'd write maybe twice a week.
 
-Currently in beta on Play Store. Would love to hear what features journalers would want!
+Free on Google Play. Would love to hear what features journalers would want!
 
 ---
 
@@ -116,7 +116,7 @@ An app that blocks social media until you journal.
 📊 Streak tracking
 🌙 Dark mode
 
-Free on Play Store (beta)
+Free on Google Play
 
 #AndroidApp #Journaling #DigitalMinimalism
 
@@ -218,9 +218,9 @@ It's free on Play Store if you want to try it.
 ## Play Store Link Comment
 (Add this as first comment on Reddit posts)
 
-Here's the Play Store link: [ADD LINK WHEN PUBLIC]
+Here's the Play Store link: https://play.google.com/store/apps/details?id=com.morningmindful
 
-Currently in closed testing - DM me your email if you want early access!
+Free to download, no account needed!
 
 ---
 

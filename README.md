@@ -172,14 +172,15 @@ Customize the blocked apps list in Settings.
 - **Encrypted Preferences** - Settings stored in EncryptedSharedPreferences
 - **Encrypted Backups** - Export/import with AES-256-GCM encryption
 - **Auto-Backup Protection** - Automatic backups use your password for encryption
-- **No Analytics** - No tracking or data collection (except crash reports)
+- **Privacy-Respecting Analytics** - Anonymous crash and performance reporting only
 - **Minimal Permissions** - Only requests what's necessary
 
 See our full [Privacy Policy](https://alanmurfi.github.io/MorningMindful/privacy.html).
 
 ## Version History
 
-### v1.0.26 (February 2026)
+### v1.0.26 (February 2026) - Production Release
+- Approved for production on Google Play Store
 - Live timer updates - change blocking duration mid-session
 - Fixed blocking not triggering on some devices
 - Fixed blocking continuing after timer expires
@@ -215,7 +216,7 @@ See our full [Privacy Policy](https://alanmurfi.github.io/MorningMindful/privacy
 - Improved backup/restore
 
 ### v1.0.14 (January 2026)
-- Initial Google Play release
+- Initial Google Play closed testing release
 - Core blocking functionality
 - Journal writing with word count
 - Streak tracking

@@ -13,12 +13,12 @@ Morning Mindful: Journal First
 
 ## Short Description (80 characters max)
 ```
-Block social media until you journal. Build mindful mornings, break doom-scrolling.
+Block social media until you journal. Build mindful mornings.
 ```
 
 **Alternatives:**
-- `Start your day intentionally. Journal before social media. Build lasting habits.`
-- `Break the doom-scroll habit. Write a journal entry to unlock your apps each morning.`
+- `Journal before you scroll. Block distracting apps every morning.`
+- `Write before you scroll. Block social media until you journal.`
 
 ---
 
@@ -66,7 +66,7 @@ Your journal is YOUR journal:
 📱 FEATURES
 
 ✓ Smart App Blocking - Block any apps during morning hours
-✓ Encrypted Journal - Military-grade AES-256 encryption
+✓ Encrypted Journal - AES-256 encryption protects your entries
 ✓ Photo Attachments - Add images to your entries
 ✓ Timeline View - See your journey with photos inline
 ✓ Search History - Find past entries instantly
@@ -84,7 +84,7 @@ The first thing most of us do each morning is reach for our phones and scroll. T
 
 Morning Mindful creates a small but powerful barrier: before you can scroll, you write. Even just 50 words of reflection can shift your mindset from reactive to intentional.
 
-Users report:
+People who use Morning Mindful report:
 • Less morning anxiety
 • Better focus throughout the day
 • A growing journal they're proud of
@@ -144,7 +144,7 @@ Everyone
 3. **"Write to Unlock"** - Journal entry screen with word counter
 4. **"Track Your Streak"** - Stats showing entries/words/streak
 5. **"Your Private Timeline"** - History view with photos
-6. **"Military-Grade Encryption"** - Security/privacy callout
+6. **"AES-256 Encrypted"** - Security/privacy callout
 7. **"Dark Mode Included"** - Dark theme screenshot
 8. **"Two Blocking Modes"** - Settings showing Full Block vs Gentle
 
