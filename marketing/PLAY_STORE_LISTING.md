@@ -25,9 +25,9 @@ Block social media until you journal. Build mindful mornings.
 ## Full Description (4000 characters max)
 
 ```
-🌅 Take back your mornings. Stop doom-scrolling. Start journaling.
+🌅 You grab your phone. Open Instagram. An hour vanishes. Sound familiar?
 
-Morning Mindful helps you build a healthier relationship with your phone by blocking distracting apps until you write a short journal entry. It's simple: journal first, then social media.
+Morning Mindful blocks your distracting apps until you write a short journal entry. That's the whole idea — journal first, then scroll.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -39,7 +39,7 @@ Morning Mindful helps you build a healthier relationship with your phone by bloc
 4️⃣ Write your required words (default: 50 words)
 5️⃣ Apps unlock for the rest of the day
 
-It's that simple. No willpower needed—just a gentle system that works.
+That's it. The app does the hard part so you don't have to white-knuckle it.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -80,29 +80,28 @@ Your journal is YOUR journal:
 
 💭 WHY MORNING MINDFUL?
 
-The first thing most of us do each morning is reach for our phones and scroll. That habit shapes your entire day—often negatively.
+Be honest — what's the first thing you do every morning? For most of us, it's grab the phone and scroll. That sets the tone for the whole day, and usually not in a good way.
 
-Morning Mindful creates a small but powerful barrier: before you can scroll, you write. Even just 50 words of reflection can shift your mindset from reactive to intentional.
+Morning Mindful puts a small speed bump between you and your apps. Before you scroll, you write. 50 words. That's all it takes to start your morning on your own terms instead of the algorithm's.
 
-People who use Morning Mindful report:
+What people notice after a few weeks:
 • Less morning anxiety
 • Better focus throughout the day
-• A growing journal they're proud of
-• Finally breaking the doom-scroll habit
+• A journal that actually gets used
+• The doom-scroll habit finally losing its grip
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 🎯 PERFECT FOR
 
-• Anyone trying to reduce screen time
-• People who want to journal but struggle with consistency
-• Those who reach for their phone first thing every morning
-• Digital wellness enthusiasts
-• Anyone building better morning routines
+• Anyone tired of Screen Time limits that don't actually work
+• People who want to journal but can't stay consistent
+• The "I'll just check one thing" crowd (we've all been there)
+• Anyone who wants their mornings back
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Start your mindful morning journey today. Your future self will thank you.
+Try it tomorrow morning. See what happens when you write before you scroll.
 
 Questions or feedback? Contact us at alanwmurphy@gmail.com
 ```
@@ -152,7 +151,7 @@ Everyone
 
 ## Feature Graphic Text (1024x500)
 **Main text:** "Journal First. Scroll Later."
-**Subtext:** "Build mindful mornings by blocking social media until you write"
+**Subtext:** "Block social media until you write — it's that simple"
 **Visual:** Sunrise gradient with journal/phone imagery
 
 ---
@@ -166,7 +165,7 @@ Everyone
 Text: "Not so fast..."
 
 [8-15s] User writes a few sentences in the journal.
-Text: "Just 50 words to start your day with intention"
+Text: "Just 50 words. That's all."
 
 [15-20s] Checkmark. Apps unlock.
 Text: "Done! Your apps are unlocked"
