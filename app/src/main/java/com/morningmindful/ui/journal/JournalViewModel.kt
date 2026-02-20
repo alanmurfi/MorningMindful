@@ -58,7 +58,7 @@ class JournalViewModel @Inject constructor(
 
     // Whether we're editing a past entry
     val isEditingPastEntry: Boolean = editDate != null && editDate != LocalDate.now()
-    private val targetDate: LocalDate = editDate ?: LocalDate.now()
+    val targetDate: LocalDate = editDate ?: LocalDate.now()
 
     // Current journal text
     private val _journalText = MutableStateFlow("")

@@ -77,6 +77,21 @@ class JournalActivity : AppCompatActivity() {
         setupKeyboardScrolling()
     }
 
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+
+        // If ViewModel has a stale date (e.g. yesterday), recreate the activity
+        // so a fresh ViewModel is created with today's date
+        if (!viewModel.isEditingPastEntry && viewModel.targetDate != LocalDate.now()) {
+            recreate()
+            return
+        }
+
+        // Update blocked app message for new intent
+        handleBlockedAppMessage()
+    }
+
     private fun updateHeaderForEditMode() {
         if (viewModel.isEditingPastEntry) {
             binding.headerText.text = getString(R.string.edit_entry)

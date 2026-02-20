@@ -1,9 +1,9 @@
 # Morning Mindful - Product Requirements Document
 
-**Version:** 1.0.26
-**Last Updated:** February 14, 2026
+**Version:** 1.0.27
+**Last Updated:** February 20, 2026
 **Author:** Alan Murphy
-**Status:** Closed Testing (Day 12 of 14)
+**Status:** Production
 
 ---
 
@@ -219,7 +219,7 @@ Photo included in backup
 | Testers | 28 |
 | Commits | 55+ |
 | Bugs fixed | 18+ |
-| Version | 1.0.26 |
+| Version | 1.0.27 |
 
 ### 5.2 Quality Metrics
 | Metric | Target | Status |
@@ -245,6 +245,7 @@ Photo included in backup
 | 1.0.20 | Feb 2026 | Material You dynamic colors, unit tests |
 | 1.0.21 | Feb 2026 | Search, daily reminders, Firebase integration, in-app review |
 | 1.0.22 | Feb 2026 | Ad display fix, privacy policy updates |
+| 1.0.27 | Feb 2026 | Stale journal date fix, production release |
 | 1.0.26 | Feb 2026 | Blocking reliability fixes, live timer updates |
 
 ---

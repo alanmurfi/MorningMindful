@@ -4,8 +4,8 @@ Android app that blocks social media until you write a journal entry. Built with
 
 ## Quick Context
 
-- **Version:** 1.0.26
-- **Status:** Closed Testing (Play Store)
+- **Version:** 1.0.27
+- **Status:** Production (Play Store)
 - **Testers:** 28
 - **Package:** `com.morningmindful`
 
