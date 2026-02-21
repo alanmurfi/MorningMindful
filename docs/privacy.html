@@ -88,7 +88,7 @@
         <a href="index.html" class="back-link">← Back to Home</a>
 
         <h1>Privacy Policy for Morning Mindful</h1>
-        <p class="last-updated"><strong>Last updated:</strong> February 10, 2026 | <strong>App Version:</strong> 1.0.22</p>
+        <p class="last-updated"><strong>Last updated:</strong> February 21, 2026 | <strong>App Version:</strong> 1.0.27</p>
 
         <h2>Introduction</h2>
         <p>Morning Mindful ("we", "our", or "the app") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, and safeguard your information when you use our mobile application.</p>
@@ -98,10 +98,11 @@
         <h3>Information Stored Locally on Your Device</h3>
         <p>Morning Mindful stores the following data <strong>locally on your device only</strong>:</p>
         <ul>
-            <li><strong>Journal entries:</strong> Your written journal content, including text, timestamps, and attached photos</li>
-            <li><strong>App settings:</strong> Your preferences such as blocking duration, word count requirements, and selected apps to block</li>
+            <li><strong>Journal entries:</strong> Your written journal content, including text, timestamps, mood selections, and attached photos</li>
+            <li><strong>Photo attachments:</strong> Images you attach to journal entries, stored locally on your device in app-private storage</li>
+            <li><strong>App settings:</strong> Your preferences such as blocking duration, word count requirements, morning window times, and selected apps to block</li>
             <li><strong>Usage statistics:</strong> Entry counts, word counts, and streaks (stored locally for your personal tracking)</li>
-            <li><strong>Backup files:</strong> Encrypted backup files stored in a folder you choose (if auto-backup is enabled)</li>
+            <li><strong>Backup files:</strong> Encrypted backup files (including photos) stored in a folder you choose (if auto-backup is enabled)</li>
         </ul>
 
         <div class="highlight">
@@ -146,13 +147,35 @@
         <p>This permission allows the app to show the journal screen or reminder overlay when you attempt to open a blocked app.</p>
 
         <h3>Notifications</h3>
-        <p>Used to show a notification when app blocking is active, allowing you to track your remaining time.</p>
+        <p>Used for two purposes:</p>
+        <ul>
+            <li>Showing a notification when app blocking is active, allowing you to track your remaining time</li>
+            <li>Sending optional daily reminder notifications at a time you choose to encourage your journaling habit</li>
+        </ul>
+
+        <h3>Boot Completed & Exact Alarms</h3>
+        <p>Used to restart the blocking service and reschedule daily reminders after your device reboots. Without this, blocking and reminders would stop working until you manually open the app.</p>
+
+        <h3>Foreground Service</h3>
+        <p>Used to keep the blocking monitor running reliably in the background during your configured morning window. This is what allows the app to detect blocked apps even when Morning Mindful is not in the foreground.</p>
+
+        <h3>Advertising ID</h3>
+        <p>Used by Google AdMob to serve ads. You can opt out of personalized advertising in your device's Google settings, or reset your advertising ID at any time.</p>
 
         <h2>Third-Party Services</h2>
 
         <h3>Google AdMob</h3>
         <p>Morning Mindful displays advertisements through Google AdMob. AdMob may collect certain information for ad personalization. Please refer to <a href="https://policies.google.com/privacy" target="_blank">Google's Privacy Policy</a> for details on how Google handles data.</p>
         <p>You can opt out of personalized advertising in your device's Google settings.</p>
+
+        <h3>Firebase Analytics</h3>
+        <p>We use Firebase Analytics to understand how the app is used in aggregate (e.g., which features are popular, how often the app is opened). This service collects:</p>
+        <ul>
+            <li>Anonymous usage events (e.g., "journal saved", "settings changed")</li>
+            <li>Device information (model, OS version, screen size)</li>
+            <li>App version and session duration</li>
+        </ul>
+        <p>No personal data, journal content, or mood selections are included in analytics events. All events are anonymous and cannot be used to identify you.</p>
 
         <h3>Firebase Crashlytics</h3>
         <p>We use Firebase Crashlytics to collect crash reports and improve app stability. This service collects:</p>
