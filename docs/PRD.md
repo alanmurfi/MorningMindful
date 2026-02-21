@@ -56,6 +56,7 @@ Morning Mindful creates a gentle friction between the user and distracting apps 
 | Auto-save | ✅ | Automatically save drafts every few seconds |
 | Photo attachments | ✅ | Add photos to journal entries |
 | Timestamp separators | ✅ | Visual separation for continued entries |
+| Mood tracking | ✅ | Record mood with emoji for each entry |
 
 #### 2.1.3 Morning Window
 | Requirement | Status | Description |
@@ -213,13 +214,14 @@ Photo included in backup
 
 ## 5. Testing Status
 
-### 5.1 Current Metrics (Day 9)
+### 5.1 Current Metrics
 | Metric | Value |
 |--------|-------|
 | Testers | 28 |
-| Commits | 55+ |
-| Bugs fixed | 18+ |
+| Commits | 60+ |
+| Bugs fixed | 20+ |
 | Version | 1.0.27 |
+| Status | Production (Google Play) |
 
 ### 5.2 Quality Metrics
 | Metric | Target | Status |
@@ -245,8 +247,8 @@ Photo included in backup
 | 1.0.20 | Feb 2026 | Material You dynamic colors, unit tests |
 | 1.0.21 | Feb 2026 | Search, daily reminders, Firebase integration, in-app review |
 | 1.0.22 | Feb 2026 | Ad display fix, privacy policy updates |
-| 1.0.27 | Feb 2026 | Stale journal date fix, production release |
 | 1.0.26 | Feb 2026 | Blocking reliability fixes, live timer updates |
+| 1.0.27 | Feb 2026 | Stale journal date fix, edge-to-edge support, production release |
 
 ---
 

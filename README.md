@@ -14,27 +14,42 @@ A digital wellbeing Android app that helps you build a mindful morning routine b
 
 ## Features
 
-### Core Features
-- **Smart App Blocking** - Blocks social media and messaging apps during your morning hours
-- **Journal to Unlock** - Write a configurable number of words to unlock blocked apps
-- **Morning Window** - Blocking only activates during your configured morning hours (e.g., 5 AM - 10 AM)
-- **Two Blocking Modes** - Full Block (instant redirect) or Gentle Reminder (dismissible overlay)
+### App Blocking
+- **Two Blocking Modes** - Full Block (instant redirect via Accessibility Service) or Gentle Reminder (dismissible overlay via Usage Stats)
+- **Configurable Morning Window** - Set your own start/end hours (e.g., 5 AM–10 AM) and blocking duration (5–60 min)
+- **20+ Default Blocked Apps** - Social media, messaging, entertainment, and browsers pre-configured
+- **Custom App Blocking** - Add any installed app to your block list
+- **Always in Control** - Disable blocking anytime, or wait for the timer to expire
+
+### Journal
+- **Write to Unlock** - Complete a journal entry with your word count goal (50–500 words) to unlock all apps
+- **Photo Attachments** - Add photos from gallery or camera to your journal entries
+- **Timeline View** - See entries with text and photos displayed inline chronologically
+- **Auto-Save** - Drafts save automatically every few seconds
+- **Mood Tracking** - Record how you're feeling with each entry
+- **CJK Support** - Chinese/Japanese/Korean character counting (1 character = 1 word)
+- **Edit Past Entries** - Go back and update any previous journal entry
+
+### Track Your Progress
+- **Streak Tracking** - Current streak, longest streak, total entries, and lifetime word count
+- **Search History** - Full-text search through all past entries
+- **Entry Detail View** - Read back entries with full timeline, photos, and metadata
+- **Full-Screen Image Viewer** - Tap any photo to view it at full size with timestamps
 
 ### Privacy & Security
-- **Encrypted Storage** - Journal entries encrypted with SQLCipher (AES-256)
-- **Auto-Backup** - Automatic encrypted backups to a local folder of your choice
-- **Backup Restore** - Restore from existing backup during setup or reinstall
-- **Export/Import** - Password-protected backup files with AES-256-GCM encryption
-- **Offline First** - All data stored locally, no account required
+- **Encrypted Database** - Journal entries encrypted with SQLCipher (AES-256)
+- **Encrypted Settings** - EncryptedSharedPreferences for all sensitive preferences
+- **Auto-Backup** - Automatic encrypted backups with photos to a local folder
+- **Manual Export/Import** - Password-protected .mmbackup files with AES-256-GCM
+- **Backup Restore on Reinstall** - Detects existing backups during onboarding and offers instant restore
+- **100% Local** - All data stays on your device, no account required, no cloud sync
 
-### Customization
-- **Dark Mode** - Full dark theme support with system, light, and dark options
-- **Photo Attachments** - Add photos to your journal entries
-- **Timeline View** - See your journal entries with photos displayed inline chronologically
-- **Search History** - Search through your past journal entries
-- **Daily Reminders** - Configurable notification reminders to journal
-- **Streak Tracking** - Track your journaling streak and total word count
-- **Multi-Language** - English, German, and Chinese (Simplified) support
+### Personalization
+- **Material You** - Dynamic colors from your wallpaper on Android 12+
+- **Theme Options** - System, light, and dark mode
+- **Daily Reminders** - Notification at your chosen time to keep the habit going
+- **3 Languages** - English, German, and Chinese (Simplified)
+- **Guided Onboarding** - Step-by-step setup for new users with redo option in settings
 
 ## How It Works
 
