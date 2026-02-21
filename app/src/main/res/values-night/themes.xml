@@ -18,11 +18,7 @@
         <item name="colorOnSurface">@color/text_primary</item>
 
         <!-- Status bar (dark for dark mode) -->
-        <item name="android:statusBarColor">@color/background</item>
         <item name="android:windowLightStatusBar">false</item>
-
-        <!-- Navigation bar (dark for dark mode) -->
-        <item name="android:navigationBarColor">@color/background</item>
     </style>
 
     <!-- Overlay theme for gentle reminder -->
@@ -32,7 +28,5 @@
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:backgroundDimEnabled">false</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:navigationBarColor">@android:color/transparent</item>
     </style>
 </resources>

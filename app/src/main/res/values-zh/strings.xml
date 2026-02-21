@@ -271,7 +271,7 @@
     <string name="setup_required_desc">启用权限以开始限制应用。</string>
     <string name="setup_now">立即设置</string>
     <string name="words_label">字数</string>
-    <string name="streak_label">连续</string>
+    <string name="streak_label">天连续</string>
     <string name="recent_entries">最近日记</string>
     <string name="view_all">查看全部</string>
     <string name="empty_no_entries">还没有日记</string>

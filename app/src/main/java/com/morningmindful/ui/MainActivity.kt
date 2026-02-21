@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -50,6 +51,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
 
         // Check if onboarding is needed
         lifecycleScope.launch {
@@ -227,7 +229,7 @@ class MainActivity : AppCompatActivity() {
 
                 launch {
                     viewModel.currentStreak.collectLatest { streak ->
-                        binding.currentStreakValue.text = getString(R.string.streak_days, streak)
+                        binding.currentStreakValue.text = streak.toString()
                     }
                 }
 

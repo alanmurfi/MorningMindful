@@ -18,11 +18,9 @@
         <item name="colorOnSurface">@color/text_primary</item>
 
         <!-- Status bar -->
-        <item name="android:statusBarColor">@color/background</item>
         <item name="android:windowLightStatusBar">true</item>
 
         <!-- Navigation bar (API 27+) -->
-        <item name="android:navigationBarColor">@color/background</item>
         <item name="android:windowLightNavigationBar">true</item>
     </style>
 </resources>

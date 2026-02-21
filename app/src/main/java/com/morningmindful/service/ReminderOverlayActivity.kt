@@ -2,6 +2,7 @@ package com.morningmindful.service
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.morningmindful.databinding.ActivityReminderOverlayBinding
 import com.morningmindful.ui.journal.JournalActivity
@@ -22,6 +23,7 @@ class ReminderOverlayActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         binding = ActivityReminderOverlayBinding.inflate(layoutInflater)
         setContentView(binding.root)
 

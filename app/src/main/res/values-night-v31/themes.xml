@@ -27,11 +27,9 @@
         <item name="android:colorBackground">@android:color/system_neutral1_900</item>
 
         <!-- Status bar (dark) -->
-        <item name="android:statusBarColor">@android:color/system_neutral1_900</item>
         <item name="android:windowLightStatusBar">false</item>
 
         <!-- Navigation bar (dark) -->
-        <item name="android:navigationBarColor">@android:color/system_neutral1_900</item>
         <item name="android:windowLightNavigationBar">false</item>
     </style>
 
@@ -42,16 +40,12 @@
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:backgroundDimEnabled">false</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:navigationBarColor">@android:color/transparent</item>
     </style>
 
     <!-- Fullscreen theme for image viewer -->
     <style name="Theme.MorningMindful.Fullscreen" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowContentOverlay">@null</item>
-        <item name="android:statusBarColor">@android:color/black</item>
-        <item name="android:navigationBarColor">@android:color/black</item>
         <item name="android:windowBackground">@android:color/black</item>
         <item name="android:windowLightStatusBar">false</item>
     </style>

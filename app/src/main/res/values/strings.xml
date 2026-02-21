@@ -285,7 +285,7 @@
     <string name="setup_required_desc">Enable permissions to start blocking apps.</string>
     <string name="setup_now">Setup Now</string>
     <string name="words_label">Words</string>
-    <string name="streak_label">Streak</string>
+    <string name="streak_label">Day Streak</string>
     <string name="recent_entries">Recent Entries</string>
     <string name="view_all">View All</string>
     <string name="empty_no_entries">No journal entries yet</string>

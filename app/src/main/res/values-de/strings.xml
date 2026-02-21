@@ -271,7 +271,7 @@
     <string name="setup_required_desc">Aktiviere Berechtigungen, um Apps zu sperren.</string>
     <string name="setup_now">Jetzt einrichten</string>
     <string name="words_label">Wörter</string>
-    <string name="streak_label">Serie</string>
+    <string name="streak_label">Tage Serie</string>
     <string name="recent_entries">Letzte Einträge</string>
     <string name="view_all">Alle anzeigen</string>
     <string name="empty_no_entries">Noch keine Tagebucheinträge</string>

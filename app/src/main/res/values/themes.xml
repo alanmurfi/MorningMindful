@@ -18,11 +18,7 @@
         <item name="colorOnSurface">@color/text_primary</item>
 
         <!-- Status bar -->
-        <item name="android:statusBarColor">@color/background</item>
         <item name="android:windowLightStatusBar">true</item>
-
-        <!-- Navigation bar -->
-        <item name="android:navigationBarColor">@color/background</item>
     </style>
 
     <!-- Overlay theme for gentle reminder -->
@@ -32,16 +28,12 @@
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:backgroundDimEnabled">false</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:navigationBarColor">@android:color/transparent</item>
     </style>
 
     <!-- Fullscreen theme for image viewer -->
     <style name="Theme.MorningMindful.Fullscreen" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowContentOverlay">@null</item>
-        <item name="android:statusBarColor">@android:color/black</item>
-        <item name="android:navigationBarColor">@android:color/black</item>
         <item name="android:windowBackground">@android:color/black</item>
         <item name="android:windowLightStatusBar">false</item>
     </style>
