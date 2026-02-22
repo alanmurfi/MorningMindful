@@ -24,87 +24,73 @@ Block social media until you journal. Build mindful mornings, break doom-scrolli
 
 ## Full Description (4000 characters max)
 
+> **Note:** This is the current live Play Store description as of v1.0.28, updated with Accessibility Service disclosure for Google Play policy compliance.
+
 ```
-🌅 Take back your mornings. Stop doom-scrolling. Start journaling.
+Break the doom-scrolling habit. Start every morning with intention.
 
-Morning Mindful helps you build a healthier relationship with your phone by blocking distracting apps until you write a short journal entry. It's simple: journal first, then social media.
+Morning Mindful blocks distracting apps like Instagram, TikTok, and Reddit until you write a short journal entry. It's the simplest way to replace reactive scrolling with a few minutes of reflection.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+HOW IT WORKS
 
-✨ HOW IT WORKS
+1. Set your morning hours (e.g., 5 AM to 10 AM)
+2. Open a blocked app and you're redirected to journal
+3. Write your required word count (50-500 words, your choice)
+4. All apps unlock for the rest of the day
 
-1️⃣ Set your morning window (e.g., 5 AM - 10 AM)
-2️⃣ Choose which apps to block (Instagram, TikTok, X, etc.)
-3️⃣ When you open a blocked app, you're prompted to journal
-4️⃣ Write your required words (default: 50 words)
-5️⃣ Apps unlock for the rest of the day
+That's it. No complicated setup, no subscriptions, no accounts.
 
-It's that simple. No willpower needed—just a gentle system that works.
+TWO BLOCKING MODES
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Choose the approach that works for you:
+- Full Block: Instantly redirects you to journal. No way around it until you write.
+- Gentle Reminder: Shows a friendly nudge. You can dismiss it or choose to write.
 
-🛡️ TWO BLOCKING MODES
+YOUR JOURNAL, YOUR PRIVACY
 
-• Full Block Mode - Instantly redirects you to journal when opening blocked apps
-• Gentle Reminder Mode - Shows a dismissible overlay (for when you need flexibility)
+Every entry is encrypted with AES-256 (the same standard banks use) and stored only on your device. We never see, collect, or transmit your writing. No account required. No cloud sync. Your thoughts stay yours.
 
-You're always in control. Disable blocking anytime in settings.
+FEATURES
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+- Photo attachments with timeline view
+- Mood tracking with each entry
+- Streak tracking and word count stats
+- Search through your journal history
+- Daily reminder notifications
+- Auto-save while you write
+- Auto-backup with encrypted restore
+- Material You dynamic colors (Android 12+)
+- Dark mode support
+- 3 languages: English, German, Chinese
 
-🔒 PRIVACY-FIRST DESIGN
+ALWAYS IN CONTROL
 
-Your journal is YOUR journal:
-• All data stored locally on your device only
-• AES-256 encryption for all journal entries
-• No account required
-• No data ever leaves your phone
-• We can't read your entries—even if we wanted to
+- Disable blocking anytime from Settings
+- Set your own timer (5-60 minutes)
+- Customize which apps are blocked
+- Works only during your chosen morning hours
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ACCESSIBILITY SERVICE DISCLOSURE
 
-📱 FEATURES
+Morning Mindful uses Android's Accessibility Service in "Full Block" mode to detect when you open an app you've chosen to block during your morning hours. When a blocked app is detected, Morning Mindful redirects you to the journal screen so you can write your entry and unlock your apps.
 
-✓ Smart App Blocking - Block any apps during morning hours
-✓ Encrypted Journal - Military-grade AES-256 encryption
-✓ Photo Attachments - Add images to your entries
-✓ Timeline View - See your journey with photos inline
-✓ Search History - Find past entries instantly
-✓ Streak Tracking - Stay motivated with your journaling streak
-✓ Auto-Backup - Encrypted backups to a folder you choose
-✓ Dark Mode - Easy on the eyes, morning or night
-✓ Daily Reminders - Gentle notifications to keep you on track
-✓ Multi-Language - English, German, Chinese support
+The Accessibility Service is used ONLY to:
+- Detect which app is currently in the foreground
+- Redirect to the journal when a blocked app is opened
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+The Accessibility Service does NOT:
+- Read, collect, or store content from other apps
+- Log your app usage history
+- Transmit any data off your device
+- Modify settings or controls of other apps
 
-💭 WHY MORNING MINDFUL?
+This permission is optional. You can choose "Gentle Reminder" mode instead, which uses Usage Stats access and does not require the Accessibility Service.
 
-The first thing most of us do each morning is reach for our phones and scroll. That habit shapes your entire day—often negatively.
+BUILT FOR TRUST
 
-Morning Mindful creates a small but powerful barrier: before you can scroll, you write. Even just 50 words of reflection can shift your mindset from reactive to intentional.
+Morning Mindful is open source on GitHub. See our full privacy policy for details: https://alanmurfi.github.io/MorningMindful/privacy.html
 
-Users report:
-• Less morning anxiety
-• Better focus throughout the day
-• A growing journal they're proud of
-• Finally breaking the doom-scroll habit
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-🎯 PERFECT FOR
-
-• Anyone trying to reduce screen time
-• People who want to journal but struggle with consistency
-• Those who reach for their phone first thing every morning
-• Digital wellness enthusiasts
-• Anyone building better morning routines
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-Start your mindful morning journey today. Your future self will thank you.
-
-Questions or feedback? Contact us at alanwmurphy@gmail.com
+Start tomorrow morning. Write a few words, unlock your day, and see how different it feels.
 ```
 
 ---

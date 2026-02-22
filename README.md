@@ -3,7 +3,7 @@
 [![Android](https://img.shields.io/badge/Platform-Android-green.svg)](https://developer.android.com)
 [![API](https://img.shields.io/badge/API-26%2B-brightgreen.svg)](https://android-arsenal.com/api?level=26)
 [![Kotlin](https://img.shields.io/badge/Kotlin-2.0-blue.svg)](https://kotlinlang.org)
-[![Version](https://img.shields.io/badge/Version-1.0.27-purple.svg)](https://github.com/alanmurfi/MorningMindful/releases)
+[![Version](https://img.shields.io/badge/Version-1.0.28-purple.svg)](https://github.com/alanmurfi/MorningMindful/releases)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 A digital wellbeing Android app that helps you build a mindful morning routine by blocking social media apps until you complete a journal entry.
@@ -193,6 +193,10 @@ Customize the blocked apps list in Settings.
 See our full [Privacy Policy](https://alanmurfi.github.io/MorningMindful/privacy.html).
 
 ## Version History
+
+### v1.0.28 (February 2026)
+- Updated Play Store description with Accessibility Service disclosure
+- Policy compliance update for Google Play resubmission
 
 ### v1.0.27 (February 2026)
 - Fixed journal showing yesterday's entry when opened the next morning

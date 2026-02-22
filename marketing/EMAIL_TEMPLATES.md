@@ -19,10 +19,9 @@ I'm reaching out because I recently built an Android app that takes a different 
 - Two modes: Full Block or Gentle Reminder
 - Built because I needed it myself (and it actually worked)
 
-The app just entered open testing on Google Play and is preparing for full release.
+The app is live on Google Play.
 
 Would you be interested in checking it out? I'm happy to provide:
-- Early access
 - Press kit with screenshots and assets
 - Interview about the development process
 

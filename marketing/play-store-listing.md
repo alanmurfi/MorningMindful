@@ -76,12 +76,10 @@ Start tomorrow morning. Write a few words, unlock your day, and see how differen
 
 ---
 
-## What's New (Release Notes for v1.0.27)
+## What's New (Release Notes for v1.0.28)
 
-- Fixed journal showing yesterday's entry when opened the next morning
-- Improved edge-to-edge display on Android 15
-- Material library update for better compatibility
-- Bug fixes and stability improvements
+- Updated Play Store description with Accessibility Service disclosure
+- Policy compliance update for Google Play
 
 ---
 
