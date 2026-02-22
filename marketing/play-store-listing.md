@@ -52,9 +52,25 @@ Every entry is encrypted with AES-256 (the same standard banks use) and stored o
 - Customize which apps are blocked
 - Works only during your chosen morning hours
 
+**ACCESSIBILITY SERVICE DISCLOSURE**
+
+Morning Mindful uses Android's Accessibility Service in "Full Block" mode to detect when you open an app you've chosen to block during your morning hours. When a blocked app is detected, Morning Mindful redirects you to the journal screen so you can write your entry and unlock your apps.
+
+The Accessibility Service is used ONLY to:
+- Detect which app is currently in the foreground
+- Redirect to the journal when a blocked app is opened
+
+The Accessibility Service does NOT:
+- Read, collect, or store content from other apps
+- Log your app usage history
+- Transmit any data off your device
+- Modify settings or controls of other apps
+
+This permission is optional. You can choose "Gentle Reminder" mode instead, which uses Usage Stats access and does not require the Accessibility Service.
+
 **BUILT FOR TRUST**
 
-Morning Mindful is open source on GitHub. The Accessibility Service only detects which app is in the foreground - it never reads content from other apps. See our full privacy policy for details.
+Morning Mindful is open source on GitHub. See our full privacy policy for details: https://alanmurfi.github.io/MorningMindful/privacy.html
 
 Start tomorrow morning. Write a few words, unlock your day, and see how different it feels.
 
