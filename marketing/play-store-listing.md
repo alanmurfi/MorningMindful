@@ -76,6 +76,12 @@ Start tomorrow morning. Write a few words, unlock your day, and see how differen
 
 ---
 
+## What's New (Release Notes for v1.0.29)
+
+- Production release on Google Play
+- Accessibility Service disclosure for policy compliance
+- Stability and reliability improvements
+
 ## What's New (Release Notes for v1.0.28)
 
 - Updated Play Store description with Accessibility Service disclosure
