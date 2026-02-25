@@ -32,8 +32,10 @@ import com.morningmindful.util.PermissionUtils
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -62,6 +64,7 @@ class SettingsActivity : AppCompatActivity() {
     private var pendingExportPassword: String? = null
     private var pendingImportUri: Uri? = null
     private var pendingBackupUri: Uri? = null
+    private var isUpdatingAutoBackupUI = false
     private lateinit var blockedAppsAdapter: BlockedAppsAdapter
 
     // Backup folder selection for auto-backup
@@ -74,7 +77,7 @@ class SettingsActivity : AppCompatActivity() {
                 Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
             )
             pendingBackupUri = uri
-            showAutoBackupPasswordDialog()
+            checkForExistingBackup(uri)
         } else {
             // User cancelled, turn switch back off
             binding.autoBackupSwitch.isChecked = false
@@ -282,6 +285,7 @@ class SettingsActivity : AppCompatActivity() {
 
         // Auto-backup switch
         binding.autoBackupSwitch.setOnCheckedChangeListener { _, isChecked ->
+            if (isUpdatingAutoBackupUI) return@setOnCheckedChangeListener
             if (isChecked) {
                 // Check if we already have a backup folder configured
                 val existingUri = viewModel.getAutoBackupUri()
@@ -496,6 +500,82 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     /**
+     * Check if there's an existing backup file in the selected folder.
+     * If yes, offer to reuse it instead of creating a new one.
+     */
+    private fun checkForExistingBackup(folderUri: Uri) {
+        lifecycleScope.launch {
+            val backupExists = withContext(Dispatchers.IO) {
+                JournalBackupManager.findAutoBackupInFolder(this@SettingsActivity, folderUri) != null
+            }
+
+            if (backupExists) {
+                showRestoreExistingBackupDialog()
+            } else {
+                showAutoBackupPasswordDialog()
+            }
+        }
+    }
+
+    /**
+     * Show dialog when an existing backup is found in the selected folder.
+     * Offers to reuse the existing backup or set up a new one.
+     */
+    private fun showRestoreExistingBackupDialog() {
+        MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.backup_found_title)
+            .setMessage(R.string.backup_found_restore_question)
+            .setPositiveButton(R.string.use_existing_backup) { _, _ ->
+                // Ask for the existing backup password to verify and reuse
+                showExistingBackupPasswordDialog()
+            }
+            .setNegativeButton(R.string.setup_new_backup) { _, _ ->
+                showAutoBackupPasswordDialog()
+            }
+            .setOnCancelListener {
+                binding.autoBackupSwitch.isChecked = false
+                pendingBackupUri = null
+            }
+            .show()
+    }
+
+    /**
+     * Show dialog to enter password for an existing backup file.
+     */
+    private fun showExistingBackupPasswordDialog() {
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_restore_password, null)
+        val passwordInput = dialogView.findViewById<EditText>(R.id.passwordInput)
+
+        MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.import_enter_password)
+            .setMessage(R.string.restore_password_message)
+            .setView(dialogView)
+            .setPositiveButton(R.string.ok) { _, _ ->
+                val password = passwordInput.text.toString()
+                if (password.length < 8) {
+                    Toast.makeText(this, R.string.password_too_short, Toast.LENGTH_SHORT).show()
+                    showExistingBackupPasswordDialog()
+                } else {
+                    val uri = pendingBackupUri
+                    if (uri != null) {
+                        viewModel.setupAutoBackup(uri.toString(), password)
+                        Toast.makeText(this, R.string.auto_backup_enabled, Toast.LENGTH_SHORT).show()
+                    }
+                    pendingBackupUri = null
+                }
+            }
+            .setNegativeButton(R.string.cancel) { _, _ ->
+                binding.autoBackupSwitch.isChecked = false
+                pendingBackupUri = null
+            }
+            .setOnCancelListener {
+                binding.autoBackupSwitch.isChecked = false
+                pendingBackupUri = null
+            }
+            .show()
+    }
+
+    /**
      * Show dialog to set password for auto-backup encryption.
      */
     private fun showAutoBackupPasswordDialog() {
@@ -523,12 +603,10 @@ class SettingsActivity : AppCompatActivity() {
                         pendingBackupUri = null
                     }
                     else -> {
-                        // Save auto-backup settings
+                        // Save auto-backup settings in a single coroutine to avoid race conditions
                         val uri = pendingBackupUri
                         if (uri != null) {
-                            viewModel.setAutoBackupUri(uri.toString())
-                            viewModel.setAutoBackupPassword(password)
-                            viewModel.setAutoBackupEnabled(true)
+                            viewModel.setupAutoBackup(uri.toString(), password)
                             Toast.makeText(this, R.string.auto_backup_enabled, Toast.LENGTH_SHORT).show()
                         }
                         pendingBackupUri = null
@@ -550,7 +628,9 @@ class SettingsActivity : AppCompatActivity() {
      * Update the auto-backup status text and visibility.
      */
     private fun updateAutoBackupUI(enabled: Boolean, lastBackupTime: Long) {
+        isUpdatingAutoBackupUI = true
         binding.autoBackupSwitch.isChecked = enabled
+        isUpdatingAutoBackupUI = false
         binding.changeBackupFolderButton.visibility = if (enabled) View.VISIBLE else View.GONE
         binding.includeImagesRow.visibility = if (enabled) View.VISIBLE else View.GONE
 

@@ -312,6 +312,7 @@
     <string name="backup_found_restore_question">We found an existing backup in this folder. Would you like to restore your journals from it?</string>
     <string name="restore_password_message">Enter the password you used when creating this backup.</string>
     <string name="setup_new_backup">Start Fresh</string>
+    <string name="use_existing_backup">Use Existing</string>
 
     <!-- Daily Reminder -->
     <string name="daily_reminder">Daily Reminder</string>

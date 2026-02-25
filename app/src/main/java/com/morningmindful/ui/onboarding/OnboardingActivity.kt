@@ -83,6 +83,12 @@ class OnboardingActivity : AppCompatActivity() {
         // Track onboarding started
         com.morningmindful.util.Analytics.trackOnboardingStarted()
 
+        // Preserve existing backup settings when re-doing onboarding
+        val settings = MorningMindfulApp.getInstance().settingsRepository
+        autoBackupEnabled = settings.isAutoBackupEnabledSync()
+        autoBackupUri = settings.getAutoBackupUriSync()
+        autoBackupPassword = settings.getAutoBackupPasswordSync()
+
         setupViewPager()
         setupButtons()
     }

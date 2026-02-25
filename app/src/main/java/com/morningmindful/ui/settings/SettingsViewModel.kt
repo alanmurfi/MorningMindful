@@ -170,6 +170,19 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Save all auto-backup settings in a single coroutine to avoid race conditions.
+     * URI and password are written before enabled flag, ensuring the switch listener
+     * always finds a valid URI when auto-backup is reported as enabled.
+     */
+    fun setupAutoBackup(uri: String, password: String) {
+        viewModelScope.launch {
+            settingsRepository.setAutoBackupUri(uri)
+            settingsRepository.setAutoBackupPassword(password)
+            settingsRepository.setAutoBackupEnabled(true)
+        }
+    }
+
     fun setAutoBackupUri(uri: String?) {
         viewModelScope.launch {
             settingsRepository.setAutoBackupUri(uri)

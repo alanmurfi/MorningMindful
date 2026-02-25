@@ -298,6 +298,7 @@
     <string name="backup_found_restore_question">我们在此文件夹中发现了现有备份。你想从中恢复日记吗？</string>
     <string name="restore_password_message">输入创建此备份时使用的密码。</string>
     <string name="setup_new_backup">重新开始</string>
+    <string name="use_existing_backup">使用现有备份</string>
 
     <!-- Morning Monitor -->
     <string name="morning_monitor_active">等待晨间日记</string>

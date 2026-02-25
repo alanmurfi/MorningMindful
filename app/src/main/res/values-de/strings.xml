@@ -298,6 +298,7 @@
     <string name="backup_found_restore_question">Wir haben ein vorhandenes Backup in diesem Ordner gefunden. Möchtest du deine Tagebücher daraus wiederherstellen?</string>
     <string name="restore_password_message">Gib das Passwort ein, das du beim Erstellen dieses Backups verwendet hast.</string>
     <string name="setup_new_backup">Neu beginnen</string>
+    <string name="use_existing_backup">Vorhandenes verwenden</string>
 
     <!-- Morning Monitor -->
     <string name="morning_monitor_active">Warten auf Morgentagebuch</string>

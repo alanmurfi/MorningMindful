@@ -1,7 +1,7 @@
 # Morning Mindful - Product Requirements Document
 
-**Version:** 1.0.29
-**Last Updated:** February 24, 2026
+**Version:** 1.0.30
+**Last Updated:** February 25, 2026
 **Author:** Alan Murphy
 **Status:** Production
 
@@ -220,7 +220,7 @@ Photo included in backup
 | Testers | 28 |
 | Commits | 60+ |
 | Bugs fixed | 20+ |
-| Version | 1.0.29 |
+| Version | 1.0.30 |
 | Status | Production (Google Play) |
 
 ### 5.2 Quality Metrics
@@ -249,6 +249,7 @@ Photo included in backup
 | 1.0.22 | Feb 2026 | Ad display fix, privacy policy updates |
 | 1.0.26 | Feb 2026 | Blocking reliability fixes, live timer updates |
 | 1.0.28 | Feb 2026 | Accessibility Service disclosure, Play Store policy compliance |
+| 1.0.30 | Feb 2026 | Fix auto-backup setup race condition, detect existing backups |
 | 1.0.29 | Feb 2026 | Production release (removed beta track) |
 | 1.0.27 | Feb 2026 | Stale journal date fix, edge-to-edge support, production release |
 
