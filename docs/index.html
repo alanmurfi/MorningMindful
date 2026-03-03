@@ -742,6 +742,189 @@
             font-size: 0.9rem;
         }
 
+        /* Store Badges */
+        .store-badges {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .store-badge {
+            height: 56px;
+            transition: all 0.3s ease;
+        }
+
+        .store-badge:hover {
+            transform: translateY(-3px);
+            filter: brightness(1.1);
+        }
+
+        .ios-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.3);
+            padding: 12px 24px;
+            border-radius: 12px;
+            color: white;
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            height: 56px;
+        }
+
+        .ios-badge:hover {
+            background: rgba(255,255,255,0.25);
+            transform: translateY(-3px);
+        }
+
+        .ios-badge svg {
+            width: 24px;
+            height: 24px;
+            fill: white;
+        }
+
+        .ios-badge-text {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.2;
+        }
+
+        .ios-badge-text .small {
+            font-size: 0.65rem;
+            font-weight: 400;
+            opacity: 0.8;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .ios-badge-text .large {
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        /* iOS Waitlist Section */
+        .ios-section {
+            padding: 80px 20px;
+            background: linear-gradient(135deg, #1a1a2e 0%, #2d1b69 50%, #1a1a2e 100%);
+            color: white;
+            text-align: center;
+        }
+
+        .ios-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .ios-icon {
+            width: 80px;
+            height: 80px;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+            border: 1px solid rgba(255,255,255,0.15);
+        }
+
+        .ios-icon svg {
+            width: 40px;
+            height: 40px;
+            fill: white;
+        }
+
+        .ios-section h2 {
+            font-size: 2.25rem;
+            font-weight: 800;
+            margin-bottom: 12px;
+            letter-spacing: -0.02em;
+        }
+
+        .ios-section .ios-subtitle {
+            font-size: 1.1rem;
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 32px;
+            line-height: 1.6;
+        }
+
+        .waitlist-form {
+            display: flex;
+            gap: 12px;
+            max-width: 460px;
+            margin: 0 auto 16px;
+        }
+
+        .waitlist-form input[type="email"] {
+            flex: 1;
+            padding: 14px 20px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            color: white;
+            font-size: 1rem;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .waitlist-form input[type="email"]::placeholder {
+            color: rgba(255,255,255,0.5);
+        }
+
+        .waitlist-form input[type="email"]:focus {
+            border-color: var(--primary-light);
+        }
+
+        .waitlist-form button {
+            padding: 14px 28px;
+            background: white;
+            color: var(--primary-dark);
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 700;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .waitlist-form button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(255,255,255,0.2);
+        }
+
+        .waitlist-note {
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.5);
+        }
+
+        .waitlist-success {
+            display: none;
+            padding: 16px 24px;
+            background: rgba(74, 222, 128, 0.15);
+            border: 1px solid rgba(74, 222, 128, 0.3);
+            border-radius: 12px;
+            color: #4ADE80;
+            font-weight: 600;
+            max-width: 460px;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 500px) {
+            .waitlist-form {
+                flex-direction: column;
+            }
+        }
+
         /* Responsive */
         @media (max-width: 900px) {
             .features-grid {
@@ -826,13 +1009,16 @@
                 Version 1.0.31 - Now available on Google Play
             </div>
             <p class="tagline">Break the doom-scrolling habit. Start your mornings with intention by journaling before social media.</p>
-            <div class="cta-buttons">
-                <a href="https://play.google.com/store/apps/details?id=com.morningmindful" class="cta-button">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M3,20.5V3.5C3,2.91 3.34,2.39 3.84,2.15L13.69,12L3.84,21.85C3.34,21.6 3,21.09 3,20.5M16.81,15.12L6.05,21.34L14.54,12.85L16.81,15.12M20.16,10.81C20.5,11.08 20.75,11.5 20.75,12C20.75,12.5 20.5,12.92 20.16,13.19L17.89,14.5L15.39,12L17.89,9.5L20.16,10.81M6.05,2.66L16.81,8.88L14.54,11.15L6.05,2.66Z"/></svg>
-                    Get on Google Play
+            <div class="store-badges">
+                <a href="https://play.google.com/store/apps/details?id=com.morningmindful" target="_blank" rel="noopener">
+                    <img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" alt="Get it on Google Play" class="store-badge">
                 </a>
-                <a href="#features" class="cta-button secondary">
-                    Learn More
+                <a href="#ios-waitlist" class="ios-badge">
+                    <svg viewBox="0 0 384 512"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg>
+                    <span class="ios-badge-text">
+                        <span class="small">Coming Soon on</span>
+                        <span class="large">iOS</span>
+                    </span>
                 </a>
             </div>
         </div>
@@ -1237,6 +1423,51 @@
         </div>
     </section>
 
+    <!-- iOS Waitlist Section -->
+    <section class="ios-section" id="ios-waitlist">
+        <div class="ios-container">
+            <div class="ios-icon">
+                <svg viewBox="0 0 384 512"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg>
+            </div>
+            <h2>Coming Soon to iOS</h2>
+            <p class="ios-subtitle">Morning Mindful is heading to the App Store. Join the waitlist to be first to know when it launches.</p>
+            <form class="waitlist-form" id="waitlist-form" onsubmit="handleWaitlist(event)">
+                <input type="email" placeholder="your@email.com" required aria-label="Email address">
+                <button type="submit">Join Waitlist</button>
+            </form>
+            <div class="waitlist-success" id="waitlist-success">You're on the list! We'll email you when the iOS version is ready.</div>
+            <p class="waitlist-note" id="waitlist-note">No spam, just a single notification when we launch.</p>
+        </div>
+    </section>
+
+    <script>
+    // Google Forms configuration
+    var GOOGLE_FORM_ID = '1FAIpQLSc3QJCLRtu2kbS4OL8pDZ4wro-_v9I49kaF9VXsbq7-IeAUSw';
+    var GOOGLE_ENTRY_ID = '2109692921';
+
+    function handleWaitlist(e) {
+        e.preventDefault();
+        var email = e.target.querySelector('input[type="email"]').value;
+        var url = 'https://docs.google.com/forms/d/e/' + GOOGLE_FORM_ID + '/formResponse';
+        var formData = new FormData();
+        formData.append('entry.' + GOOGLE_ENTRY_ID, email);
+
+        fetch(url, {
+            method: 'POST',
+            mode: 'no-cors',
+            body: formData
+        }).then(function() {
+            document.getElementById('waitlist-form').style.display = 'none';
+            document.getElementById('waitlist-note').style.display = 'none';
+            document.getElementById('waitlist-success').style.display = 'block';
+        }).catch(function() {
+            document.getElementById('waitlist-form').style.display = 'none';
+            document.getElementById('waitlist-note').style.display = 'none';
+            document.getElementById('waitlist-success').style.display = 'block';
+        });
+    }
+    </script>
+
     <!-- Footer -->
     <footer>
         <div class="footer-content">
@@ -1247,6 +1478,7 @@
             <div class="footer-links">
                 <h5>Links</h5>
                 <a href="https://play.google.com/store/apps/details?id=com.morningmindful">Google Play</a>
+                <a href="#ios-waitlist">iOS Waitlist</a>
                 <a href="https://github.com/alanmurfi/MorningMindful">GitHub</a>
                 <a href="privacy.html">Privacy Policy</a>
             </div>
