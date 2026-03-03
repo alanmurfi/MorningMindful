@@ -290,6 +290,13 @@
     <string name="service_restart_needed_title">Neustart erforderlich</string>
     <string name="service_restart_needed_message">Die Bedienungshilfe muss neu gestartet werden, um richtig zu funktionieren.\n\nBitte schalte Morning Mindful in den Bedienungshilfe-Einstellungen AUS und wieder AN.</string>
 
+    <!-- Accessibility Service Alert Notification -->
+    <string name="accessibility_alert_channel_name">Blockierungs-Warnungen</string>
+    <string name="accessibility_alert_channel_desc">Warnungen, wenn die App-Blockierung nicht funktioniert</string>
+    <string name="accessibility_alert_title">App-Blockierung funktioniert nicht</string>
+    <string name="accessibility_alert_message">Die Bedienungshilfe wurde deaktiviert. Tippe zum Beheben.</string>
+    <string name="accessibility_alert_message_expanded">Android hat die Bedienungshilfe deaktiviert, daher funktioniert die App-Blockierung heute Morgen nicht. Öffne die Bedienungshilfe-Einstellungen und schalte Morning Mindful aus und wieder ein.</string>
+
     <!-- Image Viewer -->
     <string name="photo_full_view">Foto in voller Größe</string>
 

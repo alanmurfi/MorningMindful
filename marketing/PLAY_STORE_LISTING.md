@@ -24,7 +24,7 @@ Block social media until you journal. Build mindful mornings, break doom-scrolli
 
 ## Full Description (4000 characters max)
 
-> **Note:** This is the current live Play Store description as of v1.0.28, updated with Accessibility Service disclosure for Google Play policy compliance.
+> **Note:** This is the current live Play Store description as of v1.0.29, updated with Accessibility Service disclosure for Google Play policy compliance.
 
 ```
 Break the doom-scrolling habit. Start every morning with intention.

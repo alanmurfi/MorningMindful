@@ -304,6 +304,13 @@
     <string name="service_restart_needed_title">Restart Required</string>
     <string name="service_restart_needed_message">The accessibility service needs to be restarted to work properly.\n\nPlease turn Morning Mindful OFF and then ON again in Accessibility settings.</string>
 
+    <!-- Accessibility Service Alert Notification -->
+    <string name="accessibility_alert_channel_name">Blocking Alerts</string>
+    <string name="accessibility_alert_channel_desc">Alerts when app blocking stops working</string>
+    <string name="accessibility_alert_title">App blocking is not working</string>
+    <string name="accessibility_alert_message">The accessibility service was disabled. Tap to fix.</string>
+    <string name="accessibility_alert_message_expanded">Android disabled the accessibility service, so app blocking won\'t work this morning. Open Accessibility settings and turn Morning Mindful off then on again.</string>
+
     <!-- Image Viewer -->
     <string name="photo_full_view">Full size photo</string>
 

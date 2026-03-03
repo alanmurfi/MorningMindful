@@ -18,9 +18,11 @@ import androidx.core.app.NotificationCompat
 import com.morningmindful.MorningMindfulApp
 import com.morningmindful.R
 import com.morningmindful.data.repository.SettingsRepository
+import com.morningmindful.service.AppBlockerAccessibilityService
 import com.morningmindful.ui.MainActivity
 import com.morningmindful.util.BlockingState
 import com.morningmindful.util.PerformanceTraces
+import com.morningmindful.util.PermissionUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -48,10 +50,16 @@ class MorningMonitorService : Service() {
     private var screenOnReceiver: BroadcastReceiver? = null
     private var dateChangeReceiver: BroadcastReceiver? = null
 
+    private var accessibilityHealthCheckJob: kotlinx.coroutines.Job? = null
+    private var accessibilityAlertShown = false
+
     companion object {
         private const val TAG = "MorningMonitorService"
         private const val CHANNEL_ID = "morning_monitor_channel"
         private const val NOTIFICATION_ID = 3001
+        private const val ACCESSIBILITY_ALERT_CHANNEL_ID = "accessibility_alert_channel"
+        private const val ACCESSIBILITY_ALERT_NOTIFICATION_ID = 3002
+        private const val HEALTH_CHECK_INTERVAL_MS = 5 * 60 * 1000L // 5 minutes
 
         @Volatile
         var isServiceRunning = false
@@ -85,6 +93,7 @@ class MorningMonitorService : Service() {
         registerScreenUnlockReceiver()
         registerScreenOnReceiver()
         registerDateChangeReceiver()
+        startAccessibilityHealthCheck()
 
         // Check if we should stop (outside morning window or already journaled)
         serviceScope.launch {
@@ -98,6 +107,7 @@ class MorningMonitorService : Service() {
         super.onDestroy()
         Log.d(TAG, "Service destroyed")
         isServiceRunning = false
+        accessibilityHealthCheckJob?.cancel()
         unregisterScreenUnlockReceiver()
         unregisterScreenOnReceiver()
         unregisterDateChangeReceiver()
@@ -108,6 +118,8 @@ class MorningMonitorService : Service() {
 
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val manager = getSystemService(NotificationManager::class.java)
+
             val channel = NotificationChannel(
                 CHANNEL_ID,
                 "Morning Monitor",
@@ -116,8 +128,17 @@ class MorningMonitorService : Service() {
                 description = "Monitors for screen unlock during morning hours"
                 setShowBadge(false)
             }
-            val manager = getSystemService(NotificationManager::class.java)
             manager.createNotificationChannel(channel)
+
+            val alertChannel = NotificationChannel(
+                ACCESSIBILITY_ALERT_CHANNEL_ID,
+                getString(R.string.accessibility_alert_channel_name),
+                NotificationManager.IMPORTANCE_HIGH
+            ).apply {
+                description = getString(R.string.accessibility_alert_channel_desc)
+                setShowBadge(true)
+            }
+            manager.createNotificationChannel(alertChannel)
         }
     }
 
@@ -355,6 +376,84 @@ class MorningMonitorService : Service() {
                 trace.stop()
             }
         }
+    }
+
+    /**
+     * Periodically checks if the accessibility service is still running.
+     * Android can silently disable accessibility services (showing "app isn't working"),
+     * which breaks Full Block mode. This alerts the user so they can re-enable it.
+     */
+    private fun startAccessibilityHealthCheck() {
+        accessibilityHealthCheckJob?.cancel()
+        accessibilityAlertShown = false
+
+        accessibilityHealthCheckJob = serviceScope.launch {
+            // Initial check after a short delay
+            delay(10_000)
+
+            while (true) {
+                checkAccessibilityHealth()
+                delay(HEALTH_CHECK_INTERVAL_MS)
+            }
+        }
+    }
+
+    private suspend fun checkAccessibilityHealth() {
+        try {
+            val app = applicationContext as? MorningMindfulApp ?: return
+            val blockingMode = app.settingsRepository.blockingMode.first()
+
+            // Only relevant for Full Block mode
+            if (blockingMode != SettingsRepository.BLOCKING_MODE_FULL) return
+
+            val serviceRunning = AppBlockerAccessibilityService.isServiceRunning
+
+            if (!serviceRunning && !accessibilityAlertShown) {
+                Log.w(TAG, "Accessibility service not running during morning window!")
+                showAccessibilityAlert()
+                accessibilityAlertShown = true
+            } else if (serviceRunning && accessibilityAlertShown) {
+                // Service recovered - dismiss the alert
+                Log.d(TAG, "Accessibility service recovered, dismissing alert")
+                dismissAccessibilityAlert()
+                accessibilityAlertShown = false
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error checking accessibility health", e)
+        }
+    }
+
+    private fun showAccessibilityAlert() {
+        val settingsIntent = PendingIntent.getActivity(
+            this,
+            1,
+            PermissionUtils.getAccessibilitySettingsIntent(),
+            PendingIntent.FLAG_IMMUTABLE
+        )
+
+        val notification = NotificationCompat.Builder(this, ACCESSIBILITY_ALERT_CHANNEL_ID)
+            .setContentTitle(getString(R.string.accessibility_alert_title))
+            .setContentText(getString(R.string.accessibility_alert_message))
+            .setStyle(NotificationCompat.BigTextStyle()
+                .bigText(getString(R.string.accessibility_alert_message_expanded)))
+            .setSmallIcon(R.drawable.ic_notification)
+            .setContentIntent(settingsIntent)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setAutoCancel(true)
+            .addAction(
+                R.drawable.ic_notification,
+                getString(R.string.open_settings),
+                settingsIntent
+            )
+            .build()
+
+        val manager = getSystemService(NotificationManager::class.java)
+        manager.notify(ACCESSIBILITY_ALERT_NOTIFICATION_ID, notification)
+    }
+
+    private fun dismissAccessibilityAlert() {
+        val manager = getSystemService(NotificationManager::class.java)
+        manager.cancel(ACCESSIBILITY_ALERT_NOTIFICATION_ID)
     }
 
     private suspend fun checkAndMaybeStop() {
