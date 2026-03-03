@@ -24,7 +24,14 @@ Block social media until you journal. Build mindful mornings, break doom-scrolli
 
 ## Full Description (4000 characters max)
 
-> **Note:** This is the current live Play Store description as of v1.0.29, updated with Accessibility Service disclosure for Google Play policy compliance.
+> **Note:** Current live Play Store description as of v1.0.31.
+
+### What's New (Release Notes for v1.0.31)
+```
+- Morning Mindful now alerts you if Android disables the accessibility service during your morning window
+- Tap the notification to go straight to settings and re-enable app blocking in seconds
+- No more silent failures — you'll always know if blocking stops working
+```
 
 ```
 Break the doom-scrolling habit. Start every morning with intention.
