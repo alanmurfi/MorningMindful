@@ -1,11 +1,10 @@
 package com.morningmindful.ui.onboarding
 
-import android.net.Uri
-import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
@@ -17,7 +16,7 @@ import com.morningmindful.util.PermissionUtils
 
 /**
  * Adapter for onboarding ViewPager2.
- * Guides user through setup step by step.
+ * Value-first flow: Welcome → Problem → How It Works → Mode → Permissions → Ready
  */
 class OnboardingPagerAdapter(
     private val activity: OnboardingActivity
@@ -30,27 +29,21 @@ class OnboardingPagerAdapter(
             return if (isGentleMode) {
                 listOf(
                     OnboardingPage.WELCOME,
-                    OnboardingPage.PERMISSION_NOTIFICATIONS,
+                    OnboardingPage.PROBLEM,
+                    OnboardingPage.HOW_IT_WORKS,
                     OnboardingPage.BLOCKING_MODE,
-                    OnboardingPage.BLOCKING_DURATION,
-                    OnboardingPage.WORD_COUNT,
-                    OnboardingPage.MORNING_WINDOW,
                     OnboardingPage.PERMISSION_USAGE_STATS,
                     OnboardingPage.PERMISSION_OVERLAY,
-                    OnboardingPage.BACKUP_SETUP,
                     OnboardingPage.READY
                 )
             } else {
                 listOf(
                     OnboardingPage.WELCOME,
-                    OnboardingPage.PERMISSION_NOTIFICATIONS,
+                    OnboardingPage.PROBLEM,
+                    OnboardingPage.HOW_IT_WORKS,
                     OnboardingPage.BLOCKING_MODE,
-                    OnboardingPage.BLOCKING_DURATION,
-                    OnboardingPage.WORD_COUNT,
-                    OnboardingPage.MORNING_WINDOW,
                     OnboardingPage.PERMISSION_ACCESSIBILITY,
                     OnboardingPage.PERMISSION_OVERLAY,
-                    OnboardingPage.BACKUP_SETUP,
                     OnboardingPage.READY
                 )
             }
@@ -78,17 +71,12 @@ class OnboardingPagerAdapter(
         private val sliderValue: TextView = itemView.findViewById(R.id.sliderValue)
         private val startTimeContainer: View = itemView.findViewById(R.id.startTimeContainer)
         private val endTimeContainer: View = itemView.findViewById(R.id.endTimeContainer)
-        private val startTimeValue: TextView = itemView.findViewById(R.id.startTimeValue)
-        private val endTimeValue: TextView = itemView.findViewById(R.id.endTimeValue)
-        private val startTimeMinus: View = itemView.findViewById(R.id.startTimeMinus)
-        private val startTimePlus: View = itemView.findViewById(R.id.startTimePlus)
-        private val endTimeMinus: View = itemView.findViewById(R.id.endTimeMinus)
-        private val endTimePlus: View = itemView.findViewById(R.id.endTimePlus)
         private val fullBlockCard: CardView = itemView.findViewById(R.id.fullBlockCard)
         private val gentleReminderCard: CardView = itemView.findViewById(R.id.gentleReminderCard)
         private val fullBlockIcon: ImageView = itemView.findViewById(R.id.fullBlockIcon)
         private val gentleReminderIcon: ImageView = itemView.findViewById(R.id.gentleReminderIcon)
         private val secondaryButton: MaterialButton = itemView.findViewById(R.id.pageSecondaryButton)
+        private val stepsContainer: LinearLayout = itemView.findViewById(R.id.stepsContainer)
 
         fun bind(page: OnboardingPage) {
             icon.setImageResource(page.iconRes)
@@ -105,31 +93,23 @@ class OnboardingPagerAdapter(
             endTimeContainer.visibility = View.GONE
             fullBlockCard.visibility = View.GONE
             gentleReminderCard.visibility = View.GONE
+            stepsContainer.visibility = View.GONE
 
             when (page) {
-                OnboardingPage.PERMISSION_NOTIFICATIONS -> {
-                    actionButton.visibility = View.VISIBLE
-                    statusText.visibility = View.VISIBLE
-
-                    val hasPermission = PermissionUtils.hasNotificationPermission(activity)
-                    if (hasPermission) {
-                        statusText.text = itemView.context.getString(R.string.permission_granted)
-                        statusText.setTextColor(itemView.context.getColor(R.color.success))
-                        actionButton.text = itemView.context.getString(R.string.enabled)
-                        actionButton.isEnabled = false
-                    } else {
-                        statusText.text = itemView.context.getString(R.string.tap_to_allow_notifications)
-                        statusText.setTextColor(itemView.context.getColor(R.color.text_secondary))
-                        actionButton.text = itemView.context.getString(R.string.allow_notifications)
-                        actionButton.isEnabled = true
-                        actionButton.setOnClickListener {
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                                activity.requestNotificationPermission()
-                            } else {
-                                PermissionUtils.openNotificationSettings(activity)
-                            }
-                        }
-                    }
+                OnboardingPage.HOW_IT_WORKS -> {
+                    stepsContainer.visibility = View.VISIBLE
+                    itemView.findViewById<TextView>(R.id.step1Title).text =
+                        itemView.context.getString(R.string.onboarding_step1_title)
+                    itemView.findViewById<TextView>(R.id.step1Desc).text =
+                        itemView.context.getString(R.string.onboarding_step1_desc)
+                    itemView.findViewById<TextView>(R.id.step2Title).text =
+                        itemView.context.getString(R.string.onboarding_step2_title)
+                    itemView.findViewById<TextView>(R.id.step2Desc).text =
+                        itemView.context.getString(R.string.onboarding_step2_desc)
+                    itemView.findViewById<TextView>(R.id.step3Title).text =
+                        itemView.context.getString(R.string.onboarding_step3_title)
+                    itemView.findViewById<TextView>(R.id.step3Desc).text =
+                        itemView.context.getString(R.string.onboarding_step3_desc)
                 }
                 OnboardingPage.BLOCKING_MODE -> {
                     fullBlockCard.visibility = View.VISIBLE
@@ -143,62 +123,6 @@ class OnboardingPagerAdapter(
                     gentleReminderCard.setOnClickListener {
                         activity.blockingMode = SettingsRepository.BLOCKING_MODE_GENTLE
                         updateBlockingModeSelection()
-                    }
-                }
-                OnboardingPage.BLOCKING_DURATION -> {
-                    slider.visibility = View.VISIBLE
-                    sliderValue.visibility = View.VISIBLE
-                    slider.valueFrom = 5f
-                    slider.valueTo = 60f
-                    slider.stepSize = 5f
-                    slider.value = activity.blockingDuration.toFloat()
-                    sliderValue.text = itemView.context.getString(R.string.minutes_format, activity.blockingDuration)
-                    slider.addOnChangeListener { _, value, _ ->
-                        activity.blockingDuration = value.toInt()
-                        sliderValue.text = itemView.context.getString(R.string.minutes_format, value.toInt())
-                    }
-                }
-                OnboardingPage.WORD_COUNT -> {
-                    slider.visibility = View.VISIBLE
-                    sliderValue.visibility = View.VISIBLE
-                    slider.valueFrom = 50f
-                    slider.valueTo = 500f
-                    slider.stepSize = 50f
-                    slider.value = activity.requiredWordCount.toFloat()
-                    sliderValue.text = itemView.context.getString(R.string.words_format, activity.requiredWordCount)
-                    slider.addOnChangeListener { _, value, _ ->
-                        activity.requiredWordCount = value.toInt()
-                        sliderValue.text = itemView.context.getString(R.string.words_format, value.toInt())
-                    }
-                }
-                OnboardingPage.MORNING_WINDOW -> {
-                    startTimeContainer.visibility = View.VISIBLE
-                    endTimeContainer.visibility = View.VISIBLE
-                    updateTimeDisplays()
-
-                    startTimeMinus.setOnClickListener {
-                        if (activity.morningStartHour > 0) {
-                            activity.morningStartHour--
-                            updateTimeDisplays()
-                        }
-                    }
-                    startTimePlus.setOnClickListener {
-                        if (activity.morningStartHour < activity.morningEndHour - 1) {
-                            activity.morningStartHour++
-                            updateTimeDisplays()
-                        }
-                    }
-                    endTimeMinus.setOnClickListener {
-                        if (activity.morningEndHour > activity.morningStartHour + 1) {
-                            activity.morningEndHour--
-                            updateTimeDisplays()
-                        }
-                    }
-                    endTimePlus.setOnClickListener {
-                        if (activity.morningEndHour < 24) {
-                            activity.morningEndHour++
-                            updateTimeDisplays()
-                        }
                     }
                 }
                 OnboardingPage.PERMISSION_ACCESSIBILITY -> {
@@ -261,53 +185,9 @@ class OnboardingPagerAdapter(
                         }
                     }
                 }
-                OnboardingPage.BACKUP_SETUP -> {
-                    actionButton.visibility = View.VISIBLE
-                    secondaryButton.visibility = View.VISIBLE
-                    statusText.visibility = View.VISIBLE
-
-                    // Check if backup folder is already selected
-                    val hasBackupFolder = activity.autoBackupUri != null
-                    if (hasBackupFolder) {
-                        statusText.text = itemView.context.getString(R.string.backup_folder_selected)
-                        statusText.setTextColor(itemView.context.getColor(R.color.success))
-                        actionButton.text = itemView.context.getString(R.string.change_backup_folder)
-                    } else {
-                        statusText.text = ""
-                        actionButton.text = itemView.context.getString(R.string.choose_backup_folder)
-                    }
-
-                    actionButton.isEnabled = true
-                    actionButton.setOnClickListener {
-                        activity.requestBackupFolderSelection()
-                    }
-
-                    secondaryButton.text = itemView.context.getString(R.string.skip_backup_setup)
-                    secondaryButton.setOnClickListener {
-                        // Just disable auto-backup and move to next page
-                        activity.autoBackupEnabled = false
-                        activity.autoBackupUri = null
-                    }
-                }
                 else -> {
-                    // Welcome and Ready pages - no extra controls
+                    // Welcome, Problem, Ready pages - no extra controls needed
                 }
-            }
-        }
-
-        private fun updateTimeDisplays() {
-            startTimeValue.text = formatHour(activity.morningStartHour)
-            endTimeValue.text = formatHour(activity.morningEndHour)
-        }
-
-        private fun formatHour(hour: Int): String {
-            val context = itemView.context
-            return when {
-                hour == 0 -> context.getString(R.string.time_12am)
-                hour < 12 -> context.getString(R.string.time_am, hour)
-                hour == 12 -> context.getString(R.string.time_12pm)
-                hour == 24 -> context.getString(R.string.time_12am)
-                else -> context.getString(R.string.time_pm, hour - 12)
             }
         }
 
@@ -338,6 +218,16 @@ enum class OnboardingPage(
         R.drawable.ic_sun,
         R.string.onboarding_welcome_title,
         R.string.onboarding_welcome_desc
+    ),
+    PROBLEM(
+        R.drawable.ic_block,
+        R.string.onboarding_problem_title,
+        R.string.onboarding_problem_desc
+    ),
+    HOW_IT_WORKS(
+        R.drawable.ic_journal,
+        R.string.onboarding_how_it_works_title,
+        R.string.onboarding_how_it_works_desc
     ),
     BLOCKING_MODE(
         R.drawable.ic_settings,

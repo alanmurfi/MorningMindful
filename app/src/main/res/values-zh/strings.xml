@@ -142,7 +142,19 @@
 
     <!-- Onboarding -->
     <string name="onboarding_welcome_title">欢迎使用晨间正念</string>
-    <string name="onboarding_welcome_desc">用正念开始你的早晨。\n\n这个应用通过在你写完简短日记之前温和地限制社交媒体，帮助你打破刷手机的习惯。</string>
+    <string name="onboarding_welcome_desc">夺回你的早晨。\n\n你值得按自己的方式开始新的一天——而不是在别人的动态里滑来滑去。</string>
+
+    <string name="onboarding_problem_title">夺回你的早晨</string>
+    <string name="onboarding_problem_desc">普通人醒来后3分钟内就会拿起手机——在起床前花30多分钟刷社交媒体。\n\n这意味着每年有超过180小时在你的一天还没开始之前就被刷手机浪费了。</string>
+
+    <string name="onboarding_how_it_works_title">使用方法</string>
+    <string name="onboarding_how_it_works_desc">每天早上三个简单步骤：</string>
+    <string name="onboarding_step1_title">打开社交应用</string>
+    <string name="onboarding_step1_desc">Instagram、TikTok、X——我们会拦截</string>
+    <string name="onboarding_step2_title">跳转到日记</string>
+    <string name="onboarding_step2_desc">写几句关于你早晨的感想</string>
+    <string name="onboarding_step3_title">应用已解锁</string>
+    <string name="onboarding_step3_desc">完成！你的应用在今天剩余时间里都可以自由使用</string>
 
     <string name="onboarding_duration_title">限制时长</string>
     <string name="onboarding_duration_desc">解锁手机后应用应该被限制多长时间？</string>
@@ -174,8 +186,8 @@
     <string name="auto_backup_password_title">设置备份密码</string>
     <string name="auto_backup_password_message">选择一个密码来加密你的备份。如果需要恢复备份，你将需要此密码。</string>
 
-    <string name="onboarding_ready_title">准备就绪！</string>
-    <string name="onboarding_ready_desc">限制功能已启用。\n\n你可以随时更改这些设置。\n\n享受你的正念早晨！</string>
+    <string name="onboarding_ready_title">一切就绪！</string>
+    <string name="onboarding_ready_desc">限制功能已激活，默认时段为早上5点到10点。\n\n你可以随时在设置中自定义所有内容——限制时长、字数要求、晨间时段等。</string>
 
     <string name="next">下一步</string>
     <string name="back">返回</string>

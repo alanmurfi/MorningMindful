@@ -142,7 +142,19 @@
 
     <!-- Onboarding -->
     <string name="onboarding_welcome_title">Willkommen bei Morning Mindful</string>
-    <string name="onboarding_welcome_desc">Beginne deine Morgen mit Absicht.\n\nDiese App hilft dir, die Gewohnheit des Doom-Scrollings zu durchbrechen, indem sie Social Media sanft sperrt, bis du einen kurzen Tagebucheintrag geschrieben hast.</string>
+    <string name="onboarding_welcome_desc">Hol dir deine Morgen zurück.\n\nDu verdienst es, den Tag nach deinen Regeln zu beginnen — nicht mit dem Feed anderer Leute.</string>
+
+    <string name="onboarding_problem_title">Erobere deine Morgen zurück</string>
+    <string name="onboarding_problem_desc">Der Durchschnittsmensch greift innerhalb von 3 Minuten nach dem Aufwachen zum Handy — und verbringt über 30 Minuten in sozialen Medien, bevor er aufsteht.\n\nDas sind über 180 Stunden pro Jahr, die durch Doom-Scrolling verloren gehen, bevor der Tag überhaupt beginnt.</string>
+
+    <string name="onboarding_how_it_works_title">So funktioniert\'s</string>
+    <string name="onboarding_how_it_works_desc">Drei einfache Schritte, jeden Morgen:</string>
+    <string name="onboarding_step1_title">Öffne eine Social-Media-App</string>
+    <string name="onboarding_step1_desc">Instagram, TikTok, X — wir erkennen es</string>
+    <string name="onboarding_step2_title">Werde zum Tagebuch weitergeleitet</string>
+    <string name="onboarding_step2_desc">Schreibe ein paar Worte über deinen Morgen</string>
+    <string name="onboarding_step3_title">Apps entsperrt</string>
+    <string name="onboarding_step3_desc">Fertig! Deine Apps sind für den Rest des Tages frei</string>
 
     <string name="onboarding_duration_title">Sperrdauer</string>
     <string name="onboarding_duration_desc">Wie lange sollen Apps nach dem Entsperren deines Handys gesperrt sein?</string>
@@ -174,8 +186,8 @@
     <string name="auto_backup_password_title">Backup-Passwort festlegen</string>
     <string name="auto_backup_password_message">Wähle ein Passwort, um deine Backups zu verschlüsseln. Du benötigst dieses Passwort, wenn du aus einem Backup wiederherstellst.</string>
 
-    <string name="onboarding_ready_title">Du bist bereit!</string>
-    <string name="onboarding_ready_desc">Die Sperre ist jetzt aktiviert.\n\nDu kannst diese Einstellungen jederzeit ändern.\n\nGenieße deine achtsamen Morgen!</string>
+    <string name="onboarding_ready_title">Alles bereit!</string>
+    <string name="onboarding_ready_desc">Die Sperre ist von 5 bis 10 Uhr mit intelligenten Standardwerten aktiv.\n\nDu kannst alles jederzeit in den Einstellungen anpassen — Sperrdauer, Wortanzahl, Morgenfenster und mehr.</string>
 
     <string name="next">Weiter</string>
     <string name="back">Zurück</string>
