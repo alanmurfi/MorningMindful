@@ -5,4 +5,8 @@
     <dimen name="mood_card_margin">8dp</dimen>
     <dimen name="mood_card_radius">12dp</dimen>
     <dimen name="mood_card_stroke">2dp</dimen>
+
+    <!-- Onboarding dot indicators -->
+    <dimen name="dot_size">8dp</dimen>
+    <dimen name="dot_margin">4dp</dimen>
 </resources>

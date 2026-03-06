@@ -140,7 +140,31 @@
     <string name="notification_title">晨间正念已激活</string>
     <string name="notification_text">完成日记以解锁应用</string>
 
-    <!-- Onboarding -->
+    <!-- Onboarding - Narrative Pages -->
+    <string name="onboarding_splash">嘿</string>
+    <string name="onboarding_hook_1">你有没有注意到</string>
+    <string name="onboarding_hook_2">每天早上</string>
+    <string name="onboarding_hook_3">你做的第一件事</string>
+    <string name="onboarding_hook_4">就是拿起手机？</string>
+    <string name="onboarding_pain_1">然后不知不觉</string>
+    <string name="onboarding_pain_2">30分钟就没了。</string>
+    <string name="onboarding_pain_3">刷着</string>
+    <string name="onboarding_pain_4">别人的生活。</string>
+    <string name="onboarding_empathy_1">这不是你的错。</string>
+    <string name="onboarding_empathy_2">这些应用就是为了</string>
+    <string name="onboarding_empathy_3">偷走你的早晨而设计的。</string>
+    <string name="onboarding_turn_1">但如果</string>
+    <string name="onboarding_turn_2">明天你换一种方式开始呢？</string>
+    <string name="onboarding_turn_3">如果你选择写点什么呢？</string>
+    <string name="onboarding_solution_1">晨间正念</string>
+    <string name="onboarding_solution_2">限制社交媒体</string>
+    <string name="onboarding_solution_3">直到你写完日记。</string>
+    <string name="onboarding_solution_4">只需要几句话，就这么简单。</string>
+    <string name="tap_to_continue">点击继续</string>
+    <string name="onboarding_ready_new_desc">明天早上，当你想打开instagram时，我们会在这里。\n\n写几句话，你的应用就会解锁。\n\n你可以在设置中自定义一切。</string>
+    <string name="onboarding_ready_new_title">准备好了</string>
+
+    <!-- Onboarding - Setup Pages (legacy) -->
     <string name="onboarding_welcome_title">欢迎使用晨间正念</string>
     <string name="onboarding_welcome_desc">夺回你的早晨。\n\n你值得按自己的方式开始新的一天——而不是在别人的动态里滑来滑去。</string>
 
@@ -203,9 +227,9 @@
     <string name="onboarding_mode_title">选择限制方式</string>
     <string name="onboarding_mode_desc">你希望应用如何工作？</string>
     <string name="blocking_mode_full_title">完全限制</string>
-    <string name="blocking_mode_full_desc">应用会立即被限制。\n需要无障碍权限。</string>
+    <string name="blocking_mode_full_desc">这个权限看起来有点吓人，但这是最可靠的限制应用的方式。应用只在本地检测你打开了哪个应用——没有人能看到任何东西。\n\n你的隐私数据绝不会离开你的手机。你的数据100%属于你。</string>
     <string name="blocking_mode_gentle_title">温和提醒</string>
-    <string name="blocking_mode_gentle_desc">显示可关闭的提醒。\n不需要无障碍权限。</string>
+    <string name="blocking_mode_gentle_desc">不需要吓人的权限。当你打开受限应用时会显示提示，但不如完全限制那么可靠。</string>
 
     <!-- Permission prompts -->
     <string name="revoke_accessibility_title">撤销无障碍权限？</string>

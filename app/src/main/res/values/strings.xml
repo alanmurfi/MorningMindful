@@ -141,7 +141,31 @@
     <string name="notification_text">Complete your journal to unlock apps</string>
     <string name="morning_monitor_active">Waiting for morning journal</string>
 
-    <!-- Onboarding -->
+    <!-- Onboarding - Narrative Pages -->
+    <string name="onboarding_splash">hey</string>
+    <string name="onboarding_hook_1">ever notice how</string>
+    <string name="onboarding_hook_2">the first thing you do</string>
+    <string name="onboarding_hook_3">every morning</string>
+    <string name="onboarding_hook_4">is reach for your phone?</string>
+    <string name="onboarding_pain_1">and before you know it</string>
+    <string name="onboarding_pain_2">30 minutes are gone.</string>
+    <string name="onboarding_pain_3">scrolling through</string>
+    <string name="onboarding_pain_4">someone else\'s life.</string>
+    <string name="onboarding_empathy_1">it\'s not your fault.</string>
+    <string name="onboarding_empathy_2">these apps are designed</string>
+    <string name="onboarding_empathy_3">to steal your mornings.</string>
+    <string name="onboarding_turn_1">but what if</string>
+    <string name="onboarding_turn_2">you started tomorrow differently?</string>
+    <string name="onboarding_turn_3">what if you wrote instead?</string>
+    <string name="onboarding_solution_1">morning mindful</string>
+    <string name="onboarding_solution_2">blocks social media</string>
+    <string name="onboarding_solution_3">until you journal.</string>
+    <string name="onboarding_solution_4">just a few words. that\'s it.</string>
+    <string name="tap_to_continue">tap to continue</string>
+    <string name="onboarding_ready_new_desc">tomorrow morning, when you reach for instagram, we\'ll be here.\n\njust write a few words and your apps unlock.\n\nyou can customize everything in settings.</string>
+    <string name="onboarding_ready_new_title">you\'re ready</string>
+
+    <!-- Onboarding - Setup Pages (legacy) -->
     <string name="onboarding_welcome_title">Welcome to Morning Mindful</string>
     <string name="onboarding_welcome_desc">Take back your mornings.\n\nYou deserve to start the day on your terms — not scrolling through someone else\'s feed.</string>
 
@@ -204,9 +228,9 @@
     <string name="onboarding_mode_title">Choose Blocking Style</string>
     <string name="onboarding_mode_desc">How would you like the app to work?</string>
     <string name="blocking_mode_full_title">Full Block</string>
-    <string name="blocking_mode_full_desc">Apps are blocked instantly.\nRequires Accessibility permission.</string>
+    <string name="blocking_mode_full_desc">The permission looks scary, but this is the most reliable way to block apps. The app checks which app you opened — nobody else sees anything.\n\nNo private data ever leaves your phone. Your data belongs to you, 100%.</string>
     <string name="blocking_mode_gentle_title">Gentle Reminder</string>
-    <string name="blocking_mode_gentle_desc">Shows a reminder you can dismiss.\nNo Accessibility permission needed.</string>
+    <string name="blocking_mode_gentle_desc">No scary permissions needed. Shows a nudge when you open a blocked app, but it\'s not as reliable as Full Block.</string>
 
     <!-- Permission prompts -->
     <string name="revoke_accessibility_title">Revoke Accessibility Permission?</string>
